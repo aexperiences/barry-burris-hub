@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Patient Intake — Barry Burris, NMD</title>
+<link rel="icon" type="image/png" id="fav">
+<style>
+:root{--navy:#12263A;--ink:#1f2d3a;--muted:#6b7a89;--line:#e6ecf1;--teal:#0e7c84;--teal2:#12a3ad;--teal-soft:#e6f3f4;--gold:#c6a04a;--gold-soft:#f7efd9;--good:#2e7d32;--bad:#b3261e}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(165deg,#eef3f7,#e6eef3);min-height:100vh;color:var(--ink);font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.shell{max-width:740px;margin:0 auto;padding:22px 18px 70px}
+.pbanner{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:11px;padding:11px 15px;font-size:13px;margin-bottom:14px}
+.phead{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.phead img{width:50px;height:50px;border-radius:50%}
+.phead .n{font-weight:800;font-size:17px;line-height:1.1}
+.phead .t{font-size:10.5px;letter-spacing:1.3px;text-transform:uppercase;color:var(--teal);margin-top:2px}
+.langbar{display:flex;gap:6px;margin-left:auto}
+.langbar button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:5px 10px;font-size:12px;font-weight:700;cursor:pointer;color:var(--muted)}
+.langbar button.on{background:var(--navy);border-color:var(--navy);color:#fff}
+.prog{height:9px;background:#dde6ec;border-radius:20px;overflow:hidden;margin-bottom:20px}
+.prog>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--teal2));transition:width .3s}
+.card{background:#fff;border:1px solid var(--line);border-radius:18px;padding:26px 24px;box-shadow:0 6px 26px rgba(18,38,58,.06)}
+.step-t{font-size:22px;font-weight:800;margin:0 0 4px;letter-spacing:-.3px}
+.step-s{color:var(--muted);margin:0 0 20px}
+label.f{display:block;font-weight:700;font-size:14px;margin:18px 0 7px}.req{color:var(--bad)}
+input[type=text],input[type=email],input[type=tel],input[type=date],input[type=number],textarea,select{width:100%;border:1px solid #d5dee6;border-radius:11px;padding:12px 13px;font:inherit;background:#fbfdfe;color:var(--ink)}
+textarea{min-height:80px;resize:vertical}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,132,.12)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:560px){.row2{grid-template-columns:1fr}}
+.slider{display:flex;align-items:center;gap:13px;margin:8px 0 2px}.slider input{flex:1;accent-color:var(--teal)}
+.slval{min-width:40px;text-align:center;font-weight:800;font-size:17px;color:var(--navy);background:var(--teal-soft);border-radius:9px;padding:5px 0}
+.smallmuted{font-size:12px;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{border:1px solid #d5dee6;border-radius:22px;padding:9px 14px;font-size:14px;cursor:pointer;user-select:none;background:#fff}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+.nav{display:flex;justify-content:space-between;gap:12px;margin-top:26px}
+.btn{border:1px solid #d5dee6;background:#fff;border-radius:12px;padding:14px 22px;font-weight:800;font-size:15px;cursor:pointer;color:var(--ink)}
+.btn.p{background:var(--teal);border-color:var(--teal);color:#fff}.btn.g{background:var(--navy);border-color:var(--navy);color:#fff}
+.btn.full{width:100%}.btn:disabled{opacity:.45;cursor:not-allowed}
+.welcome{text-align:center;padding:8px 6px}.welcome img{width:92px;height:92px;border-radius:50%;margin:4px auto 14px;display:block;box-shadow:0 6px 20px rgba(18,38,58,.15)}
+.welcome h1{font-size:25px;margin:0 0 8px}.welcome p{color:var(--muted);max-width:520px;margin:0 auto 10px}
+.uploader{border:2px dashed #cdd8e1;border-radius:14px;padding:22px;text-align:center;background:#fbfdfe;cursor:pointer;font-weight:800}
+.uploader:hover{border-color:var(--teal);background:var(--teal-soft)}
+.fi{display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--line);border-radius:10px;margin-top:8px;font-size:14px}
+.check{display:flex;gap:11px;align-items:flex-start;margin-top:14px}.check input{width:20px;height:20px;margin-top:1px;accent-color:var(--teal)}
+.sumgrp{border:1px solid var(--line);border-radius:13px;padding:15px 17px;margin:12px 0}
+.sumgrp h4{margin:0 0 9px;font-size:11.5px;letter-spacing:.6px;text-transform:uppercase;color:var(--muted)}
+.kv{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14.5px}.kv:last-child{border-bottom:0}.kv .k{color:var(--muted)}.kv .v{text-align:right;font-weight:600}
+.pill{display:inline-block;background:var(--teal-soft);color:var(--teal);border-radius:20px;padding:3px 11px;font-size:12.5px;font-weight:700;margin:3px 4px 0 0}
+.howai{background:var(--navy);color:#e9f0f6;border-radius:15px;padding:20px 22px;margin-top:18px;font-size:14px;line-height:1.6}.howai b{color:#7fd0d6}
+.flag{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:12px;padding:13px 15px;margin-top:14px;font-size:13.5px}
+.muted{color:var(--muted)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:11px;opacity:0;pointer-events:none;transition:.2s;z-index:60}.toast.show{opacity:1}
+.foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+
+@media(max-width:600px){
+ .shell{padding:16px 13px 60px}
+ .card{padding:20px 16px}
+ .step-t{font-size:20px}
+ .btn{padding:13px 15px;font-size:14px}
+ .phead{flex-wrap:wrap}
+ .langbar{margin-left:0}
+ .chip{font-size:13.5px;padding:9px 12px}
+}
+</style></head>
+<body>
+<style>
+.pgate{position:fixed;inset:0;z-index:2000;display:flex;align-items:center;justify-content:center;padding:22px;background:radial-gradient(900px 500px at 50% -10%,rgba(43,179,189,.16),transparent 60%),#0b1522}
+.pgate.hide{display:none}
+.pgcard{background:#fff;border-radius:18px;max-width:420px;width:100%;padding:26px 24px;text-align:center;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.pgcoin{width:56px;height:56px;border-radius:50%}
+.pgt{font-weight:800;font-size:20px;margin-top:10px;color:#12263A}
+.pgs{color:#6b7a89;font-size:12.5px;margin-top:2px}
+.pgd{color:#42566a;font-size:14px;margin:14px 0}
+.pgin{width:100%;border:1.5px solid #e6ecf1;border-radius:11px;padding:12px 13px;font:inherit;font-size:15px;margin-bottom:10px}
+.pgin:focus{outline:none;border-color:#0e7c84}
+.pgbtn{width:100%;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#06222a;background:linear-gradient(180deg,#2bb3bd,#0e7c84);cursor:pointer}
+.pgnote{color:#8a97a5;font-size:11.5px;margin-top:12px}
+.pwho{background:#eef4f5;border:1px solid #d7e6e8;color:#3a5a5e;border-radius:10px;padding:7px 12px;font-size:12.5px;margin-bottom:10px;text-align:right}
+.pwho.hide{display:none}
+.pwho a{color:#0e7c84;font-weight:700;text-decoration:none}
+</style>
+<div id="pgate" class="pgate hide">
+  <div class="pgcard">
+    <img id="pgcoin" class="pgcoin" alt="BB">
+    <div class="pgt">Barry Burris, NMD</div>
+    <div class="pgs">Patient intake &middot; Hồ sơ bệnh nhân</div>
+    <p class="pgd">Welcome — enter your name to begin. <span style="opacity:.7">Chào mừng — nhập tên để bắt đầu.</span></p>
+    <input id="pgName" class="pgin" placeholder="Your name / Họ và tên" onkeydown="if(event.key==='Enter')pgateBegin()">
+    <input id="pgEmail" class="pgin" placeholder="Email (optional / không bắt buộc)" onkeydown="if(event.key==='Enter')pgateBegin()">
+    <button class="pgbtn" onclick="pgateBegin()">Begin / Bắt đầu →</button>
+    <div class="pgnote">Open preview — no password needed yet. Your answers stay on this device.</div>
+  </div>
+</div>
+<div class="shell">
+  <div id="pwho" class="pwho hide"></div>
+  <div class="pbanner"><b>Secure submission is being finalized.</b> Please don't enter sensitive medical details yet — bring your answers to your visit. What you type stays on your own device for now.</div>
+  <div class="phead"><img id="hcoin" alt="BB"><div><div class="n">Barry Burris, NMD</div><div class="t">Functional Medicine &amp; Longevity · Intake</div></div>
+    <div class="langbar"><button data-l="both" class="on" onclick="setLang('both')">VN+EN</button><button data-l="en" onclick="setLang('en')">EN</button><button data-l="vn" onclick="setLang('vn')">VN</button></div></div>
+  <div class="prog"><i id="bar"></i></div>
+  <div class="card" id="card"></div>
+  <div class="nav" id="nav"></div>
+  <div class="foot">Saved on this device only · Built by Accelerated Experiences, LLC</div>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+const COIN="data:image/png;base64,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";
+document.getElementById('hcoin').src=COIN;document.getElementById('fav').href=COIN;
+let LANG='both';
+function tr(s){if(!s)return s;if(LANG==='both')return s;const m=s.match(/^(.*?)\s*\(([^()]*)\)\s*$/);if(!m)return s;return LANG==='en'?m[2]:m[1];}
+function setLang(l){LANG=l;document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));render();}
+function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
+const todayISO=new Date().toISOString().slice(0,10);
+
+const STATE={date:todayISO,name:'',dob:'',sex:'',phone:'',email:'',address:'',emergency:'',occupation:'',height:'',weight:'',
+ concern:'',goals:[],symptoms:[],diagnoses:[],meds:'',surgical:'',allergies:'',
+ sleepQ:'',alert:'',sleepDur:'',diet:[],smoke:'',smokeQty:'',alcohol:'',alcoholQty:'',exercise:'',
+ energy:5,sleep:5,mood:5,libido:5,
+ family:[],familyNote:'',
+ menarche:'',regular:'',menDays:'',cycleDay:'',contraception:'',pregnancies:'',children:'',famCancer:'',gynResult:'',
+ mLibido:'',erection:'',morning:'',muscle:'',belly:'',recovery:'',motivation:'',urinary:'',
+ labFiles:[],additional:'',referral:'',consent:false};
+try{const s=localStorage.getItem('bb_intake2');if(s)Object.assign(STATE,JSON.parse(s));STATE.consent=false;}catch(e){}
+function save(){try{localStorage.setItem('bb_intake2',JSON.stringify(STATE))}catch(e){}}
+function setV(k,v){STATE[k]=v;save();}
+function isF(){return (STATE.sex||'').indexOf('Nữ')===0}
+function isM(){return (STATE.sex||'').indexOf('Nam')===0}
+
+const F=(k,type,lab,opts,extra)=>Object.assign({k,type,lab,opts:opts||[]},extra||{});
+const STEPS=[
+ {id:'welcome'},
+ {id:'info',t:'Thông Tin Bệnh Nhân (Patient Information)',fields:[
+   F('name','text','Họ và tên (Full Name)',0,{req:1}),
+   F('dob','date','Ngày sinh (DOB)',0,{req:1}),
+   F('sex','radio','Giới tính (Gender)',['Nữ (Female)','Nam (Male)'],{req:1}),
+   F('phone','tel','Điện thoại (Phone)',0,{req:1}),
+   F('email','email','Email'),
+   F('address','para','Địa chỉ (Address)'),
+   F('emergency','text','Người liên hệ khẩn cấp (Emergency Contact - Name & Phone)'),
+   F('occupation','text','Nghề nghiệp (Occupation)'),
+   F('height','number','Chiều cao cm (Height)'),F('weight','number','Cân nặng kg (Weight)')]},
+ {id:'goals',t:'Mục Tiêu & Dấu Hiệu (Goals & Symptoms)',fields:[
+   F('concern','para','Bạn mong muốn đạt được kết quả nào? (In your own words, what results do you want?)'),
+   F('goals','check','Chọn 1-2 mục tiêu quan trọng nhất (Top 1-2 goals)',['Điều trị bệnh lý cụ thể (Treat a specific illness)','Chống lão hóa & Tuổi thọ (Anti-Aging & Longevity)','Tối ưu hóa Hormone (Hormone Optimization)','Giảm đau / Phục hồi chấn thương (Pain Relief)','Tăng cường năng lượng (Improve Energy)']),
+   F('symptoms','check','Dấu hiệu hiện tại (Symptom Checklist)',['Mệt mỏi mãn tính (Chronic Fatigue)','Kém tập trung / Giảm trí nhớ (Brain Fog)','Đau khớp / Cứng khớp (Joint Pain)','Giảm ham muốn (Low Libido)','Vấn đề tiêu hóa (Digestive Issues)','Khó ngủ / Mất ngủ (Insomnia)'])]},
+ {id:'history',t:'Tiền Sử Y Khoa (Medical History)',fields:[
+   F('diagnoses','check','Tiền sử bệnh - chọn tất cả phù hợp (Past Medical History)',['Tiểu đường (Diabetes)','Huyết áp cao (High BP)','Bệnh tuyến giáp (Thyroid condition)','Bệnh tự miễn (Autoimmune)','Ung thư (Cancer)']),
+   F('meds','para','Thuốc / TPCN đang dùng (Medicines/supplements)'),
+   F('surgical','text','Tiền sử phẫu thuật - loại & năm (Surgical History - Type & Year)'),
+   F('allergies','para','Dị ứng (Allergies) - liệt kê hoặc ghi Không (list or write None)')]},
+ {id:'lifestyle',t:'Thói Quen Sinh Hoạt (Lifestyle Habits)',fields:[
+   F('sleepQ','radio','Chất lượng giấc ngủ (Sleep Quality)',['Tốt (Good)','Chập chờn (Inconsistent)','Mất ngủ (Insomnia)']),
+   F('alert','radio','Tỉnh táo khi dậy? (Alert when waking?)',['Có (Yes)','Không (No)']),
+   F('sleepDur','radio','Thời gian ngủ (Sleep Duration)',['1-3 Giờ/đêm (Hrs/night)','4-6 Giờ/đêm (Hrs/night)','7-10 Giờ/đêm (Hrs/night)','10+ Giờ/đêm (Hrs/night)']),
+   F('diet','check','Chế độ ăn (Diet)',['Bình thường (Standard)','Nhiều đạm / Thịt (High Protein)','Chay (Vegan)','Keto / Ít tinh bột (Low Carb)','Nhịn ăn gián đoạn (Intermittent Fasting)']),
+   F('smoke','radio','Hút thuốc (Smoke)',['Không (No)','Có (Yes)']),
+   F('smokeQty','text','Số điếu/ngày (Cigarettes/day)',0,{showIf:s=>(s.smoke||'').indexOf('Có')===0}),
+   F('alcohol','radio','Bia/Rượu (Alcohol)',['Không (No)','Có (Yes)']),
+   F('alcoholQty','text','Số lần/tuần (Times/week)',0,{showIf:s=>(s.alcohol||'').indexOf('Có')===0}),
+   F('exercise','radio','Tần suất tập thể dục (Exercise frequency)',['Không bao giờ hoặc rất ít (Never or very rarely)','1 lần/tuần (1x/week)','2-3 lần/tuần (2-3x/week)','4-5 lần/tuần (4-5x/week)','Hầu như mỗi ngày (Almost every day)'])]},
+ {id:'wellbeing',t:'Đánh Giá Nhanh (Quick Wellbeing 0–10)',sub:'Kéo mỗi thanh (Slide each 0–10 over the past 2 weeks). Carries into your visit note.',fields:[
+   F('energy','slider','Năng lượng (Energy)'),F('sleep','slider','Giấc ngủ (Sleep)'),F('mood','slider','Tâm trạng (Mood)'),F('libido','slider','Ham muốn (Libido)')]},
+ {id:'family',t:'Tiền Sử Bệnh Gia Đình (Family Medical History)',fields:[
+   F('family','check','Bệnh trong gia đình (Bố/Mẹ/Anh chị em) (Conditions in family)',['Tiểu đường (Diabetes)','Tim mạch (Heart disease)','Ung thư (Cancer)','Huyết áp cao (High BP)','Đột quỵ (Stroke)','Tuyến giáp (Thyroid)']),
+   F('familyNote','para','Chi tiết - ai & bệnh gì (Details - who & what)')]},
+ {id:'female',t:'Sức Khỏe Nội Tiết & Sinh Sản (Reproductive Health)',showIf:isF,fields:[
+   F('menarche','radio','Tuổi bắt đầu kinh nguyệt (Age onset menstruation)',['Dưới 10 tuổi (Under 10)','10-12 tuổi (10-12)','13-15 tuổi (13-15)','16 tuổi trở lên (16 or older)']),
+   F('regular','radio','Kinh nguyệt có đều không? (Periods regular?)',['Có (Yes)','Không (No)']),
+   F('menDays','radio','Số ngày hành kinh (Days of menstruation)',['1-3 ngày (days)','4-7 ngày (days)','8+ ngày (days)']),
+   F('cycleDay','text','Hôm nay là ngày thứ mấy của chu kỳ? (Current day of cycle)'),
+   F('contraception','radio','Biện pháp tránh thai (Contraception)',['Không (No)','Thuốc uống (Pills)','Dụng cụ tử cung/Cấy ghép (IUD/Implant)','Khác (Other)']),
+   F('pregnancies','select','Số lần mang thai (Pregnancies)',['0','1','2','3','4','5+']),
+   F('children','select','Số con đã sinh (Children)',['0','1','2','3','4','5+']),
+   F('famCancer','radio','Gia đình bị ung thư vú/buồng trứng/tử cung? (Family history breast/ovarian/uterine cancer)',['Không (No)','Có (Yes)']),
+   F('gynResult','radio','Kết quả khám phụ khoa gần nhất (Last gyn exam result)',['Bình thường (Normal)','Bất thường (Abnormal)','Chưa từng khám (Never had one)'])]},
+ {id:'male',t:'Sức Khỏe Nội Tiết & Nam Khoa (Hormonal & Male Health)',showIf:isM,fields:[
+   F('mLibido','radio','Mức độ ham muốn (Libido / Sex drive)',['Cao (High)','Bình thường (Normal)','Thấp (Low)','Rất thấp (Very Low)']),
+   F('erection','radio','Khó cương cứng / duy trì? (Difficulty achieving or maintaining erection?)',['Không (No)','Thỉnh thoảng (Sometimes)','Thường xuyên (Often)']),
+   F('morning','radio','Cương cứng vào buổi sáng? (Morning erections?)',['Có (Yes)','Không (No)','Không chắc chắn (Uncertain)']),
+   F('muscle','radio','Khó tăng cơ dù tập luyện? (Difficult to build muscle?)',['Không (No)','Có (Yes)']),
+   F('belly','radio','Tích mỡ vùng bụng? (Belly fat accumulation?)',['Không (No)','Có (Yes)']),
+   F('recovery','radio','Khả năng phục hồi sau tập (Recovery after exercise)',['Nhanh (Fast)','Vừa phải (Moderate)','Chậm / Đau lâu (Slow)']),
+   F('motivation','radio','Thiếu động lực / mục tiêu? (Lack of motivation or drive?)',['Không (No)','Có (Yes)']),
+   F('urinary','radio','Tiểu yếu hoặc tiểu đêm? (Weak urine stream or nocturia?)',['Không (No)','Có (Yes)'])]},
+ {id:'labs',t:'Kết Quả Xét Nghiệm (Lab Work)',sub:'Có kết quả gần đây? Tải lên — sẽ vào bản nháp bác sĩ xem. (Upload recent labs — they feed the draft note.)',fields:[F('labFiles','file','')]},
+ {id:'finish',t:'Gần Xong (Almost Done)',fields:[
+   F('additional','para','Điều gì khác muốn chia sẻ với bác sĩ? (Anything else to share?)'),
+   F('referral','select','Bạn biết đến chúng tôi qua đâu? (How did you find us?)',['Google','Facebook / Instagram','Bạn bè giới thiệu (Friend)','Bác sĩ giới thiệu (Doctor)','Khác (Other)'])]}
+];
+
+let step=0;
+function vis(i){const s=STEPS[i];return !s.showIf||s.showIf(STATE);}
+function fieldHTML(f){
+ if(f.showIf&&!f.showIf(STATE))return '';
+ const lab=`<label class="f">${tr(f.lab)}${f.req?' <span class="req">*</span>':''}</label>`;
+ const v=STATE[f.k];
+ if(['text','tel','email','date','number'].includes(f.type))return f.lab?lab+`<input type="${f.type}" value="${(v||'').toString().replace(/"/g,'&quot;')}" oninput="setV('${f.k}',this.value)">`:'';
+ if(f.type==='para')return lab+`<textarea oninput="setV('${f.k}',this.value)">${v||''}</textarea>`;
+ if(f.type==='select')return lab+`<select onchange="setV('${f.k}',this.value)"><option value="">—</option>`+f.opts.map(o=>`<option ${v===o?'selected':''}>${tr(o)}</option>`).join('')+`</select>`;
+ if(f.type==='slider')return lab+`<div class="slider"><span class="smallmuted">0</span><input type="range" min="0" max="10" value="${v}" oninput="setV('${f.k}',+this.value);document.getElementById('sv_${f.k}').textContent=this.value"><span class="smallmuted">10</span><span class="slval" id="sv_${f.k}">${v}</span></div>`;
+ if(f.type==='file')return `<div class="uploader" onclick="document.getElementById('lab').click()">⬆ ${tr('Tải lên PDF hoặc ảnh (Upload PDF or photo)')}</div><input id="lab" type="file" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none" onchange="addFiles(this.files)"><div id="filelist">${fileHTML()}</div><div class="flag" style="margin-top:14px"><b>${tr('Sắp có (Coming soon):')}</b> ${tr('kết quả gửi thẳng từ phòng lab vào đây (results sent straight from your lab into this portal).')}</div>`;
+ // radio / check
+ const arr=f.type==='check';
+ return lab+`<div class="chips">`+f.opts.map(o=>{const on=arr?(v||[]).includes(o):v===o;return `<div class="chip ${on?'on':''}" data-k="${f.k}" data-v="${o.replace(/"/g,'&quot;')}" data-m="${arr?1:0}" onclick="chip(this)">${tr(o)}</div>`;}).join('')+`</div>`;
+}
+function chip(el){const k=el.dataset.k,val=el.dataset.v,m=el.dataset.m==='1';
+ if(m){const a=STATE[k]||(STATE[k]=[]);const i=a.indexOf(val);i>=0?a.splice(i,1):a.push(val);}else STATE[k]=val;
+ save();render();}
+function fileHTML(){return STATE.labFiles.map((f,i)=>`<div class="fi"><span>📄 ${f}</span><span class="chip" style="padding:3px 10px" onclick="STATE.labFiles.splice(${i},1);save();document.getElementById('filelist').innerHTML=fileHTML()">✕</span></div>`).join('')}
+function addFiles(fl){for(const f of fl)STATE.labFiles.push(f.name);save();document.getElementById('filelist').innerHTML=fileHTML();toast('Added — stays on your device')}
+
+// manual (no web search) focus-area rules
+function focusAreas(){const f=[];const g=STATE;
+ if(isM()&&/Thấp|Rất thấp/.test(g.mLibido||'')&&((g.morning||'').indexOf('Không')===0||/Thường xuyên/.test(g.erection||'')))f.push(tr('Testosterone thấp / mãn dục nam (Low testosterone / andropause)'));
+ if(isF()&&(g.regular||'').indexOf('Không')===0)f.push(tr('Nội tiết / chu kỳ (Hormonal / cycle)'));
+ if((g.symptoms||[]).some(s=>/Fatigue|Mệt mỏi/.test(s))&&((g.diagnoses||[]).some(s=>/Thyroid|giáp/.test(s))))f.push(tr('Tuyến giáp / chuyển hóa (Thyroid / metabolic)'));
+ if(/Insomnia|Mất ngủ/.test(g.sleepQ||'')||g.sleep<=4)f.push(tr('Giấc ngủ / căng thẳng (Sleep / stress)'));
+ if((g.diagnoses||[]).some(s=>/Diabetes|Tiểu đường|BP|Huyết áp/.test(s))&&isM()&&(g.belly||'').indexOf('Có')===0)f.push(tr('Chuyển hóa tim mạch (Cardiometabolic)'));
+ if(g.energy<=3)f.push(tr('Năng lượng / mệt mỏi (Energy / fatigue)'));
+ return [...new Set(f)];
+}
+
+function render(){
+ while(step>0&&!vis(step))step--;
+ const s=STEPS[step];const V=STEPS.map((_,i)=>i).filter(vis);const pos=V.indexOf(step);
+ document.getElementById('bar').style.width=(pos/(V.length-1)*100)+'%';
+ let html='';
+ if(s.id==='welcome'){html=`<div class="welcome"><img src="${COIN}"><h1>${tr('Chào mừng bạn (Welcome)')}</h1><p>${tr('Bảng câu hỏi này giúp bác sĩ chuẩn bị cho buổi khám của bạn — khoảng 10 phút. (This intake helps the doctor prepare for your visit — about 10 minutes.)')}</p><p class="smallmuted">${tr('Có thể tạm dừng bất cứ lúc nào (You can pause anytime).')}</p></div>`;}
+ else{html=`<div class="step-t">${tr(s.t)}</div>`+(s.sub?`<div class="step-s">${tr(s.sub)}</div>`:'<div class="step-s"></div>')+s.fields.map(fieldHTML).join('');
+   if(s.id==='finish')html+=`<div class="check"><input type="checkbox" ${STATE.consent?'checked':''} onchange="STATE.consent=this.checked;save();document.getElementById('sub').disabled=!this.checked"><label>${tr('Tôi hiểu phần gửi bảo mật đang được hoàn thiện và tôi chưa nhập thông tin y tế nhạy cảm. (I understand secure submission is being finalized and I have not entered sensitive medical information.)')}</label></div>`;}
+ document.getElementById('card').innerHTML=html;
+ let nav='';
+ if(s.id==='welcome')nav=`<span></span><button class="btn p full" onclick="go(1)">${tr('Bắt đầu (Begin)')} →</button>`;
+ else if(s.id==='finish')nav=`<button class="btn" onclick="back()">← ${tr('Quay lại (Back)')}</button><button class="btn g" id="sub" ${STATE.consent?'':'disabled'} onclick="summary()">${tr('Hoàn tất (Submit)')} ✓</button>`;
+ else nav=`<button class="btn" onclick="back()">← ${tr('Quay lại (Back)')}</button><button class="btn p" onclick="fwd()">${tr('Tiếp tục (Continue)')} →</button>`;
+ document.getElementById('nav').innerHTML=nav;window.scrollTo(0,0);
+}
+function go(i){step=i;render()}
+function fwd(){let i=step+1;while(i<STEPS.length&&!vis(i))i++;i<STEPS.length?(step=i,render()):summary()}
+function back(){let i=step-1;while(i>=0&&!vis(i))i--;if(i>=0){step=i;render()}}
+
+function summary(){
+ document.getElementById('bar').style.width='100%';
+ const areas=focusAreas();const L=(k,v)=>`<div class="kv"><span class="k">${k}</span><span class="v">${v||'<span class=muted>—</span>'}</span></div>`;
+ const sc=`Energy ${STATE.energy} · Sleep ${STATE.sleep} · Mood ${STATE.mood} · Libido ${STATE.libido}`;
+ document.getElementById('nav').innerHTML='';
+ document.getElementById('card').innerHTML=`<div class="step-t">${tr('Cảm ơn bạn (Thank you)')}, ${STATE.name||''}!</div>
+   <div class="step-s">${tr('Đây là những gì bác sĩ sẽ thấy — không có chẩn đoán nào ở đây. (Here is what the doctor will see — nothing here is a diagnosis.)')}</div>
+   <div class="sumgrp"><h4>Subjective</h4>${L('Concern',STATE.concern)}${L('Goals',(STATE.goals||[]).map(x=>tr(x)).join(', '))}${L('Scores (0–10)',sc)}</div>
+   <div class="sumgrp"><h4>History & meds</h4>${L('Conditions',(STATE.diagnoses||[]).map(x=>tr(x)).join(', '))}${L('Medications',(STATE.meds||'').split('\n').filter(Boolean).join(' · '))}${L('Allergies',STATE.allergies)}</div>
+   <div class="sumgrp"><h4>Symptoms</h4>${(STATE.symptoms||[]).length?STATE.symptoms.map(x=>`<span class="pill">${tr(x)}</span>`).join(''):'<span class="muted">—</span>'}</div>
+   <div class="sumgrp"><h4>Labs uploaded</h4>${STATE.labFiles.length?STATE.labFiles.map(f=>`<span class="pill">📄 ${f}</span>`).join(''):'<span class="muted">None</span>'}</div>
+   ${areas.length?`<div class="flag"><b>${tr('Vùng cần bác sĩ đánh giá (Areas for the doctor to evaluate):')}</b> ${areas.join(' · ')}.<br><span class="muted">${tr('Từ bộ quy tắc thủ công — không phải chẩn đoán, không tra cứu internet. (From a manual rule set — not a diagnosis, no internet search.)')}</span></div>`:''}
+   <div class="howai"><b>${tr('Cách hoạt động (How this works).')}</b> ${tr('Câu trả lời của bạn điền sẵn phần khách quan của hồ sơ; bác sĩ quyết định mọi vấn đề lâm sàng. (Your answers pre-fill the objective parts of the chart; the doctor makes every clinical decision.)')}</div>
+   <div class="nav"><button class="btn" onclick="step=${STEPS.length-1};render()">← ${tr('Quay lại (Back)')}</button>
+     <button class="btn p" onclick="toSOAP()">${tr('Gửi vào bản nháp (Send to draft note)')} →</button></div>
+   <div style="text-align:center;margin-top:12px"><button class="btn" onclick="dl()">${tr('Tải bản tóm tắt (Download summary)')}</button></div>`;
+ window.scrollTo(0,0);
+}
+function sexEN(){return isM()?'Male':isF()?'Female':''}
+function toSOAP(){const p={name:STATE.name,sex:sexEN(),dob:STATE.dob,cc:STATE.concern||(STATE.goals||[]).map(x=>tr(x)).join('; '),
+   scores:{energy:STATE.energy,libido:STATE.libido,sleep:STATE.sleep,mood:STATE.mood},
+   meds:STATE.meds,allergies:STATE.allergies,labs:STATE.labFiles,flags:focusAreas()};
+ const b=btoa(unescape(encodeURIComponent(JSON.stringify(p))));
+ window.open('soap-note-generator-prototype.html?intake='+encodeURIComponent(b),'_blank');
+ toast('Opening the draft note…');}
+function dl(){const g=STATE,L=[];L.push('PATIENT INTAKE SUMMARY — Barry Burris, NMD (prototype)');L.push('Date: '+g.date);L.push('Name: '+g.name+'  DOB: '+g.dob+'  Sex: '+sexEN());L.push('Concern: '+g.concern);L.push('Goals: '+(g.goals||[]).map(x=>tr(x)).join(', '));L.push('Scores: Energy '+g.energy+', Sleep '+g.sleep+', Mood '+g.mood+', Libido '+g.libido);L.push('Conditions: '+(g.diagnoses||[]).map(x=>tr(x)).join(', '));L.push('Medications: '+g.meds.replace(/\n/g,'; '));L.push('Allergies: '+g.allergies);L.push('Symptoms: '+(g.symptoms||[]).map(x=>tr(x)).join(', '));L.push('Labs: '+g.labFiles.join(', '));L.push('Focus areas (manual, not a diagnosis): '+focusAreas().join(', '));
+ const bl=new Blob([L.join('\n')],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='intake-summary.txt';a.click();toast('Downloaded')}
+
+/* patient sign-in gate (device-local, open) */
+function pEsc(x){return String(x==null?'':x).replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+function pSess(){try{return JSON.parse(localStorage.getItem('bb_patient'))||null;}catch(e){return null;}}
+function pgateInit(){var c=document.getElementById('pgcoin');if(c)c.src=COIN;var st=pSess();if(st){pgateHide(st);}else{document.getElementById('pgate').classList.remove('hide');}}
+function pgateBegin(){var n=(document.getElementById('pgName').value||'').trim();if(!n){document.getElementById('pgName').focus();return;}var st={name:n,email:(document.getElementById('pgEmail').value||'').trim(),ts:Date.now()};try{localStorage.setItem('bb_patient',JSON.stringify(st));}catch(e){}pgateHide(st);}
+function pgateHide(st){document.getElementById('pgate').classList.add('hide');var w=document.getElementById('pwho');if(w){w.classList.remove('hide');w.innerHTML='Signed in as <b>'+pEsc(st.name)+'</b> \u00b7 <a href="#" onclick="pgateOut();return false;">Sign out</a>';}}
+function pgateOut(){try{localStorage.removeItem('bb_patient');}catch(e){}location.reload();}
+
+render();pgateInit();
+</script></body></html>

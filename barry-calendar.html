@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Calendar · Barry Burris, NMD</title>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<style>
+:root{--bg:#eef2f6;--paper:#fff;--ink:#1f2d3a;--mut:#6b7a89;--line:#e6ecf1;
+ --navy:#12263A;--navy2:#0e1d30;--teal:#0e7c84;--teal-soft:#e6f3f4;--gold:#c6a04a;--gold-soft:#f7efd9;--shadow:0 12px 34px rgba(18,38,58,.10);
+ --fc-border-color:#e6ecf1;--fc-today-bg-color:#f2f8f9;--fc-neutral-bg-color:#f6fafb;--fc-page-bg-color:#fff;
+ --fc-button-bg-color:#fff;--fc-button-border-color:#e6ecf1;--fc-button-text-color:#12263A;
+ --fc-button-hover-bg-color:#eef4f5;--fc-button-hover-border-color:#cfe0e2;
+ --fc-button-active-bg-color:#12263A;--fc-button-active-border-color:#12263A;--fc-list-event-hover-bg-color:#f6fafb}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+header{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#eaf1f7;padding:11px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.14)}
+.hb{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:11px}
+.coin{width:34px;height:34px;border-radius:50%;flex:none}
+.htitle{font-weight:800;font-size:18px}.hsub{font-size:11px;color:#9fb4c7}.sp{flex:1}
+.bb-chip{font-size:11.5px;color:#cfe0e2}.bb-chip b{color:#fff}.bb-chip a{color:#7fd0d6;text-decoration:none;margin-left:2px}
+.hbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eaf1f7;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.hbtn:hover{background:rgba(255,255,255,.22)}
+.wrap{max-width:1240px;margin:0 auto;padding:14px 16px 70px}
+.tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
+.tbtn:hover{border-color:var(--teal)}.tbtn.dark{background:var(--teal);color:#fff;border:none;font-weight:700}
+#cal{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
+.fc .fc-toolbar-title{color:var(--navy);font-size:21px;font-weight:800}
+.fc .fc-button{font-weight:600;text-transform:capitalize;box-shadow:none!important}
+.fc .fc-button-primary:not(:disabled).fc-button-active{color:#fff}
+.fc-event{border-radius:6px;padding:0 3px;font-size:12px;cursor:pointer}
+.fc-daygrid-event{white-space:nowrap}
+.legend{display:flex;flex-wrap:wrap;gap:10px;margin:12px 4px 0;font-size:12px;color:var(--mut)}
+.legend span{display:inline-flex;align-items:center;gap:6px}.lg{width:11px;height:11px;border-radius:3px}
+.note{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:11px;padding:9px 13px;font-size:12.5px;margin-bottom:12px}
+.scrim{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:60;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+.scrim.on{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:520px;border-radius:16px;padding:20px 22px;box-shadow:0 24px 60px rgba(0,0,0,.3);margin:auto}
+.sheet h3{margin:0 0 14px;font-size:18px;font-weight:800}
+.fld{margin-bottom:11px}.fld label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin-bottom:5px}
+.fld input,.fld select,.fld textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;font-size:14px;background:#fff}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--teal)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.rowbtns{display:flex;gap:9px;margin-top:14px;align-items:center}
+.save{flex:1;background:linear-gradient(180deg,var(--teal),#0b5a61);color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-size:15px}
+.del{background:none;border:1px solid #e6bdb9;color:#b3261e;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600}
+.cancel{background:none;border:none;color:var(--mut);cursor:pointer;padding:10px}
+.muted{color:var(--mut);font-size:12.5px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:11px 17px;border-radius:11px;font-weight:600;opacity:0;transition:.25s;z-index:120}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header><div class="hb">
+  <a class="hbtn" href="barry-burris-hub.html" title="Back to the hub">←</a>
+  <img class="coin" id="coin" alt="BB">
+  <div><div class="htitle">Calendar</div><div class="hsub">Barry Burris, NMD · appointments & schedule</div></div>
+  <div class="sp"></div>
+  <span id="chip"></span>
+  <a class="hbtn" href="barry-signin.html">Menu</a>
+</div></header>
+
+<div class="wrap">
+  <div class="note" id="roNote" style="display:none"><b>View only.</b> Your role can see the schedule but not change it.</div>
+  <div class="tools">
+    <select id="fType" onchange="FT=this.value;refetch()"><option value="">All types</option></select>
+    <select id="fRes" onchange="FR=this.value;refetch()"><option value="">All providers / rooms</option></select>
+    <div class="sp"></div>
+    <button class="tbtn dark hide" id="newBtn" onclick="openEv()">＋ Appointment</button>
+  </div>
+  <div id="cal"></div>
+  <div class="legend" id="legend"></div>
+</div>
+
+<!-- event editor -->
+<div class="scrim" id="scrim" onclick="if(event.target===this)closeEv()"><div class="sheet">
+  <h3 id="evTitle">New appointment</h3>
+  <div id="evView"></div>
+  <div id="evForm">
+    <div class="fld"><label>Title / patient</label><input id="eTitle" placeholder="e.g. Jordan Rivera — follow-up"></div>
+    <div class="row2">
+      <div class="fld"><label>Type</label><select id="eType"></select></div>
+      <div class="fld"><label>Provider / room</label><select id="eRes"></select></div>
+    </div>
+    <div class="row2">
+      <div class="fld"><label>Starts</label><input id="eStart" type="datetime-local"></div>
+      <div class="fld"><label>Ends</label><input id="eEnd" type="datetime-local"></div>
+    </div>
+    <div class="row2">
+      <div class="fld"><label>All-day?</label><select id="eAll"><option value="false">No — timed</option><option value="true">Yes — all day</option></select></div>
+      <div class="fld"><label>Mode</label><select id="eMode"><option value="">—</option><option>Telehealth</option><option>In-person</option></select></div>
+    </div>
+    <div class="fld"><label>Notes</label><textarea id="eNotes" style="min-height:52px" placeholder="Reason for visit, prep instructions… (no diagnoses/PHI)"></textarea></div>
+    <div class="rowbtns"><button class="save" id="saveBtn" onclick="saveEv()">Save</button><button class="del hide" id="delBtn" onclick="delEv()">Delete</button><button class="cancel" onclick="closeEv()">Cancel</button></div>
+  </div>
+</div></div>
+
+<div class="toast" id="toast"></div>
+
+<script src="bb-auth.js"></script>
+<script>
+BBAuth.requireGate();
+var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
+document.getElementById('coin').src=COIN;
+document.getElementById('chip').innerHTML=BBAuth.chipHTML();
+
+var LS='bb_cal_events';
+var CANEDIT=BBAuth.can('schedule.edit');
+var CAT={teal:'#0e7c84',sky:'#2b6cb0',purple:'#6b3fa0',gold:'#b8860b',green:'#2e7d4f',red:'#b3261e',slate:'#5b6b86'};
+var TYPELABEL={consult:'Discovery consult',followup:'Follow-up',telehealth:'Telehealth',labs:'Labs / blood draw',iv:'IV therapy',procedure:'Procedure',meeting:'Meeting',block:'Blocked / OOO',personal:'Personal'};
+var TYPECAT={consult:'teal',followup:'sky',telehealth:'purple',labs:'gold',iv:'green',procedure:'red',meeting:'slate',block:'slate',personal:'slate'};
+var RES=['Barry Burris, NMD','Telehealth','Exam room','Phlebotomy'];
+var CAL,FT='',FR='',edId=null;
+var el=function(id){return document.getElementById(id);};
+var two=function(n){return String(n).padStart(2,'0');};
+function toast(m){var t=el('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2000);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function readEv(){try{return JSON.parse(localStorage.getItem(LS))||[];}catch(e){return[];}}
+function writeEv(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(e){}}
+function catColor(e){return CAT[TYPECAT[e.type]]||CAT.slate;}
+function localISO(d,allDay){if(!d)return'';return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+(allDay?'':'T'+two(d.getHours())+':'+two(d.getMinutes()));}
+function passFilter(e){return (!FT||e.type===FT)&&(!FR||e.resource===FR);}
+function toFC(e){var c=catColor(e);return {id:e.id,title:e.title+(e.resource&&e.resource!=='Barry Burris, NMD'?' · '+e.resource:''),start:e.start,end:e.end||null,allDay:!!e.allDay,backgroundColor:c,borderColor:c,textColor:'#fff',editable:CANEDIT,extendedProps:{raw:e}};}
+
+function boot(){
+  if(!window.FullCalendar){setTimeout(boot,120);return;}
+  el('fType').innerHTML='<option value="">All types</option>'+Object.keys(TYPELABEL).map(function(t){return '<option value="'+t+'">'+TYPELABEL[t]+'</option>';}).join('');
+  el('fRes').innerHTML='<option value="">All providers / rooms</option>'+RES.map(function(r){return '<option value="'+esc(r)+'">'+esc(r)+'</option>';}).join('');
+  el('eType').innerHTML=Object.keys(TYPELABEL).map(function(t){return '<option value="'+t+'">'+TYPELABEL[t]+'</option>';}).join('');
+  el('eRes').innerHTML=RES.map(function(r){return '<option value="'+esc(r)+'">'+esc(r)+'</option>';}).join('');
+  el('legend').innerHTML=Object.keys(TYPELABEL).map(function(t){return '<span><i class="lg" style="background:'+(CAT[TYPECAT[t]]||CAT.slate)+'"></i>'+TYPELABEL[t]+'</span>';}).join('');
+  el('newBtn').classList.toggle('hide',!CANEDIT);
+  el('roNote').style.display=CANEDIT?'none':'block';
+  CAL=new FullCalendar.Calendar(el('cal'),{
+    initialView:'dayGridMonth',
+    headerToolbar:{left:'prev,next today',center:'title',right:'dayGridMonth,timeGridWeek,timeGridDay,listMonth'},
+    height:'auto',expandRows:true,nowIndicator:true,dayMaxEvents:4,firstDay:0,
+    editable:CANEDIT,selectable:CANEDIT,selectMirror:true,
+    eventClick:function(a){openEv(a.event.extendedProps.raw);},
+    select:function(s){if(CANEDIT)openEv(null,s.startStr,s.endStr,s.allDay);if(CAL)CAL.unselect();},
+    eventDrop:onMove,eventResize:onMove,
+    events:function(info,succ){succ(readEv().filter(passFilter).map(toFC));}
+  });
+  CAL.render();
+}
+function refetch(){if(CAL)CAL.refetchEvents();}
+function onMove(a){
+  if(!CANEDIT){a.revert();return;}
+  var arr=readEv();var i=arr.findIndex(function(x){return x.id===a.event.extendedProps.raw.id;});
+  if(i<0){a.revert();return;}
+  arr[i].start=localISO(a.event.start,a.event.allDay);arr[i].end=localISO(a.event.end,a.event.allDay);arr[i].allDay=a.event.allDay;
+  writeEv(arr);toast('Moved');
+}
+function fmtT(iso){var d=new Date(iso);var h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';h=h%12||12;return h+(m?':'+two(m):'')+' '+ap;}
+function openEv(raw,startStr,endStr,allDay){
+  var ro=!CANEDIT;edId=raw?raw.id:null;
+  el('evTitle').textContent=raw?(ro?'Appointment':'Edit appointment'):'New appointment';
+  el('evForm').classList.toggle('hide',ro);el('evView').classList.toggle('hide',!ro);
+  if(ro&&raw){var c=catColor(raw);var sd=new Date(raw.start);
+    el('evView').innerHTML='<div style="border-left:4px solid '+c+';padding-left:12px"><div style="font-size:18px;font-weight:800">'+esc(raw.title)+'</div>'+
+      '<div style="color:var(--mut);font-size:13px;margin-top:4px">'+(TYPELABEL[raw.type]||raw.type)+(raw.resource?' · '+esc(raw.resource):'')+(raw.mode?' · '+esc(raw.mode):'')+'</div>'+
+      '<div style="margin-top:8px;font-size:14px">'+(raw.allDay?'All day':(fmtT(raw.start)+(raw.end?' – '+fmtT(raw.end):'')))+' · '+sd.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+'</div>'+
+      (raw.notes?'<div style="margin-top:8px;font-size:13.5px;color:#42566a">'+esc(raw.notes)+'</div>':'')+'</div>'+
+      '<div class="rowbtns"><button class="cancel" onclick="closeEv()">Close</button></div>';
+    el('scrim').classList.add('on');return;
+  }
+  el('delBtn').classList.toggle('hide',!raw);
+  el('eTitle').value=raw?raw.title:'';el('eType').value=raw?raw.type:'followup';el('eRes').value=raw?(raw.resource||RES[0]):RES[0];
+  el('eStart').value=raw?(raw.start||''):(startStr?startStr.slice(0,16):'');el('eEnd').value=raw?(raw.end||''):(endStr?endStr.slice(0,16):'');
+  el('eAll').value=(raw&&raw.allDay)||allDay?'true':'false';el('eMode').value=raw?(raw.mode||''):'';el('eNotes').value=raw?(raw.notes||''):'';
+  el('scrim').classList.add('on');
+}
+function closeEv(){el('scrim').classList.remove('on');}
+function saveEv(){
+  var ev={title:el('eTitle').value.trim(),type:el('eType').value,resource:el('eRes').value,start:el('eStart').value,end:el('eEnd').value,allDay:el('eAll').value==='true',mode:el('eMode').value,notes:el('eNotes').value.trim()};
+  if(!ev.title){toast('Add a title.');return;}
+  if(!ev.start){toast('Pick a start.');return;}
+  var arr=readEv();
+  if(edId){var i=arr.findIndex(function(x){return x.id===edId;});if(i>=0)arr[i]=Object.assign(arr[i],ev);}
+  else{ev.id='e'+Date.now().toString(36)+Math.floor(Math.random()*900+100);arr.push(ev);}
+  writeEv(arr);closeEv();refetch();toast('Saved');
+}
+function delEv(){if(!edId||!confirm('Delete this appointment?'))return;writeEv(readEv().filter(function(x){return x.id!==edId;}));closeEv();refetch();toast('Deleted');}
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeEv();});
+boot();
+</script>
+</body>
+</html>

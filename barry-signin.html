@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Practice Hub · Barry Burris, NMD</title>
+<style>
+:root{--bg:#0b1522;--panel:#111f30;--panel2:#0e1a29;--line:#22354a;--ink:#eaf1f7;--mut:#9fb4c7;
+ --teal:#2bb3bd;--teal2:#0e7c84;--gold:#e6c67e;--gold2:#c6a04a;--navy:#12263A;--ok:#7fd6a3;--shadow:0 24px 60px rgba(0,0,0,.55)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);
+ background:radial-gradient(1200px 600px at 50% -10%,rgba(43,179,189,.18),transparent 60%),radial-gradient(900px 500px at 50% 120%,rgba(230,198,126,.10),transparent 60%),var(--bg);
+ min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:34px 18px 26px}
+a{color:inherit}
+.stage{width:100%;max-width:660px}
+.brand{display:flex;align-items:center;gap:12px;justify-content:center;margin-bottom:5px}
+.coin{width:44px;height:44px;border-radius:50%}
+.brand h1{font-weight:800;font-size:22px;margin:0;line-height:1}
+.kicker{text-align:center;color:var(--gold);font-size:11px;letter-spacing:3px;text-transform:uppercase;margin:0 0 20px;font-weight:700}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);overflow:hidden}
+.rule{height:6px;background:linear-gradient(90deg,var(--teal2),var(--teal),var(--gold))}
+.pad{padding:22px 22px 20px}
+.lede{color:var(--mut);font-size:14px;margin:0 0 16px;text-align:center}
+.roles{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+@media(max-width:520px){.roles{grid-template-columns:1fr}}
+.role{text-align:left;cursor:pointer;border:1px solid var(--line);background:#0d1826;border-radius:13px;padding:13px 14px;transition:.15s;color:var(--ink)}
+.role:hover{border-color:#335}
+.role.on{border-color:var(--gold);box-shadow:0 0 0 1px var(--gold) inset;background:#141d29}
+.role .rt{font-weight:700;font-size:15px;display:flex;align-items:center;gap:8px}
+.role .rd{color:var(--mut);font-size:11.5px;margin-top:3px;line-height:1.35}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:11px;letter-spacing:.4px;text-transform:uppercase;color:var(--mut);margin:0 0 6px;font-weight:700}
+.field input{width:100%;padding:12px 13px;border-radius:11px;border:1px solid var(--line);background:#0a121d;color:var(--ink);font-size:15px;font-family:inherit}
+.field input:focus{outline:none;border-color:var(--teal)}
+.enter{width:100%;margin-top:4px;padding:13px;border:none;border-radius:12px;cursor:pointer;font-weight:800;font-size:15.5px;color:#06222a;background:linear-gradient(180deg,var(--teal),var(--teal2))}
+.enter:hover{filter:brightness(1.06)}
+.err{color:#ff9d9d;font-size:12.5px;text-align:center;min-height:16px;margin:8px 0 0}
+.who{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.who .hi{font-size:17px;font-weight:800}.who .hi span{color:var(--gold)}
+.badge{font-size:10.5px;letter-spacing:1.2px;text-transform:uppercase;font-weight:700;padding:5px 10px;border-radius:999px;border:1px solid var(--line);color:var(--gold);background:#161f2b}
+.signout{background:none;border:none;color:var(--mut);font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+.maptitle{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mut);margin:2px 0 12px;font-weight:700}
+.grp{margin:0 0 14px}
+.gtitle{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);opacity:.85;margin:0 0 8px;font-weight:800}
+.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+@media(max-width:520px){.tgrid{grid-template-columns:1fr}}
+.tile{display:flex;align-items:center;gap:11px;text-decoration:none;border:1px solid var(--line);border-radius:13px;padding:11px 12px;background:#0d1826;transition:.15s;color:var(--ink);min-height:56px}
+.tile.wide{grid-column:1 / -1}
+.tile.open:hover{border-color:var(--teal);background:#12202e;transform:translateY(-1px)}
+.tile.prev{opacity:.55;cursor:default}
+.tic{width:34px;height:34px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:18px;background:linear-gradient(180deg,#12283a,#0d1c2b);border:1px solid var(--line)}
+.tx{display:flex;flex-direction:column;min-width:0}
+.tl{font-weight:700;font-size:14.5px;line-height:1.15}
+.tdd{color:var(--mut);font-size:11.5px;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.foot{margin-top:16px;text-align:center;color:var(--mut);font-size:12.5px;line-height:1.7}
+.foot a{color:var(--teal);text-decoration:none;font-weight:600}
+.cred{margin-top:10px;color:#7b8ea1;font-size:11px}
+.hide{display:none!important}
+.linkbtn{background:none;border:none;color:var(--gold);cursor:pointer;font:inherit;font-size:11px;text-transform:none;letter-spacing:0;font-weight:700}
+/* team modal */
+.scrim{position:fixed;inset:0;background:rgba(6,14,22,.66);z-index:60;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:26px 12px}
+.scrim.on{display:flex}
+.sheet{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);width:100%;max-width:560px;border-radius:16px;padding:20px 22px;box-shadow:var(--shadow);margin:auto}
+.sheet h3{margin:0 0 12px;font-size:18px;font-weight:800}
+.mrow{display:flex;align-items:center;gap:10px;padding:9px 4px;border-top:1px solid var(--line);font-size:13.5px}
+.mrow .mi{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;background:#12283a;border:1px solid var(--line);flex:none}
+.mrow .mn{flex:1;min-width:0}.mrow .mn b{display:block}.mrow .mn small{color:var(--mut)}
+.mrow .mx{background:none;border:none;color:#ff9d9d;cursor:pointer;font-size:15px}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.mini{border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font:inherit;font-size:14px;background:#0a121d;color:var(--ink);width:100%}
+.addbtn{background:linear-gradient(180deg,var(--gold),var(--gold2));color:#241a06;border:none;border-radius:10px;padding:10px 14px;font-weight:800;cursor:pointer}
+.closebtn{background:none;border:none;color:var(--mut);cursor:pointer;padding:10px}
+</style>
+</head>
+<body>
+<div class="stage">
+  <div class="brand"><img class="coin" id="coin" alt="BB"><h1>Barry Burris, NMD</h1></div>
+  <p class="kicker">Practice Hub · one door</p>
+
+  <div class="card">
+    <div class="rule"></div>
+    <div class="pad">
+
+      <!-- GATE -->
+      <div id="gate">
+        <p class="lede">One sign-in for the whole practice. Pick your role — you'll land in your workspace and stay signed in across every tool. <b style="color:var(--ink)">No password needed yet.</b></p>
+        <div class="roles" id="roles"></div>
+        <div class="field">
+          <label for="in-name">Your name</label>
+          <input id="in-name" type="text" placeholder="e.g. Barry Burris" autocomplete="name" onkeydown="if(event.key==='Enter')enter()">
+        </div>
+        <div class="field hide" id="f-pass">
+          <label for="in-pass">Owner passcode <span style="text-transform:none;letter-spacing:0;color:var(--mut)">(optional — leave blank while open)</span></label>
+          <input id="in-pass" type="password" placeholder="•••••" autocomplete="current-password" onkeydown="if(event.key==='Enter')enter()">
+        </div>
+        <button class="enter" id="btn-enter" onclick="enter()">Enter the hub →</button>
+        <p class="err" id="err"></p>
+        <p style="text-align:center;margin:12px 0 0"><button class="linkbtn" onclick="openTeam()">＋ Manage team / add an employee</button></p>
+      </div>
+
+      <!-- SIGNED IN -->
+      <div id="in" class="hide">
+        <div class="who">
+          <div class="hi">Welcome, <span id="who-name">there</span></div>
+          <span class="badge" id="who-badge">Owner</span>
+        </div>
+        <div style="text-align:right;margin:-6px 0 12px">
+          <button class="linkbtn" onclick="openTeam()" style="color:var(--mut);margin-right:12px">Manage team</button>
+          <button class="signout" onclick="signOut()">Sign out</button>
+        </div>
+        <p class="maptitle">Where you can go</p>
+        <div id="map"></div>
+      </div>
+
+      <!-- preview outline (signed out) -->
+      <div id="outline" style="margin-top:16px">
+        <p class="maptitle">What's inside the hub</p>
+        <div id="map-preview"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="foot">
+    Are you a patient? <a href="patient-portal.html">Open the patient portal →</a>
+    <div class="cred">Hub by Accelerated Experiences, LLC</div>
+  </div>
+</div>
+
+<!-- team manager -->
+<div class="scrim" id="teamScrim" onclick="if(event.target===this)closeTeam()"><div class="sheet">
+  <h3>Team &amp; privileges</h3>
+  <p style="color:var(--mut);font-size:13px;margin:0 0 6px">Add the people who work in the practice and choose what each can do. They pick their name at sign-in.</p>
+  <div id="teamList"></div>
+  <div class="row2" style="margin-top:12px">
+    <input class="mini" id="tmName" placeholder="Name (e.g. Linh Nguyen)">
+    <select class="mini" id="tmRole"></select>
+  </div>
+  <div class="row2" style="margin-top:8px">
+    <input class="mini" id="tmEmail" placeholder="Email (optional)">
+    <button class="addbtn" onclick="addMember()">＋ Add employee</button>
+  </div>
+  <div style="text-align:right;margin-top:12px"><button class="closebtn" onclick="closeTeam()">Done</button></div>
+</div></div>
+
+<script src="bb-auth.js"></script>
+<script>
+var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
+document.getElementById('coin').src=COIN;
+
+var GROUPS=[{key:'work',title:'Practice'},{key:'money',title:'Business'},{key:'admin',title:'Admin'},{key:'patient',title:'For patients'}];
+var DEST=[
+ {key:'home',group:'work',wide:true,icon:'🏠',label:'Home',short:'Today at a glance',cap:null,base:'barry-burris-hub.html'},
+ {key:'calendar',group:'work',icon:'📅',label:'Calendar',short:'Appointments & schedule',cap:'schedule.view',base:'barry-calendar.html'},
+ {key:'contacts',group:'work',icon:'👥',label:'Contacts (CRM)',short:'Patients, providers & vendors',cap:'contacts.view',base:'barry-contacts.html'},
+ {key:'charting',group:'work',icon:'📝',label:'Charting',short:'SOAP note & treatment plan',cap:'charting.view',base:'soap-note-generator-prototype.html'},
+ {key:'labs',group:'work',icon:'⚗️',label:'Labs',short:'Order & track panels',cap:'labs.view',base:'barry-burris-hub.html#labs'},
+ {key:'billing',group:'money',icon:'＄',label:'Billing',short:'Invoices & one ledger',cap:'billing.view',base:'barry-burris-hub.html#billing'},
+ {key:'services',group:'money',icon:'⭐',label:'Services',short:'Your programs & pricing',cap:null,base:'barry-burris-hub.html#services'},
+ {key:'team',group:'admin',icon:'⚙️',label:'Team & settings',short:'Employees & privileges',cap:'team.manage',base:'barry-burris-hub.html#team'},
+ {key:'portal',group:'patient',wide:true,icon:'▤',label:'Patient portal',short:'The intake survey you send patients',cap:null,base:'patient-portal.html'}
+];
+
+var SELECTED=null;
+function buildRoles(){
+  var wrap=document.getElementById('roles');var html='';
+  Object.keys(BBAuth.ROLES).forEach(function(k){var r=BBAuth.ROLES[k];
+    html+='<div class="role" data-role="'+k+'" onclick="pickRole(\''+k+'\')"><div class="rt"><span>'+r.icon+'</span> '+r.label+'</div><div class="rd">'+r.desc+'</div></div>';});
+  wrap.innerHTML=html;
+  var rsel=document.getElementById('tmRole');
+  rsel.innerHTML=Object.keys(BBAuth.ROLES).filter(function(k){return k!=='owner';}).map(function(k){return '<option value="'+k+'">'+BBAuth.ROLES[k].label+'</option>';}).join('');
+}
+function pickRole(r){
+  SELECTED=r;
+  document.querySelectorAll('.role').forEach(function(el){el.classList.toggle('on',el.dataset.role===r);});
+  document.getElementById('f-pass').classList.toggle('hide',r!=='owner');
+  if(r!=='owner'){var n=document.getElementById('in-name');if(!n.value)n.focus();}
+  else{var nn=document.getElementById('in-name');if(!nn.value)nn.value='Barry Burris';}
+  document.getElementById('err').textContent='';
+}
+function can(cap,role){if(!cap)return true;var c=BBAuth.caps(role);return c.indexOf('*')>=0||c.indexOf(cap)>=0;}
+
+function renderMap(mount,role){
+  var open=!!role;
+  var html=GROUPS.map(function(g){
+    var tiles=DEST.filter(function(d){return d.group===g.key;}).map(function(d){
+      var allowed=can(d.cap,role);
+      if(open&&!allowed)return '';
+      var clickable=open&&allowed;
+      var tag=clickable?'a':'div';var attrs=clickable?(' href="'+d.base+'"'):'';
+      var cls='tile '+(clickable?'open':'prev')+(d.wide?' wide':'');
+      return '<'+tag+' class="'+cls+'"'+attrs+'><span class="tic">'+d.icon+'</span><span class="tx"><span class="tl">'+d.label+'</span><span class="tdd">'+d.short+'</span></span></'+tag+'>';
+    }).join('');
+    if(!tiles)return '';
+    return '<div class="grp"><p class="gtitle">'+g.title+'</p><div class="tgrid">'+tiles+'</div></div>';
+  }).join('');
+  mount.innerHTML=html||'<p class="lede">No tools for this role yet.</p>';
+}
+
+function enter(){
+  var err=document.getElementById('err');err.textContent='';
+  if(!SELECTED){err.textContent='Pick your role.';return;}
+  var nm=(document.getElementById('in-name').value||'').trim();
+  if(!nm){nm=SELECTED==='owner'?'Barry Burris, NMD':'';}
+  if(!nm){err.textContent='Enter your name.';return;}
+  if(SELECTED==='owner'){var p=(document.getElementById('in-pass').value||'');if(!BBAuth.checkOwner(p)){err.textContent='That owner passcode didn’t match.';return;}}
+  BBAuth.setSession({name:nm,role:SELECTED});
+  location.href='barry-burris-hub.html';
+}
+function signOut(){BBAuth.signOut();showGate();}
+function showSignedIn(s){
+  document.getElementById('gate').classList.add('hide');
+  document.getElementById('outline').classList.add('hide');
+  document.getElementById('in').classList.remove('hide');
+  document.getElementById('who-name').textContent=s.name||'there';
+  document.getElementById('who-badge').textContent=BBAuth.roleLabel(s.role);
+  renderMap(document.getElementById('map'),s.role);
+}
+function showGate(){
+  document.getElementById('in').classList.add('hide');
+  document.getElementById('gate').classList.remove('hide');
+  document.getElementById('outline').classList.remove('hide');
+}
+
+/* team manager */
+function renderTeam(){
+  var t=BBAuth.getTeam();
+  var box=document.getElementById('teamList');
+  var owner='<div class="mrow"><span class="mi">👑</span><span class="mn"><b>Barry Burris, NMD</b><small>Owner / Provider · full access</small></span></div>';
+  box.innerHTML=owner+(t.length?t.map(function(m){return '<div class="mrow"><span class="mi">'+(BBAuth.ROLES[m.role]&&BBAuth.ROLES[m.role].icon||'👤')+'</span><span class="mn"><b>'+esc(m.name)+'</b><small>'+BBAuth.roleLabel(m.role)+(m.email?' · '+esc(m.email):'')+'</small></span><button class="mx" title="Remove" onclick="rmMember(\''+m.id+'\')">✕</button></div>';}).join(''):'<div class="mrow" style="color:var(--mut)"><span class="mi">＋</span><span class="mn">No employees yet — add your first below.</span></div>');
+}
+function esc(s){return String(s==null?'':s).replace(/[<>&"]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c];});}
+function openTeam(){renderTeam();document.getElementById('teamScrim').classList.add('on');}
+function closeTeam(){document.getElementById('teamScrim').classList.remove('on');}
+function addMember(){var n=(document.getElementById('tmName').value||'').trim();if(!n){document.getElementById('tmName').focus();return;}
+  BBAuth.addMember({name:n,role:document.getElementById('tmRole').value,email:(document.getElementById('tmEmail').value||'').trim()});
+  document.getElementById('tmName').value='';document.getElementById('tmEmail').value='';renderTeam();}
+function rmMember(id){if(!confirm('Remove this employee?'))return;BBAuth.removeMember(id);renderTeam();}
+
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeTeam();});
+(function init(){
+  buildRoles();
+  renderMap(document.getElementById('map-preview'),null); // outline shows nothing clickable
+  // preview outline: show all tiles as non-clickable
+  var mp=document.getElementById('map-preview');
+  mp.innerHTML=GROUPS.map(function(g){var tiles=DEST.filter(function(d){return d.group===g.key;}).map(function(d){return '<div class="tile prev'+(d.wide?' wide':'')+'"><span class="tic">'+d.icon+'</span><span class="tx"><span class="tl">'+d.label+'</span><span class="tdd">'+d.short+'</span></span></div>';}).join('');return '<div class="grp"><p class="gtitle">'+g.title+'</p><div class="tgrid">'+tiles+'</div></div>';}).join('');
+  var s=BBAuth.getSession();
+  if(s)showSignedIn(s);else showGate();
+})();
+</script>
+</body>
+</html>
