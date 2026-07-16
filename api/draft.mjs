@@ -20,10 +20,16 @@ const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
 const DEEPSEEK_MODEL = 'deepseek-chat';
 const ANTHROPIC_MODEL = 'claude-haiku-4-5-20251001';
 
-// The exact sentence the `consider` field MUST end with (honesty lock).
-const REQUIRED_TAIL = '— AI-drafted considerations from the questionnaire; not a diagnosis or treatment recommendation. The provider makes and signs every clinical decision.';
+// The sentence the `plan` field MUST end with (honesty note — decision support, provider signs).
+const REQUIRED_TAIL = '— AI-drafted suggestions for provider review; the licensed provider verifies and signs every diagnosis, medication, and dose.';
 
-const SYSTEM = `You are a clinical scribe drafting ONLY the narrative sections of a SOAP note from a patient's intake questionnaire, for a licensed provider to review, edit, and sign. Draft three fields: \`hpi\` (a concise History of Present Illness narrative synthesized from the intake — onset, duration, associated symptoms, the patient's self-scores, goals; end with 'provider to confirm on exam.'), \`ros\` (a brief system-by-system Review of Systems from reported symptoms), and \`consider\` (a NON-prescriptive 'considerations & suggested workup' note — areas/labs to evaluate, 'confirm before any treatment decision'). ABSOLUTE RULES: never output medications, doses, specific prescriptions, or a definitive diagnosis. \`consider\` MUST end with exactly: '${REQUIRED_TAIL}' Output STRICT JSON: {"hpi":"...","ros":"...","consider":"..."}.`;
+const SYSTEM = `You are a clinical decision-support assistant drafting the Assessment and Plan of a SOAP note from a patient's intake questionnaire, for a LICENSED naturopathic / functional-medicine PROVIDER to review, edit, and SIGN. Draft these fields:
+- \`hpi\`: a concise History of Present Illness narrative (onset, duration, associated symptoms, the patient's self-scores, goals; end 'provider to confirm on exam.').
+- \`ros\`: a brief system-by-system Review of Systems from the reported symptoms.
+- \`assessment\`: a DIFFERENTIAL DIAGNOSIS — the most likely and important possible diagnoses to CONSIDER, ordered by likelihood, each with a one-line rationale from the intake and what would confirm or exclude it.
+- \`plan\`: recommended next steps and TREATMENT OPTIONS for the provider to consider — suggested labs/workup and therapeutic options appropriate to functional/naturopathic medicine (lifestyle, nutrition, botanicals/supplements, and medications/peptides/hormones where clinically appropriate), with typical starting approaches the provider will confirm and adjust. Use clear line items.
+- \`summary\`: one plain-language sentence.
+These are AI-GENERATED SUGGESTIONS to support the provider's decision-making — not a final diagnosis or prescription. The licensed provider verifies, adjusts, and signs every diagnosis, medication and dose. \`plan\` MUST end with exactly: '${REQUIRED_TAIL}' Output STRICT JSON: {"hpi":"...","ros":"...","assessment":"...","plan":"...","summary":"..."}.`;
 
 // ---- HTTP plumbing (CORS + JSON, dependency-free) ----
 function cors(res) {
@@ -133,38 +139,11 @@ function parseModelJson(text) {
   return null;
 }
 
-// ---- Safety net: strip any sentence that names a medication/dose/prescription. ----
-// A "dose" = number+unit NOT followed by "/" (so lab concentrations like "108 mg/dL" survive).
-const DOSE_RE = /\b\d+(?:\.\d+)?\s?(?:mg|mcg|µg|ug|g|iu|units?|cc|ml|meq|mmol|puffs?|tabs?|caps?)\b(?!\s*\/)/i;
-const RX_WORD_RE = /\b(?:prescrib\w*|prescription|doses?|dosage|dosing|titrat\w*)\b/i;
-const DRUG_SUFFIX_RE = /\b[a-z]{3,}(?:statin|sartan|pril|olol|dipine|prazole|azole|mycin|cycline|parin|formin|mab|nib|caine|codone|morphone)\b/i;
-const offending = (s) => DOSE_RE.test(s) || RX_WORD_RE.test(s) || DRUG_SUFFIX_RE.test(s);
-
-function sanitizeField(text, flags, label) {
-  const s = String(text == null ? '' : text).trim();
-  if (!s) return '';
-  const parts = s.match(/[^.!?]+[.!?]*\s*/g) || [s];
-  const kept = [];
-  let removed = 0;
-  for (const p of parts) {
-    if (offending(p)) { removed++; continue; }
-    kept.push(p);
-  }
-  let out = kept.join('').trim();
-  if (removed) {
-    flags.push('Safety filter removed ' + removed + ' sentence(s) from ' + label +
-      ' that named a medication or dose — the provider completes meds/doses directly.');
-    out = (out ? out + ' ' : '') +
-      '[a medication/dose statement was removed by the safety filter — provider completes meds/doses].';
-  }
-  return out;
-}
-
-// Guarantee `consider` ends with exactly the required honesty tail.
-function enforceTail(consider) {
-  let c = String(consider == null ? '' : consider).trim();
+// Guarantee `plan` ends with exactly the honesty note (decision support; provider signs).
+function enforceTail(plan) {
+  let c = String(plan == null ? '' : plan).trim();
   if (!c.endsWith(REQUIRED_TAIL)) {
-    c = c.replace(/[—-]\s*AI-drafted considerations from the questionnaire[\s\S]*$/i, '').trim();
+    c = c.replace(/[—-]\s*AI-drafted (?:considerations|suggestions)[\s\S]*$/i, '').trim();
     c = (c ? c + ' ' : '') + REQUIRED_TAIL;
   }
   return c;
@@ -197,15 +176,17 @@ export default async function handler(req, res) {
     return json(res, 200, { ok: false, reason: 'error', message: 'Could not parse an AI draft from the model response.' });
   }
 
-  const flags = [];
-  const hpi = sanitizeField(parsed.hpi, flags, 'HPI');
-  const ros = sanitizeField(parsed.ros, flags, 'Review of Systems');
-  const consider = enforceTail(sanitizeField(parsed.consider, flags, 'Considerations'));
+  const hpi = clip(parsed.hpi, 5000).trim();
+  const ros = clip(parsed.ros, 5000).trim();
+  const assessment = clip(parsed.assessment, 7000).trim();
+  const plan = enforceTail(clip(parsed.plan, 7000).trim());
+  const summary = clip(parsed.summary, 1200).trim();
 
   // If nothing usable came back, let the client fall back rather than show an empty "draft".
-  if (!hpi && !ros && !consider.replace(REQUIRED_TAIL, '').trim()) {
+  if (!hpi && !ros && !assessment && !plan.replace(REQUIRED_TAIL, '').trim()) {
     return json(res, 200, { ok: false, reason: 'error', message: 'The model returned an empty draft.' });
   }
 
-  return json(res, 200, { ok: true, hpi, ros, consider, model: provider, flags });
+  // `consider` kept as an alias of the assessment for older client builds.
+  return json(res, 200, { ok: true, hpi, ros, assessment, plan, summary, consider: assessment, model: provider });
 }
