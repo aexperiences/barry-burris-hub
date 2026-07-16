@@ -11,7 +11,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#faf4e8;--card:#fffdf7;--ink:#40352a;--ink2:#63543f;--mut:#8a7c68;--line:#e8dcc4;
- --navy:#16171d;--navy2:#101116;--teal:#31696a;--teal2:#25595a;--teal-soft:#e4eeee;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;--goldsoft:#efdcae;
+ --navy:#16171d;--navy2:#101116;--teal:#5f8f6c;--teal2:#3f6b4e;--teal-soft:#e6f0e9;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;--goldsoft:#efdcae;
  --good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;
  --shadow:0 10px 30px rgba(60,40,20,.09)}
 *{box-sizing:border-box}html,body{margin:0}
@@ -42,7 +42,7 @@ header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:
 select,.tbtn{padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
 .tbtn:hover{border-color:var(--teal)}
 .tbtn.dark{background:var(--teal);color:#fff;border:none;font-weight:700}
-.tbtn.dark:hover{background:#25595a}
+.tbtn.dark:hover{background:#3f6b4e}
 .tbtn.gold{background:linear-gradient(180deg,#e6c67e,#c9992f);color:#3a2b08;border:none;font-weight:700}
 .tablewrap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:auto}
 table{width:100%;border-collapse:collapse;font-size:13.5px}
@@ -82,7 +82,7 @@ td{padding:9px 12px;vertical-align:middle;white-space:nowrap}
 .pv-note{font-size:12px;color:var(--mut);max-width:430px;margin:8px auto 0;line-height:1.5}
 .rowbtns{display:flex;gap:9px;margin-top:16px;align-items:center;flex-wrap:wrap}
 .rowbtns a.tbtn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
-.save{flex:1;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),#25595a)}
+.save{flex:1;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),#3f6b4e)}
 .del{background:none;border:1px solid #e6bdb9;color:#b3261e;border-radius:11px;padding:11px 15px;font-weight:600;cursor:pointer}
 .cancel{background:none;border:none;color:var(--mut);font-size:13.5px;cursor:pointer;padding:11px}
 .dmsg{font-size:13px;margin-top:10px;min-height:1px}.dmsg.err{color:#b23b3b}.dmsg.ok{color:var(--good)}
@@ -179,7 +179,7 @@ var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewB
 
 /* ---- fixed filing schema (so filing can't drift) ---- */
 var CATS=['Labs','Imaging','Consents','Referrals & letters','Insurance & ID','Visit notes','Treatment plans','Prescriptions/orders','Intake forms','Misc'];
-var CAT_HUE={'Labs':'#b07a2e','Imaging':'#6b3fa0','Consents':'#31696a','Referrals & letters':'#2b6cb0','Insurance & ID':'#4e7433','Visit notes':'#25595a','Treatment plans':'#b3261e','Prescriptions/orders':'#8a5a2b','Intake forms':'#5b6b86','Misc':'#8a7c68'};
+var CAT_HUE={'Labs':'#b07a2e','Imaging':'#6b3fa0','Consents':'#5f8f6c','Referrals & letters':'#2b6cb0','Insurance & ID':'#4e7433','Visit notes':'#3f6b4e','Treatment plans':'#b3261e','Prescriptions/orders':'#8a5a2b','Intake forms':'#5b6b86','Misc':'#8a7c68'};
 /* the 15 SAMPLE patients that seed the rest of the hub (bb-intakes.js) */
 var SAMPLE_PATIENTS=['Marcus Delgado','Nguyễn Thị Mai','Trần Thị Hương','David Whitfield','Emily Foster','Lê Minh Tuấn','Sarah Chen','Phạm Thị Ngọc','Robert Nguyen','Jake Morrison','Daniel Pham','Vũ Thị Lan','Margaret O’Brien','Đặng Văn Hải','Rachel Kim'];
 
@@ -227,8 +227,8 @@ function persist(){
 /* ---- synthetic insurance-card image (no real PHI) ---- */
 function insuranceImg(){
   var svg="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'>"+
-    "<rect width='320' height='200' rx='14' fill='#31696a'/>"+
-    "<rect width='320' height='54' fill='#25595a'/>"+
+    "<rect width='320' height='200' rx='14' fill='#5f8f6c'/>"+
+    "<rect width='320' height='54' fill='#3f6b4e'/>"+
     "<text x='18' y='34' font-family='Arial' font-size='18' font-weight='700' fill='#f4e8d0'>HEALTH PLAN</text>"+
     "<text x='232' y='34' font-family='Arial' font-size='12' fill='#bfe6e8'>PPO</text>"+
     "<text x='18' y='86' font-family='Arial' font-size='10' fill='#bfe6e8'>MEMBER</text>"+

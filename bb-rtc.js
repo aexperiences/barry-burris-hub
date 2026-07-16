@@ -51,7 +51,7 @@
       '#bbtele .ts{font-size:11px;color:#8ea1b2}',
       '#bbtele .note{margin-left:auto;font-size:11px;color:#9fb0bf;background:#12202a;border:1px solid #1d2630;border-radius:99px;padding:5px 12px;max-width:46%;text-align:center}',
       '#bbtele .chatbtn{margin-left:8px;border:1px solid #2a3742;background:#18222b;color:#dfe7ee;border-radius:9px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer;font-family:Inter,system-ui,sans-serif}',
-      '#bbtele .chatbtn.on{background:#31696a;border-color:#31696a;color:#fff}',
+      '#bbtele .chatbtn.on{background:#5f8f6c;border-color:#5f8f6c;color:#fff}',
       '#bbtele .chatbtn.pulse{animation:bbtpulse 1.1s ease-in-out infinite}',
       '@keyframes bbtpulse{0%,100%{box-shadow:0 0 0 0 rgba(230,198,126,.5)}50%{box-shadow:0 0 0 6px rgba(230,198,126,0)}}',
       '#bbtele .leave{margin-left:10px;border:1px solid #7a2a24;background:#b3261e;color:#fff;border-radius:9px;padding:8px 14px;font:inherit;font-weight:700;cursor:pointer;font-family:Inter,system-ui,sans-serif}',
@@ -79,11 +79,11 @@
       '#bbtele .chat .ch-b{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}',
       '#bbtele .chat .cmsg{max-width:88%;padding:8px 11px;border-radius:12px;font-size:13.5px;line-height:1.4}',
       '#bbtele .chat .cmsg.them{align-self:flex-start;background:#18232c;border:1px solid #263440}',
-      '#bbtele .chat .cmsg.me{align-self:flex-end;background:#31696a;color:#fff}',
+      '#bbtele .chat .cmsg.me{align-self:flex-end;background:#5f8f6c;color:#fff}',
       '#bbtele .chat .cog{border:none;background:none;color:inherit;opacity:.62;font-size:11px;cursor:pointer;padding:0 2px}',
       '#bbtele .chat .ch-c{display:flex;gap:7px;padding:10px;border-top:1px solid #1d2630}',
       '#bbtele .chat .ch-c input{flex:1;background:#131c24;border:1px solid #26323d;border-radius:9px;color:#fff;padding:9px 11px;font:inherit;font-size:13px}',
-      '#bbtele .chat .ch-c button{border:none;background:#31696a;color:#fff;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer}',
+      '#bbtele .chat .ch-c button{border:none;background:#5f8f6c;color:#fff;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer}',
       '@media(max-width:640px){#bbtele .chat{position:absolute;right:0;top:0;bottom:0;width:86%;z-index:5}#bbtele .note{display:none}}'
     ].join('\n');
     document.head.appendChild(s);

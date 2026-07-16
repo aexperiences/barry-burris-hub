@@ -12,11 +12,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#faf4e8;--paper:#fffdf7;--ink:#40352a;--mut:#8a7c68;--line:#e8dcc4;
- --navy:#16171d;--navy2:#101116;--teal:#31696a;--teal-soft:#e4eeee;--gold:#c9992f;--gold-soft:#f8efd6;--shadow:0 12px 34px rgba(60,40,20,.10);
+ --navy:#16171d;--navy2:#101116;--teal:#5f8f6c;--teal-soft:#e6f0e9;--gold:#c9992f;--gold-soft:#f8efd6;--shadow:0 12px 34px rgba(60,40,20,.10);
  --fc-border-color:#e8dcc4;--fc-today-bg-color:#fbf6ea;--fc-neutral-bg-color:#f4ecdb;--fc-page-bg-color:#fffdf7;
  --fc-button-bg-color:#fffdf7;--fc-button-border-color:#e8dcc4;--fc-button-text-color:#40352a;
  --fc-button-hover-bg-color:#f4ecdb;--fc-button-hover-border-color:#e6c67e;
- --fc-button-active-bg-color:#31696a;--fc-button-active-border-color:#31696a;--fc-list-event-hover-bg-color:#f4ecdb}
+ --fc-button-active-bg-color:#5f8f6c;--fc-button-active-border-color:#5f8f6c;--fc-list-event-hover-bg-color:#f4ecdb}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
 h1,h2,h3{font-family:Fraunces,Georgia,serif}
@@ -32,7 +32,7 @@ header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:
 select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
 .tbtn:hover{border-color:var(--teal)}.tbtn.dark{background:var(--teal);color:#fff;border:none;font-weight:700}
 #cal{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-.fc .fc-toolbar-title{font-family:Fraunces,Georgia,serif;color:#25595a;font-size:22px;font-weight:700}
+.fc .fc-toolbar-title{font-family:Fraunces,Georgia,serif;color:#3f6b4e;font-size:22px;font-weight:700}
 .fc .fc-button{font-weight:600;text-transform:capitalize;box-shadow:none!important}
 .fc .fc-button-primary:not(:disabled).fc-button-active{color:#fff}
 .fc-event{border-radius:6px;padding:0 3px;font-size:12px;cursor:pointer}
@@ -49,7 +49,7 @@ select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;bac
 .fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--teal)}
 .row2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .rowbtns{display:flex;gap:9px;margin-top:14px;align-items:center}
-.save{flex:1;background:linear-gradient(180deg,var(--teal),#25595a);color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-size:15px}
+.save{flex:1;background:linear-gradient(180deg,var(--teal),#3f6b4e);color:#fff;border:none;border-radius:11px;padding:12px;font-weight:800;cursor:pointer;font-size:15px}
 .del{background:none;border:1px solid #e6bdb9;color:#b3261e;border-radius:10px;padding:10px 14px;cursor:pointer;font-weight:600}
 .cancel{background:none;border:none;color:var(--mut);cursor:pointer;padding:10px}
 .muted{color:var(--mut);font-size:12.5px}
@@ -114,7 +114,7 @@ document.getElementById('chip').innerHTML=BBAuth.chipHTML();
 
 var LS='bb_cal_events';
 var CANEDIT=BBAuth.can('schedule.edit');
-var CAT={teal:'#31696a',sky:'#2b6cb0',purple:'#6b3fa0',gold:'#b8860b',green:'#2e7d4f',red:'#b3261e',slate:'#5b6b86'};
+var CAT={teal:'#5f8f6c',sky:'#2b6cb0',purple:'#6b3fa0',gold:'#b8860b',green:'#2e7d4f',red:'#b3261e',slate:'#5b6b86'};
 var TYPELABEL={consult:'Discovery consult',followup:'Follow-up',telehealth:'Telehealth',labs:'Labs / blood draw',iv:'IV therapy',procedure:'Procedure',meeting:'Meeting',block:'Blocked / OOO',personal:'Personal'};
 var TYPECAT={consult:'teal',followup:'sky',telehealth:'purple',labs:'gold',iv:'green',procedure:'red',meeting:'slate',block:'slate',personal:'slate'};
 var RES=['Barry Burris, NMD','Telehealth','Exam room','Phlebotomy'];

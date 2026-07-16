@@ -13,7 +13,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 <style>
 :root{--bg:#faf4e8;--paper:#fffdf7;--card:#fffdf7;--ink:#40352a;--mut:#6f6047;--line:#e8dcc4;
- --navy:#16171d;--navy2:#101116;--teal:#31696a;--teal2:#25595a;--teal-soft:#e4eeee;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
+ --navy:#16171d;--navy2:#101116;--teal:#5f8f6c;--teal2:#3f6b4e;--teal-soft:#e6f0e9;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
  --good:#3f6b2b;--good-soft:#e7f0dc;--warn:#7c5417;--warn-soft:#f7ead0;--bad:#a51f16;--bad-soft:#f6e2df;--info:#0e5f84;--info-soft:#e0eef5;
  --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16);--ring:0 0 0 3px rgba(49,105,106,.35)}
 *{box-sizing:border-box}html,body{margin:0}
@@ -131,8 +131,8 @@ button{font-family:inherit}
 .card h3{font-size:17px;margin-bottom:3px}.card .csub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:760px){.grid3{grid-template-columns:1fr}}
-.hero{background:linear-gradient(120deg,#31696a,#25595a);color:#eafafb;border:none;position:relative;overflow:hidden}
-.hero h2{color:#fff;font-size:23px}.hero p{color:#e9f7f8;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
+.hero{background:linear-gradient(125deg,#c8e0d1 0%,#a9d0b8 55%,#93c3a4 100%);color:#284a38;border:none;position:relative;overflow:hidden}
+.hero h2{color:#26412f;font-size:23px}.hero p{color:#3f6b4e;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
 .qa{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .qa button{border:1px solid rgba(255,255,255,.28);border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;background:rgba(0,0,0,.24);color:#fff;display:flex;gap:8px;align-items:center}
 .qa button:hover{background:rgba(0,0,0,.36)}
@@ -829,7 +829,7 @@ function drawLabChart(){
   if(typeof Chart==='undefined'){var c=document.getElementById('labChart');if(c)c.parentNode.innerHTML='<div class="small" style="padding:20px;text-align:center">'+esc(lang==='vi'?'Biểu đồ xu hướng':'Trend chart')+'</div>';return;}
   var ctx=document.getElementById('labChart');if(!ctx)return;
   try{
-   new Chart(ctx,{type:'line',data:{labels:['Dec 2025','Mar 2026','Jun 2026'],datasets:[{label:'Vitamin D (ng/mL)',data:[18,21,24],borderColor:'#31696a',backgroundColor:'rgba(49,105,106,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#31696a'},{label:'Target ≥ 30',data:[30,30,30],borderColor:'#c9992f',borderDash:[6,5],pointRadius:0,fill:false}]},
+   new Chart(ctx,{type:'line',data:{labels:['Dec 2025','Mar 2026','Jun 2026'],datasets:[{label:'Vitamin D (ng/mL)',data:[18,21,24],borderColor:'#5f8f6c',backgroundColor:'rgba(49,105,106,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#5f8f6c'},{label:'Target ≥ 30',data:[30,30,30],borderColor:'#c9992f',borderDash:[6,5],pointRadius:0,fill:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:12}}},scales:{y:{beginAtZero:true,suggestedMax:60,ticks:{font:{family:'Inter'}}},x:{ticks:{font:{family:'Inter'}}}}}});
   }catch(e){}
 }

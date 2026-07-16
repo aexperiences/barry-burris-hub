@@ -23,7 +23,7 @@
   // staff pages = classroom calm RED, patient-facing pages = SAGE green.
   var PATIENT = /patient/i.test(location.pathname);
   var T = PATIENT
-    ? { bg1: '#4a6b52', bg2: '#3d5a45', line: '#3a5340', grpline: '#3f5c48', sub: '#c6d3bd', link: '#d9e2d0', foot: '#b3c3aa', burg: '#31696a' }
+    ? { bg1: '#4a6b52', bg2: '#3d5a45', line: '#3a5340', grpline: '#3f5c48', sub: '#c6d3bd', link: '#d9e2d0', foot: '#b3c3aa', burg: '#5f8f6c' }
     : { bg1: '#95463f', bg2: '#763530', line: '#6b2f2a', grpline: '#7a3a34', sub: '#e0b5ad', link: '#ecd7d1', foot: '#d9aaa2', burg: '#95463f' };
 
   // The BB coin — identical data-URI used across the other pages.
