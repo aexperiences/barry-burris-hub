@@ -29,6 +29,8 @@
   function hash(s) { var h = 5381; for (var i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) >>> 0; return h.toString(36); }
   function clean(n) { return String(n || '').replace(/\s*\(SAMPLE\)\s*/i, '').trim(); }
   function roomFor(name) { var c = clean(name); var n = slug(c) || 'patient'; return PREFIX + '-' + n + '-' + hash(PREFIX + ':' + c); }
+  // Barry's always-on "office" room — a fixed shared room for a direct call right now.
+  function officeRoom() { return PREFIX + '-office-' + hash(PREFIX + ':office:barry-burris-nmd'); }
 
   var COIN = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 
@@ -152,5 +154,5 @@
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) close(); });
 
-  window.BBTele = { open: open, close: close, roomFor: roomFor, isOpen: isOpen, HOST: HOST };
+  window.BBTele = { open: open, close: close, roomFor: roomFor, officeRoom: officeRoom, OFFICE: officeRoom(), isOpen: isOpen, HOST: HOST };
 })();

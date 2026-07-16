@@ -53,6 +53,19 @@ select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 
 <div class="wrap">
   <div class="note" style="margin-bottom:16px">🎥 <b>Live test video.</b> Real audio/video, right now — no sign-up. A secure clinical video service gets swapped in before real patient visits (one setting).</div>
 
+  <div class="card" style="border-color:#cfe6e8;background:linear-gradient(180deg,#f2fbfb,#fffdf7)">
+    <h3>Your room — talk right now</h3>
+    <div class="csub">Open your always-on room as <b>Dr. Barry Burris, NMD</b>. The patient taps <b>“Call Dr. Burris now”</b> in their portal — or you send the invite link — and you meet here.</div>
+    <div class="row" style="align-items:center">
+      <div style="flex:none"><button class="btn solid" onclick="openMyRoom()">📹 Open my room</button></div>
+      <div style="flex:none"><button class="btn gold" onclick="copyOfficeInvite()">Copy invite link</button></div>
+    </div>
+    <div class="share" id="shareOffice">
+      <div class="lbl">Invite link — send this to talk right now</div>
+      <div class="rm" id="officeLink">—</div>
+    </div>
+  </div>
+
   <div class="card">
     <h3>Start a visit with a patient</h3>
     <div class="csub">Pick the patient and start. They join the same room from their portal — or use the test tab to see it live right now.</div>
@@ -125,6 +138,8 @@ function copyPatientLink(){
   var url=location.origin+location.pathname+'?room='+encodeURIComponent(room1)+'&role=patient';
   copy(url);
 }
+function openMyRoom(){BBTele.open({room:BBTele.officeRoom(),displayName:'Dr. Barry Burris, NMD',subject:'Dr. Barry Burris, NMD — office'});}
+function copyOfficeInvite(){var url=location.origin+location.pathname+'?room='+encodeURIComponent(BBTele.officeRoom())+'&name=Guest';document.getElementById('officeLink').textContent=url;document.getElementById('shareOffice').classList.add('on');copy(url);}
 function quickTest(){
   room2='BBNMD-test-'+Math.random().toString(36).slice(2,8);
   document.getElementById('room2').textContent=room2;

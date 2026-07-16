@@ -425,7 +425,7 @@ T.en={
  gCare:'My Care',gRecords:'My Records',gAcct:'Account',
  menuProfile:'Profile & settings',menuSecurity:'Security',menuSignout:'Sign out',menuSignoutAll:'Sign out everywhere',
  hello:'Hello',welcome:'Welcome to your care portal. Everything about your care with Dr. Burris lives here.',
- qaJoin:'Join telehealth',qaMsg:'Message care team',qaPlan:'View care plan',qaBook:'Book a visit',
+ qaJoin:'Join telehealth',qaCall:'Call Dr. Burris now',qaMsg:'Message care team',qaPlan:'View care plan',qaBook:'Book a visit',
  actionNeeded:'Action needed',allDone:'You’re all set — nothing needs your attention right now.',
  taskConsent:'Sign your telehealth consent',taskConsentD:'Required before your first video visit.',
  taskPrevisit:'Complete your pre-visit checklist',taskPrevisitD:'A few quick items before you meet Dr. Burris.',
@@ -509,7 +509,7 @@ T.vi={
  gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
  menuProfile:'Hồ sơ & cài đặt',menuSecurity:'Bảo mật',menuSignout:'Đăng xuất',menuSignoutAll:'Đăng xuất mọi thiết bị',
  hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Mọi thứ về việc chăm sóc với bác sĩ Burris đều ở đây.',
- qaJoin:'Vào khám từ xa',qaMsg:'Nhắn đội chăm sóc',qaPlan:'Xem kế hoạch',qaBook:'Đặt lịch khám',
+ qaJoin:'Vào khám từ xa',qaCall:'Gọi BS. Burris ngay',qaMsg:'Nhắn đội chăm sóc',qaPlan:'Xem kế hoạch',qaBook:'Đặt lịch khám',
  actionNeeded:'Cần xử lý',allDone:'Mọi thứ đã ổn — hiện không có việc gì cần bạn.',
  taskConsent:'Ký đồng thuận khám từ xa',taskConsentD:'Bắt buộc trước buổi khám video đầu tiên.',
  taskPrevisit:'Hoàn thành danh sách trước khám',taskPrevisitD:'Vài mục nhanh trước khi gặp bác sĩ Burris.',
@@ -665,7 +665,7 @@ function renderHome(){
   var h=demoBanner();
   h+='<div class="card hero"><h2>'+esc(t('hello'))+', '+esc(f)+' 👋</h2><p>'+esc(t('welcome'))+'</p>'+
     '<div class="qa">'+
-    '<button class="gold" onclick="openTele()">📹 '+esc(t('qaJoin'))+'</button>'+
+    '<button class="gold" onclick="talkNow()">📞 '+esc(t('qaCall'))+'</button>'+
     '<button onclick="go(\'messages\')">✉️ '+esc(t('qaMsg'))+'</button>'+
     '<button onclick="go(\'plan\')">📋 '+esc(t('qaPlan'))+'</button>'+
     '<button onclick="go(\'appts\')">📅 '+esc(t('qaBook'))+'</button>'+
@@ -1005,6 +1005,17 @@ function addToCalendar(id){
 
 /* ================= telehealth ================= */
 var teleStream=null,micOn=true,camOn=false,teleTimer=null,connState='connecting',_teleReturn=null;
+function talkNow(){
+  var p=current();if(!p)return;
+  var pr=profileData()||{};var name=pr.name||clean(p.name);
+  // Direct line to Dr. Burris's always-on office room (both sides land together).
+  BBTele.open({
+    room:BBTele.officeRoom(),
+    displayName:name,
+    subject:(lang==='vi'?'Trò chuyện với BS. Barry Burris, NMD':'Talking with Dr. Barry Burris, NMD'),
+    note:(lang==='vi'?'Video thử nghiệm trực tiếp — dịch vụ video lâm sàng bảo mật sẽ được thêm trước khi khám bệnh nhân thật.':'Live test video — a secure clinical video service is added before real patient visits.')
+  });
+}
 function openTele(){
   var p=current();if(!p)return;
   var pr=profileData()||{};var name=pr.name||clean(p.name);
