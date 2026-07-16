@@ -17,7 +17,7 @@
 --teal:#31696a;--teal2:#25595a;--teal3:#1f4a4b;--teal-soft:#e4eeee;
 --good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;--bad-soft:#f6e6e2;
 --navy:#2c5f5a;--bg:#faf4e8;--r:16px;--shadow:0 12px 34px rgba(60,40,20,.09);
---side:#4a6b52;--side2:#3d5a45;--sideline:#3a5340;--sink:#f2f0e2;--smut:#c6d3bd}
+--side:#95463f;--side2:#763530;--sideline:#6b2f2a;--sink:#f4ece8;--smut:#e0b5ad}
 *{box-sizing:border-box}
 body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.55 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
 h1,h2,h3{font-family:Fraunces,Georgia,serif}
@@ -29,13 +29,13 @@ a{color:inherit;text-decoration:none}
 .side .brand .bn{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:18px;color:var(--gold2);line-height:1.06;letter-spacing:-.01em}
 .side .brand .bt{font-family:Oswald,sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--smut);margin-top:3px}
 .nav{flex:1;overflow-y:auto;padding:6px 12px}
-.nav .grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--smut);margin:15px 8px 5px;padding-top:12px;border-top:1px solid #3f5c48}
+.nav .grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--smut);margin:15px 8px 5px;padding-top:12px;border-top:1px solid #7a3a34}
 .nav .grp:first-child{margin-top:4px;padding-top:0;border-top:none}
-.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#d9e2d0;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}
+.nav a{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#ecd7d1;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}
 .nav a:hover{background:rgba(255,255,255,.06);color:#fff}
 .nav a.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:var(--sink);box-shadow:inset 3px 0 0 var(--gold2)}
 .nav a svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.side .foot{padding:13px 16px;border-top:1px solid var(--sideline);font-size:10.5px;color:#b3c3aa;line-height:1.5}
+.side .foot{padding:13px 16px;border-top:1px solid var(--sideline);font-size:10.5px;color:#d9aaa2;line-height:1.5}
 .side .foot b{color:var(--gold2);font-weight:600}
 .side .foot .laneA{display:inline-block;background:rgba(230,198,126,.12);color:var(--gold2);border:1px solid rgba(230,198,126,.28);padding:1px 8px;border-radius:20px;font-family:Oswald,sans-serif;font-weight:600;font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
 .app.collapsed .side{width:64px}
@@ -541,5 +541,6 @@ function saveNotes(v){try{localStorage.setItem('bb_notes',v)}catch(e){}}
 document.getElementById('greet').innerHTML=`${greetWord}, Barry Burris <small>${dstr}</small>`;
 BBAuth.requireGate();document.getElementById('rolechip').innerHTML=BBAuth.chipHTML();buildNav();var _h=(location.hash||'').replace('#','').trim();go(VIEWS[_h]?_h:'home');
 </script>
+<script src="bb-app.js"></script>
 </body>
 </html>

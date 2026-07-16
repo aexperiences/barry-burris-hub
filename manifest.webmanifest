@@ -1,0 +1,17 @@
+{
+  "name": "Barry Burris, NMD — Practice",
+  "short_name": "BB Practice",
+  "description": "Barry Burris, NMD — functional medicine & longevity. Practice operating system.",
+  "id": "/barry-burris-hub.html",
+  "start_url": "/barry-burris-hub.html",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#faf4e8",
+  "theme_color": "#95463f",
+  "categories": ["medical", "health", "productivity"],
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
+  ]
+}

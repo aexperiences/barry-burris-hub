@@ -19,6 +19,13 @@
   if (window.__bbNavLoaded) return;
   window.__bbNavLoaded = true;
 
+  // Two calm palettes so you always know which side you're on:
+  // staff pages = classroom calm RED, patient-facing pages = SAGE green.
+  var PATIENT = /patient/i.test(location.pathname);
+  var T = PATIENT
+    ? { bg1: '#4a6b52', bg2: '#3d5a45', line: '#3a5340', grpline: '#3f5c48', sub: '#c6d3bd', link: '#d9e2d0', foot: '#b3c3aa', burg: '#31696a' }
+    : { bg1: '#95463f', bg2: '#763530', line: '#6b2f2a', grpline: '#7a3a34', sub: '#e0b5ad', link: '#ecd7d1', foot: '#d9aaa2', burg: '#95463f' };
+
   // The BB coin — identical data-URI used across the other pages.
   var COIN = "data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 
@@ -65,21 +72,21 @@
 
   var CSS = [
     "#bb-side,#bb-side *{box-sizing:border-box}",
-    "#bb-side{position:fixed;top:0;left:0;width:252px;height:100vh;z-index:15;display:flex;flex-direction:column;background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f2f0e2;border-right:1px solid #3a5340;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;transform:translateX(0);transition:transform .22s ease}",
+    "#bb-side{position:fixed;top:0;left:0;width:252px;height:100vh;z-index:15;display:flex;flex-direction:column;background:linear-gradient(180deg,"+T.bg1+","+T.bg2+");color:#f4ece8;border-right:1px solid "+T.line+";font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;transform:translateX(0);transition:transform .22s ease}",
     "#bb-side .bbn-brand{display:flex;align-items:center;gap:11px;padding:20px 16px 14px}",
     "#bb-side .bbn-brand img{width:42px;height:42px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}",
     "#bb-side .bbn-bn{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:18px;color:#e6c67e;line-height:1.06;letter-spacing:-.01em}",
-    "#bb-side .bbn-bt{font-family:Oswald,sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#c6d3bd;margin-top:3px}",
+    "#bb-side .bbn-bt{font-family:Oswald,sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:"+T.sub+";margin-top:3px}",
     "#bb-side .bbn-nav{flex:1;overflow-y:auto;padding:6px 12px}",
-    "#bb-side .bbn-grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#c6d3bd;margin:15px 8px 5px;padding-top:12px;border-top:1px solid #3f5c48}",
+    "#bb-side .bbn-grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:"+T.sub+";margin:15px 8px 5px;padding-top:12px;border-top:1px solid "+T.grpline+"}",
     "#bb-side .bbn-grp:first-child{margin-top:4px;padding-top:0;border-top:none}",
-    "#bb-side a.bbn-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#d9e2d0;text-decoration:none;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}",
+    "#bb-side a.bbn-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:"+T.link+";text-decoration:none;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}",
     "#bb-side a.bbn-link:hover{background:rgba(255,255,255,.06);color:#fff}",
     "#bb-side a.bbn-link.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f2f0e2;box-shadow:inset 3px 0 0 #e6c67e}",
     "#bb-side a.bbn-link svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}",
-    "#bb-side .bbn-foot{padding:13px 16px;border-top:1px solid #3a5340;font-size:10.5px;color:#b3c3aa;line-height:1.5}",
+    "#bb-side .bbn-foot{padding:13px 16px;border-top:1px solid "+T.line+";font-size:10.5px;color:"+T.foot+";line-height:1.5}",
     "#bb-side .bbn-foot b{color:#e6c67e;font-weight:600}",
-    "#bb-burger{display:none;position:fixed;top:12px;left:12px;z-index:1150;width:42px;height:42px;align-items:center;justify-content:center;padding:0;border:1px solid #e8dcc4;background:#fffdf7;color:#31696a;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(60,40,20,.16)}",
+    "#bb-burger{display:none;position:fixed;top:12px;left:12px;z-index:1150;width:42px;height:42px;align-items:center;justify-content:center;padding:0;border:1px solid #e8dcc4;background:#fffdf7;color:"+T.burg+";border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(60,40,20,.16)}",
     "#bb-burger:hover{background:#f4ecdb;border-color:#e6c67e}",
     "#bb-scrim{display:none;position:fixed;inset:0;background:rgba(15,25,40,.5);z-index:1190}",
     "#bb-scrim.on{display:block}",
@@ -176,6 +183,11 @@
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') close();
     });
+
+    // Load the shared app shell (PWA + bottom tab bar) on every page that uses this nav.
+    if (!document.querySelector('script[src="bb-app.js"]')) {
+      var ap = document.createElement('script'); ap.src = 'bb-app.js'; document.body.appendChild(ap);
+    }
   }
 
   if (document.readyState === 'loading') {
