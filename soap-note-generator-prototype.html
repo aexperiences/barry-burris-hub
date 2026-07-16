@@ -10,9 +10,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --ink:#0f2233; --muted:#5b6b7a; --line:#dbe4ec; --bg:#f4f7fa; --card:#ffffff;
-    --teal:#0d7d84; --teal-soft:#e6f3f3;
-    --auto:#0e7c66; --auto-soft:#e5f4ef;
+    --ink:#40352a; --muted:#8a7c68; --line:#e8dcc4; --bg:#faf4e8; --card:#fffdf7;
+    --teal:#5f8f6c; --teal-soft:#e6f0e9;
+    --auto:#3f6b4e; --auto-soft:#e9f1e9;
     --fill:#9a6300; --fill-soft:#fff5e0; --fill-line:#e6b35a;
     --high:#b3261e; --high-soft:#fdecea;
     --low:#1c4e9c; --low-soft:#e9f0fb;
@@ -21,21 +21,21 @@
   }
   *{box-sizing:border-box}
   body{margin:0;background:var(--bg);color:var(--ink);
-    font:15px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
+    font:15px/1.55 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;}
   .wrap{max-width:920px;margin:0 auto;padding:20px 18px 60px;}
 
   /* Honesty / prototype banners */
   .banner{border-radius:10px;padding:12px 14px;margin:10px 0;font-size:13.5px;}
   .banner b{font-weight:700}
-  .lane{background:#0f2233;color:#e8eef4;border:1px solid #0f2233;}
-  .lane .tag{display:inline-block;background:#f0b429;color:#3a2a00;font-weight:800;
+  .lane{background:#f6e7e3;color:#7a3b34;border:1px solid #d9b3ab;}
+  .lane .tag{display:inline-block;background:#95463f;color:#fff;font-weight:800;
     font-size:11px;letter-spacing:.4px;padding:2px 7px;border-radius:5px;margin-right:8px;vertical-align:1px;}
   .sample{background:repeating-linear-gradient(45deg,#fff8e6,#fff8e6 12px,#fff3d6 12px,#fff3d6 24px);
     border:1px dashed var(--fill-line);color:#6b4a00;text-align:center;font-weight:700;letter-spacing:.3px;}
 
   header.top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;
     padding:14px 16px;background:var(--card);border:1px solid var(--line);border-radius:12px;margin-top:6px;}
-  .brand{font-weight:800;font-size:16px;color:var(--teal);letter-spacing:.2px}
+  .brand{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:17px;color:#3f6b4e;letter-spacing:.2px}
   .brand small{display:block;color:var(--muted);font-weight:600;font-size:11.5px;letter-spacing:.3px;margin-top:2px}
   .tools{display:flex;gap:8px;flex-wrap:wrap}
   button{font:inherit;cursor:pointer;border:1px solid var(--line);background:#fff;color:var(--ink);
@@ -49,14 +49,14 @@
   .chip.fillc{background:var(--fill-soft);color:var(--fill);border:1px dashed var(--fill-line)}
 
   .note{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:0;margin-top:12px;overflow:hidden}
-  .noteHead{padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff,#f3f8fb)}
-  .noteHead h1{margin:0;font-size:20px}
+  .noteHead{padding:16px 18px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fffdf7,#faf4e8)}
+  .noteHead h1{margin:0;font-size:21px;font-family:Fraunces,Georgia,serif;color:#2e4a38}
   .noteHead .meta{color:var(--muted);font-size:13px;margin-top:4px}
 
   section.soap{padding:16px 18px;border-bottom:1px solid var(--line)}
   section.soap:last-child{border-bottom:0}
   .sh{display:flex;align-items:center;gap:8px;margin:0 0 10px}
-  .sh h2{margin:0;font-size:12px;letter-spacing:1.2px;color:var(--teal);text-transform:uppercase}
+  .sh h2{margin:0;font-size:12px;letter-spacing:1.4px;color:var(--teal);text-transform:uppercase;font-family:Oswald,sans-serif;font-weight:600}
   .sh .rule{flex:1;height:1px;background:var(--line)}
 
   .row{margin:8px 0}
@@ -69,9 +69,9 @@
   .fill{background:var(--fill-soft);border:1px dashed var(--fill-line);padding:6px 10px;border-radius:6px}
   .fill .lbl:after{content:" [FILL]";color:var(--fill);font-weight:800;font-size:11px;letter-spacing:.3px}
   /* AI-draft (violet) — sample demo only; a clearly-badged editable draft the provider verifies. History/narrative only, never meds/doses/diagnosis. */
-  .airow{background:#f6f2fc;border:1px dashed #c9b8ec;padding:6px 10px;border-radius:6px}
-  .chip.aidraft{background:#efe9fb;color:#6b4fbb}
-  .aihint{display:block;font-size:11px;color:#6b4fbb;margin-top:4px;font-weight:600}
+  .airow{background:#faf0ee;border:1px dashed #dab8b2;padding:6px 10px;border-radius:6px}
+  .chip.aidraft{background:#f4e3df;color:#95463f}
+  .aihint{display:block;font-size:11px;color:#95463f;margin-top:4px;font-weight:600}
   input[type=text],input[type=number],textarea,select{
     font:inherit;width:100%;border:1px solid var(--fill-line);background:#fffdf6;border-radius:6px;
     padding:6px 8px;color:var(--ink)}
@@ -108,7 +108,7 @@
   .alerts ul{margin:0;padding-left:18px}
   .alerts li{margin:3px 0}
 
-  .frontdesk{background:#0f2233;color:#e8eef4;border-radius:12px;margin-top:12px;padding:16px 18px}
+  .frontdesk{background:#40352a;color:#e8eef4;border-radius:12px;margin-top:12px;padding:16px 18px}
   .frontdesk h2{margin:0 0 10px;font-size:12px;letter-spacing:1.2px;color:#7fd0d6;text-transform:uppercase}
   .frontdesk .fd{margin:10px 0}
   .frontdesk .fdlbl{font-size:11px;letter-spacing:.6px;text-transform:uppercase;color:#8fa3b5;margin-bottom:3px}
@@ -150,12 +150,12 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
 .tp{background:#fff;color:#233240;border:1px solid #e2e8ef;border-radius:6px;padding:34px 40px;font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;box-shadow:0 4px 22px rgba(18,38,58,.06)}
 .tp .hdr{font-size:11px;color:#8a97a5;border-bottom:1px solid #eef2f6;padding-bottom:8px;margin-bottom:16px}
 .tp .tt{color:#2c4a6b;font-size:26px;font-weight:800;letter-spacing:.5px;margin:0 0 3px}
-.tp .meta{color:#5b6b7a;font-size:13.5px;margin-bottom:16px}
+.tp .meta{color:#8a7c68;font-size:13.5px;margin-bottom:16px}
 .tp .summary{border:1px solid #b9c9de;background:#eef4fb;border-radius:6px;padding:13px 15px;font-size:13.5px;margin-bottom:8px}
 .tp .sec{background:#2c4a6b;color:#fff;font-weight:800;font-size:12.5px;letter-spacing:.4px;padding:6px 13px;border-radius:4px;margin:20px 0 9px}
 .tp h4.sub{color:#2c4a6b;font-size:14px;margin:14px 0 4px}
 .tp ul{margin:6px 0;padding-left:20px}.tp ul li{margin:4px 0}
-.tp .fine{color:#5b6b7a;font-size:12.5px;margin:4px 0}
+.tp .fine{color:#8a7c68;font-size:12.5px;margin:4px 0}
 .tp .labslist{font-size:13.5px;line-height:1.7}
 .tp table.t{border-collapse:collapse;width:100%;font-size:13px;margin-top:6px}
 .tp table.t th{background:#2c4a6b;color:#fff;text-align:left;padding:7px 10px;font-size:12px}
@@ -190,9 +190,9 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
     <div class="tools no-print">
       <button onclick="fillDemo()">Fill demo values</button>
       <button onclick="clearFill()">Clear [FILL]</button>
-      <button id="btnDraftAI" class="primary" style="background:#6b4fbb;border-color:#6b4fbb" onclick="draftWithAI(this)">✨ Draft with AI</button>
+      <button id="btnDraftAI" class="primary" style="background:#95463f;border-color:#95463f" onclick="draftWithAI(this)">✨ Draft with AI</button>
       <button class="primary" onclick="window.print()">Print / Export PDF</button>
-      <button class="primary" style="background:#12263A;border-color:#12263A" onclick="finalizePlan()">✓ Finalize → Treatment Plan</button>
+      <button class="primary" style="background:linear-gradient(180deg,#e6c67e,#c9992f);border-color:#c9992f;color:#3a2b08" onclick="finalizePlan()">✓ Finalize → Treatment Plan</button>
     </div>
   </header>
 
@@ -489,12 +489,12 @@ syncFrontDesk();
   const d=JSON.parse(decodeURIComponent(escape(atob(q))));const wrap=document.querySelector('.wrap');
   window.__intake=d;
   if(d.name){var _sx=((d.sex||'').charAt(0).toUpperCase())||CHART.sex;var _age=CHART.age;try{if(d.dob){var _by=new Date(d.dob),_n=new Date();_age=_n.getFullYear()-_by.getFullYear()-((_n.getMonth()<_by.getMonth()||(_n.getMonth()===_by.getMonth()&&_n.getDate()<_by.getDate()))?1:0);}}catch(e){}var _t=document.getElementById('title');if(_t)_t.textContent='SOAP NOTE — '+d.name+' ('+_age+_sx+')';var _sm=document.getElementById('submeta');if(_sm&&d.dob)_sm.innerHTML=_sm.innerHTML.replace(/DOB:.*/,'DOB: '+d.dob);}
-  const b=document.createElement('div');b.className='banner';b.style.cssText='background:#e6f3f4;border:1px solid #bfe3e6;color:#0e5a61;border-radius:10px;padding:10px 14px;margin:10px 0';
+  const b=document.createElement('div');b.className='banner';b.style.cssText='background:#e6f0e9;border:1px solid #cfe0d2;color:#3f6b4e;border-radius:10px;padding:10px 14px;margin:10px 0';
   var _aiBadge='<span class="chip aidraft">✨ AI DRAFT</span>';
   var _aiHint='<div class="aihint">✨ AI draft from the questionnaire — scan &amp; edit before signing.</div>';
   var _aiDraft=d.aiHPI||d.aiROS||d.aiConsider;
   b.innerHTML='<b>Loaded from patient intake - '+(d.name||'patient')+'.</b> Subjective pre-filled from the questionnaire. Clinical judgment stays [FILL].'
-    +(_aiDraft?' <span style="display:block;margin-top:6px;color:#6b4fbb"><b>✨ Narrative, possible diagnoses &amp; suggested plan are AI-drafted from the questionnaire for you to scan &amp; edit.</b> These are suggestions — the provider verifies and signs every diagnosis, medication and dose.</span>':'');
+    +(_aiDraft?' <span style="display:block;margin-top:6px;color:#95463f"><b>✨ Narrative, possible diagnoses &amp; suggested plan are AI-drafted from the questionnaire for you to scan &amp; edit.</b> These are suggestions — the provider verifies and signs every diagnosis, medication and dose.</span>':'');
   wrap.insertBefore(b,wrap.firstChild);
   if(d.cc){const cc=document.getElementById('cc');if(cc)cc.value=d.cc;}
   const mini=document.querySelectorAll('input[type=number].mini');
@@ -531,7 +531,7 @@ syncFrontDesk();
     var t=document.createElement('div');
     t.textContent=msg;
     t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;max-width:90vw;'
-      +'background:'+(kind==='warn'?'#6b551f':kind==='err'?'#7a2620':'#0f2233')+';color:#fff;padding:11px 16px;'
+      +'background:'+(kind==='warn'?'#6b551f':kind==='err'?'#7a2620':'#40352a')+';color:#fff;padding:11px 16px;'
       +'border-radius:9px;font:600 13.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
       +'box-shadow:0 6px 24px rgba(15,34,51,.28);text-align:center';
     document.body.appendChild(t);
