@@ -10,7 +10,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#faf4e8;--paper:#fffdf7;--ink:#40352a;--mut:#6f6047;--line:#e8dcc4;--navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal2:#0b5a61;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;--shadow:0 10px 30px rgba(60,40,20,.09)}
+:root{--bg:#faf4e8;--paper:#fffdf7;--ink:#40352a;--mut:#6f6047;--line:#e8dcc4;--navy:#16171d;--navy2:#101116;--teal:#31696a;--teal2:#25595a;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;--shadow:0 10px 30px rgba(60,40,20,.09)}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
 h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0}
@@ -25,7 +25,7 @@ header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:
 .card h3{font-size:18px;margin-bottom:3px}.csub{color:var(--mut);font-size:13px;margin-bottom:14px}
 .lbl{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--mut);font-weight:600;display:block;margin-bottom:6px}
 select,input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;background:#fff;color:var(--ink)}
-select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(14,124,132,.25)}
+select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px rgba(49,105,106,.25)}
 .row{display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap}.row>div{flex:1;min-width:200px}
 .btn{border:1px solid var(--line);background:#fff;border-radius:10px;padding:11px 16px;font:inherit;font-size:14px;font-weight:700;color:var(--ink);cursor:pointer}
 .btn:hover{border-color:var(--teal)}
@@ -38,7 +38,7 @@ select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 
 .share .rm{font-family:'SFMono-Regular',ui-monospace,Menlo,monospace;font-size:13px;background:#fff;border:1px solid var(--line);border-radius:8px;padding:8px 11px;word-break:break-all;margin:6px 0 12px}
 .share .acts{display:flex;gap:9px;flex-wrap:wrap}
 .step{display:flex;gap:11px;align-items:flex-start;margin:9px 0;font-size:13.5px}
-.step .n{width:24px;height:24px;border-radius:50%;background:var(--teal-soft,#e2f1f2);color:var(--teal);flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;border:1px solid #cfe6e8}
+.step .n{width:24px;height:24px;border-radius:50%;background:var(--teal-soft,#e4eeee);color:var(--teal);flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;border:1px solid #cfe6e8}
 .cred{text-align:center;color:#9aa6b2;font-size:11.5px;margin-top:8px}
 </style>
 </head>
@@ -56,7 +56,7 @@ select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 
 
   <div class="card" style="border-color:#cfe6e8;background:linear-gradient(180deg,#f2fbfb,#fffdf7)">
     <h3>Your room — talk right now</h3>
-    <div class="csub">Open your always-on room as <b>Dr. Barry Burris, NMD</b>. The patient taps <b>“Call Dr. Burris now”</b> in their portal — or you send the invite link — and you meet here.</div>
+    <div class="csub">Open your always-on room as <b>Barry Burris, NMD</b>. The patient taps <b>“Call Barry Burris now”</b> in their portal — or you send the invite link — and you meet here.</div>
     <div class="row" style="align-items:center">
       <div style="flex:none"><button class="btn solid" onclick="openMyRoom()">📹 Open my room</button></div>
       <div style="flex:none"><button class="btn gold" onclick="copyOfficeInvite()">Copy invite link</button></div>
@@ -82,7 +82,7 @@ select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 
         <button class="btn" onclick="copyPatientLink()">Copy patient test link</button>
       </div>
       <div style="margin-top:12px">
-        <div class="step"><span class="n">1</span><div>You’re in the visit as <b>Dr. Barry Burris, NMD</b>.</div></div>
+        <div class="step"><span class="n">1</span><div>You’re in the visit as <b>Barry Burris, NMD</b>.</div></div>
         <div class="step"><span class="n">2</span><div>The patient joins from <b>their portal</b> → <b>Join telehealth</b> (same room), or open the test tab above.</div></div>
         <div class="step"><span class="n">3</span><div>Allow camera + microphone when asked. You’ll see each other live.</div></div>
       </div>
@@ -107,6 +107,7 @@ select:focus,input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 
 </div>
 
 <script src="bb-intakes.js"></script>
+<script src="bb-translate.js"></script>
 <script src="bb-telehealth.js"></script>
 <script>
 var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
@@ -129,7 +130,7 @@ function startPatient(){
   room1=BBTele.roomFor(name);
   document.getElementById('room1').textContent=room1;
   document.getElementById('share1').classList.add('on');
-  BBTele.open({displayName:'Dr. Barry Burris, NMD',patient:name,subject:'Visit with '+name+' — Barry Burris, NMD'});
+  BBTele.open({myLang:'en',displayName:'Barry Burris, NMD',patient:name,subject:'Visit with '+name+' — Barry Burris, NMD'});
 }
 function openPatientTab(){
   var i=+document.getElementById('pt').value;var name=clean(PATIENTS[i]?PATIENTS[i].name:'Patient');
@@ -139,13 +140,13 @@ function copyPatientLink(){
   var url=location.origin+location.pathname+'?room='+encodeURIComponent(room1)+'&role=patient';
   copy(url);
 }
-function openMyRoom(){BBTele.open({room:BBTele.officeRoom(),displayName:'Dr. Barry Burris, NMD',subject:'Dr. Barry Burris, NMD — office'});}
+function openMyRoom(){BBTele.open({myLang:'en',room:BBTele.officeRoom(),displayName:'Barry Burris, NMD',subject:'Barry Burris, NMD — office'});}
 function copyOfficeInvite(){var url=location.origin+location.pathname+'?room='+encodeURIComponent(BBTele.officeRoom())+'&name=Guest';document.getElementById('officeLink').textContent=url;document.getElementById('shareOffice').classList.add('on');copy(url);}
 function quickTest(){
   room2='BBNMD-test-'+Math.random().toString(36).slice(2,8);
   document.getElementById('room2').textContent=room2;
   document.getElementById('share2').classList.add('on');
-  BBTele.open({room:room2,displayName:'Dr. Barry Burris, NMD',subject:'Test visit — Barry Burris, NMD'});
+  BBTele.open({myLang:'en',room:room2,displayName:'Barry Burris, NMD',subject:'Test visit — Barry Burris, NMD'});
 }
 function openTestTab(){window.open('telehealth.html?room='+encodeURIComponent(room2)+'&name=Guest','_blank');}
 function copyTestLink(){copy(location.origin+location.pathname+'?room='+encodeURIComponent(room2));}
@@ -159,8 +160,8 @@ function flash(m){var n=document.createElement('div');n.textContent=m;n.style.cs
 (function(){
   var q=new URLSearchParams(location.search);var room=q.get('room');
   if(room){
-    var role=q.get('role')||'';var nm=q.get('name')||(role==='patient'?'Patient':'Dr. Barry Burris, NMD');
-    BBTele.open({room:room,displayName:nm,subject:'Telehealth visit — Barry Burris, NMD'});
+    var role=q.get('role')||'';var nm=q.get('name')||(role==='patient'?'Patient':'Barry Burris, NMD');
+    BBTele.open({myLang:'en',room:room,displayName:nm,subject:'Telehealth visit — Barry Burris, NMD'});
   }
 })();
 </script>

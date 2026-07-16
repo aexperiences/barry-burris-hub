@@ -20,7 +20,7 @@
   'use strict';
   var HOST = 'meet.jit.si';     // <— swap to your BAA video vendor at go-live
   var PREFIX = 'BBNMD';         // room namespace (keeps our rooms distinct)
-  var api = null, overlay = null, onCloseCb = null, scriptLoading = false;
+  var api = null, overlay = null, onCloseCb = null, scriptLoading = false, _myLang = 'en';
 
   function slug(s) {
     return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
@@ -52,7 +52,23 @@
       '#bbtele .msg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#aeb9c4;gap:12px;text-align:center;padding:24px}',
       '#bbtele .msg .sp{width:26px;height:26px;border:3px solid rgba(230,198,126,.3);border-top-color:#e6c67e;border-radius:50%;animation:bbtsp 1s linear infinite}',
       '@keyframes bbtsp{to{transform:rotate(360deg)}}',
-      '#bbtele .msg button{border:1px solid #2a3742;background:#18222b;color:#e7edf2;border-radius:9px;padding:9px 15px;font:inherit;cursor:pointer;font-family:Inter,system-ui,sans-serif}'
+      '#bbtele .msg button{border:1px solid #2a3742;background:#18222b;color:#e7edf2;border-radius:9px;padding:9px 15px;font:inherit;cursor:pointer;font-family:Inter,system-ui,sans-serif}',
+      '#bbtele .tbar .chatbtn{margin-left:8px;border:1px solid #2a3742;background:#18222b;color:#dfe7ee;border-radius:9px;padding:8px 12px;font:inherit;font-weight:600;cursor:pointer;font-family:Inter,system-ui,sans-serif}',
+      '#bbtele .tbar .chatbtn.on{background:#31696a;border-color:#31696a;color:#fff}',
+      '#bbtele .tbar .chatbtn.pulse{animation:bbtpulse 1.1s ease-in-out infinite}',
+      '@keyframes bbtpulse{0%,100%{box-shadow:0 0 0 0 rgba(230,198,126,.5)}50%{box-shadow:0 0 0 6px rgba(230,198,126,0)}}',
+      '#bbtele .body{flex:1;display:flex;min-height:0}',
+      '#bbtele .chat{width:322px;flex:none;border-left:1px solid #1d2630;background:#0a0f14;display:flex;flex-direction:column;color:#e7edf2}',
+      '#bbtele .chat .ch-h{padding:11px 14px;border-bottom:1px solid #1d2630;font-size:11.5px;font-weight:700;color:#9fb0bf;text-transform:uppercase;letter-spacing:.08em}',
+      '#bbtele .chat .ch-b{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:8px}',
+      '#bbtele .chat .cmsg{max-width:88%;padding:8px 11px;border-radius:12px;font-size:13.5px;line-height:1.4}',
+      '#bbtele .chat .cmsg.them{align-self:flex-start;background:#18232c;border:1px solid #263440}',
+      '#bbtele .chat .cmsg.me{align-self:flex-end;background:#31696a;color:#fff}',
+      '#bbtele .chat .cog{border:none;background:none;color:inherit;opacity:.62;font-size:11px;cursor:pointer;padding:0 2px}',
+      '#bbtele .chat .ch-c{display:flex;gap:7px;padding:10px;border-top:1px solid #1d2630}',
+      '#bbtele .chat .ch-c input{flex:1;background:#131c24;border:1px solid #26323d;border-radius:9px;color:#fff;padding:9px 11px;font:inherit;font-size:13px}',
+      '#bbtele .chat .ch-c button{border:none;background:#31696a;color:#fff;border-radius:9px;padding:0 14px;font-weight:700;cursor:pointer}',
+      '@media(max-width:640px){#bbtele .chat{position:absolute;right:0;top:0;bottom:0;width:86%;z-index:5}}'
     ].join('\n');
     document.head.appendChild(s);
   }
@@ -68,14 +84,23 @@
       overlay.innerHTML =
         '<div class="tbar"><img src="' + COIN + '" alt=""><div><div class="tt">Telehealth visit</div><div class="ts" id="bbtele-sub">Barry Burris, NMD</div></div>' +
         '<div class="note" id="bbtele-note"></div>' +
+        '<button class="chatbtn" id="bbtele-chatbtn" type="button">💬 Chat</button>' +
         '<button class="leave" id="bbtele-leave">Leave visit</button></div>' +
-        '<div class="stage" id="bbtele-stage"></div>';
+        '<div class="body"><div class="stage" id="bbtele-stage"></div>' +
+        '<div class="chat" id="bbtele-chat" style="display:none"><div class="ch-h">Live chat · translated</div><div class="ch-b" id="bbtele-chatb"></div><div class="ch-c"><input id="bbtele-chatin" placeholder="Type a message…" aria-label="Chat message"><button id="bbtele-chatsend" type="button">Send</button></div></div>' +
+        '</div>';
       document.body.appendChild(overlay);
       overlay.querySelector('#bbtele-leave').addEventListener('click', close);
+      overlay.querySelector('#bbtele-chatbtn').addEventListener('click', toggleChat);
+      overlay.querySelector('#bbtele-chatsend').addEventListener('click', sendChat);
+      overlay.querySelector('#bbtele-chatin').addEventListener('keydown', function (e) { if (e.key === 'Enter') sendChat(); });
     }
     overlay.querySelector('#bbtele-sub').textContent = opts.subject || 'Barry Burris, NMD';
-    overlay.querySelector('#bbtele-note').textContent = opts.note || 'Live test video — a secure clinical service is added before real patient visits.';
+    overlay.querySelector('#bbtele-note').textContent = opts.note || 'Live video visit.';
     document.getElementById('bbtele-stage').innerHTML = '';
+    var _cb = document.getElementById('bbtele-chatb'); if (_cb) _cb.innerHTML = '';
+    var _cp = document.getElementById('bbtele-chat'); if (_cp) _cp.style.display = 'none';
+    var _cbtn = document.getElementById('bbtele-chatbtn'); if (_cbtn) _cbtn.classList.remove('on', 'pulse');
     overlay.classList.add('on');
   }
 
@@ -125,11 +150,12 @@
             SHOW_CHROME_EXTENSION_BANNER: false,
             HIDE_DEEP_LINKING_LOGO: true,
             DISABLE_VIDEO_BACKGROUND: false,
-            TOOLBAR_BUTTONS: ['microphone', 'camera', 'desktop', 'chat', 'raisehand', 'tileview', 'settings', 'fullscreen', 'hangup']
+            TOOLBAR_BUTTONS: ['microphone', 'camera', 'desktop', 'raisehand', 'tileview', 'settings', 'fullscreen', 'hangup']
           }
         });
         api.addListener('readyToClose', close);
         api.addListener('videoConferenceLeft', function () { setTimeout(close, 300); });
+        api.addListener('incomingMessage', function (ev) { var msg = ev && (ev.message || ev.text) || ''; if (msg) addChatBubble('them', msg, (ev && ev.nick) || ''); });
       } catch (e) {
         stageMsg('<div>Video failed to start.<br><span style="font-size:12px;opacity:.7">' + (e && e.message ? String(e.message) : '') + '</span></div>', true, function () { start(opts, room); });
       }
@@ -140,6 +166,7 @@
     opts = opts || {};
     var room = opts.room || roomFor(opts.patient || opts.displayName || 'test');
     onCloseCb = opts.onClose || null;
+    _myLang = opts.myLang || 'en';
     ensureOverlay(opts);
     start(opts, room);
     return room;
@@ -151,6 +178,42 @@
     if (onCloseCb) { var c = onCloseCb; onCloseCb = null; try { c(); } catch (e) {} }
   }
   function isOpen() { return !!(overlay && overlay.classList.contains('on')); }
+
+  // ---- in-call translated text chat (over Jitsi chat channel) ----
+  function _esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function addChatBubble(side, text) {
+    var b = document.getElementById('bbtele-chatb'); if (!b) return;
+    var id = 'bc' + Date.now() + Math.floor(Math.random() * 1e4);
+    var div = document.createElement('div'); div.className = 'cmsg ' + side; div.id = id;
+    div.innerHTML = '<span class="ctx">' + _esc(text) + '</span>';
+    b.appendChild(div); b.scrollTop = b.scrollHeight;
+    var panel = document.getElementById('bbtele-chat');
+    if (side === 'them' && panel && panel.style.display === 'none') { var cb = document.getElementById('bbtele-chatbtn'); if (cb) cb.classList.add('pulse'); }
+    if (side === 'them' && typeof BBTranslate !== 'undefined' && _myLang) {
+      BBTranslate.to(text, _myLang).then(function (tr) {
+        var el = document.getElementById(id); if (!el) return;
+        if (tr && tr !== text) {
+          var span = el.querySelector('.ctx'); span.textContent = tr;
+          var btn = document.createElement('button'); btn.className = 'cog'; btn.textContent = '🌐'; btn.title = 'original';
+          btn.setAttribute('data-o', text); btn.setAttribute('data-t', tr); btn.setAttribute('data-s', 't');
+          btn.onclick = function () { var s = btn.getAttribute('data-s'); span.textContent = (s === 't') ? btn.getAttribute('data-o') : btn.getAttribute('data-t'); btn.setAttribute('data-s', s === 't' ? 'o' : 't'); };
+          el.appendChild(document.createTextNode(' ')); el.appendChild(btn);
+        }
+      });
+    }
+  }
+  function sendChat() {
+    var inp = document.getElementById('bbtele-chatin'); if (!inp) return;
+    var txt = (inp.value || '').trim(); if (!txt) return;
+    if (api) { try { api.executeCommand('sendChatMessage', txt); } catch (e) {} }
+    addChatBubble('me', txt); inp.value = '';
+  }
+  function toggleChat() {
+    var c = document.getElementById('bbtele-chat'); if (!c) return;
+    var show = c.style.display === 'none'; c.style.display = show ? 'flex' : 'none';
+    var cb = document.getElementById('bbtele-chatbtn'); if (cb) { cb.classList.toggle('on', show); cb.classList.remove('pulse'); }
+    if (show) { var i = document.getElementById('bbtele-chatin'); if (i) i.focus(); }
+  }
 
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && isOpen()) close(); });
 

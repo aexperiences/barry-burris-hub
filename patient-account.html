@@ -13,9 +13,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 <style>
 :root{--bg:#faf4e8;--paper:#fffdf7;--card:#fffdf7;--ink:#40352a;--mut:#6f6047;--line:#e8dcc4;
- --navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal2:#0b5a61;--teal-soft:#e2f1f2;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
+ --navy:#16171d;--navy2:#101116;--teal:#31696a;--teal2:#25595a;--teal-soft:#e4eeee;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
  --good:#3f6b2b;--good-soft:#e7f0dc;--warn:#7c5417;--warn-soft:#f7ead0;--bad:#a51f16;--bad-soft:#f6e2df;--info:#0e5f84;--info-soft:#e0eef5;
- --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16);--ring:0 0 0 3px rgba(14,124,132,.35)}
+ --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16);--ring:0 0 0 3px rgba(49,105,106,.35)}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
 h1,h2,h3,h4{font-family:Fraunces,Georgia,serif;margin:0}
@@ -75,7 +75,7 @@ button{font-family:inherit}
 .pick{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-height:280px;overflow:auto;padding:2px}
 @media(max-width:520px){.pick{grid-template-columns:1fr}}
 .pcard{text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;transition:.14s;font:inherit;color:inherit}
-.pcard:hover,.pcard:focus-visible{border-color:var(--teal);box-shadow:0 6px 16px rgba(14,124,132,.12);transform:translateY(-1px)}
+.pcard:hover,.pcard:focus-visible{border-color:var(--teal);box-shadow:0 6px 16px rgba(49,105,106,.12);transform:translateY(-1px)}
 .pcard .pn{font-weight:700;font-size:13.5px}.pcard .pm{color:var(--mut);font-size:11px;margin-top:2px}
 .pcard .ptag{display:inline-block;margin-top:7px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:2px 8px}
 
@@ -131,20 +131,20 @@ button{font-family:inherit}
 .card h3{font-size:17px;margin-bottom:3px}.card .csub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
 .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:760px){.grid3{grid-template-columns:1fr}}
-.hero{background:linear-gradient(120deg,#0e7c84,#0b5a61);color:#eafafb;border:none;position:relative;overflow:hidden}
+.hero{background:linear-gradient(120deg,#31696a,#25595a);color:#eafafb;border:none;position:relative;overflow:hidden}
 .hero h2{color:#fff;font-size:23px}.hero p{color:#e9f7f8;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
 .qa{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
 .qa button{border:1px solid rgba(255,255,255,.28);border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;background:rgba(0,0,0,.24);color:#fff;display:flex;gap:8px;align-items:center}
 .qa button:hover{background:rgba(0,0,0,.36)}
 .qa button.gold{background:var(--gold2);color:#3a2b08}.qa button.gold:hover{background:#f0d69a}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
-.chip{font-size:12px;background:var(--teal-soft);color:#0a5960;border-radius:99px;padding:4px 11px;font-weight:600}
+.chip{font-size:12px;background:var(--teal-soft);color:#235456;border-radius:99px;padding:4px 11px;font-weight:600}
 .chip.g{background:var(--gold-soft);color:#75570f}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
 .kv:last-child{border-bottom:none}.kv .k{color:var(--mut)}.kv .v{font-weight:600;text-align:right}
 .status{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 9px;border-radius:99px}
 .status.rev{background:var(--warn-soft);color:var(--warn)}.status.ok{background:var(--good-soft);color:var(--good)}
-.status.conf{background:var(--teal-soft);color:#0a5960}.status.act{background:var(--bad-soft);color:var(--bad)}.status.info{background:var(--info-soft);color:var(--info)}
+.status.conf{background:var(--teal-soft);color:#235456}.status.act{background:var(--bad-soft);color:var(--bad)}.status.info{background:var(--info-soft);color:var(--info)}
 .task{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
 .task:last-child{border-bottom:none}
 .task .tk-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--warn-soft);color:var(--warn)}
@@ -356,8 +356,8 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
     <div class="tele-stage">
       <div class="tele-note" id="teleNote"></div>
       <div class="provtile">
-        <img class="pcoin" id="teleCoin" alt="Dr. Burris">
-        <div class="pnm">Dr. Barry Burris, NMD</div>
+        <img class="pcoin" id="teleCoin" alt="Barry Burris">
+        <div class="pnm">Barry Burris, NMD</div>
         <div class="pst" id="teleStatus"><span class="spin"></span> <span id="teleStatusTxt"></span></div>
       </div>
       <div class="selftile" id="selfTile"><span id="selfPlaceholder">Camera off</span></div>
@@ -417,7 +417,7 @@ T.en={
  tag:'Patient Portal · Functional Medicine &amp; Longevity',
  valueH:'Your health, in one calm place.',
  valueP:'Sign in to see your care plan, join a telehealth visit, review labs, message your care team, and manage documents — securely.',
- f1t:'Telehealth visits',f1d:'Meet Dr. Burris by secure video from anywhere.',
+ f1t:'Telehealth visits',f1d:'Meet Barry Burris by secure video from anywhere.',
  f2t:'Your plan & labs',f2d:'See your care plan and lab results as they’re released.',
  f3t:'Secure messaging',f3d:'Message the practice and share documents safely.',
  tabSignin:'Sign in',tabCreate:'Create account',
@@ -432,11 +432,11 @@ T.en={
  nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',
  gCare:'My Care',gRecords:'My Records',gAcct:'Account',
  menuProfile:'Profile & settings',menuSecurity:'Security',menuSignout:'Sign out',menuSignoutAll:'Sign out everywhere',
- hello:'Hello',welcome:'Welcome to your care portal. Everything about your care with Dr. Burris lives here.',
- qaJoin:'Join telehealth',qaCall:'Call Dr. Burris now',qaMsg:'Message care team',qaPlan:'View care plan',qaBook:'Book a visit',
+ hello:'Hello',welcome:'Welcome to your care portal. Everything about your care with Barry Burris lives here.',
+ qaJoin:'Join telehealth',qaCall:'Call Barry Burris now',qaMsg:'Message care team',qaPlan:'View care plan',qaBook:'Book a visit',
  actionNeeded:'Action needed',allDone:'You’re all set — nothing needs your attention right now.',
  taskConsent:'Sign your telehealth consent',taskConsentD:'Required before your first video visit.',
- taskPrevisit:'Complete your pre-visit checklist',taskPrevisitD:'A few quick items before you meet Dr. Burris.',
+ taskPrevisit:'Complete your pre-visit checklist',taskPrevisitD:'A few quick items before you meet Barry Burris.',
  taskConfirm:'Confirm your upcoming appointment',taskConfirmD:'Let us know you’ll be there.',
  doIt:'Do it',review:'Review',confirm:'Confirm',confirmed:'Confirmed',done:'Done',
  nextVisit:'Your next visit',noVisit:'No upcoming visit yet.',bookNow:'Book a visit',
@@ -444,7 +444,7 @@ T.en={
  telehealth:'Telehealth',inperson:'In-person',focus:'What we’re focusing on',
  recentLabs:'Recent labs',recentMsgs:'Recent messages',viewAll:'View all',
  planTitle:'My Care Plan',planSub:'Prepared with your provider',
- planBanner:'Your plan is reviewed and signed by Dr. Burris. Nothing here is a prescription or a diagnosis until your provider confirms it with you at your visit.',
+ planBanner:'Your plan is reviewed and signed by Barry Burris. Nothing here is a prescription or a diagnosis until your provider confirms it with you at your visit.',
  signedBy:'Signed by',version:'Version',goals:'Your goals',
  foundations:'Foundations we build together',
  fNutri:'Nutrition',fNutriB:'Protein and vegetables at each meal; steady blood sugar through the day.',
@@ -452,9 +452,9 @@ T.en={
  fSleep:'Sleep',fSleepB:'A consistent sleep and wake time; wind-down without screens.',
  fStress:'Stress',fStressB:'A daily down-shift — breathing, a walk, or time outdoors.',
  prescribed:'Prescribed items',prescribedEmpty:'No prescriptions yet. Your provider adds any medications or protocols here after your visit — this portal never prescribes on its own.',
- followLabs:'Follow-up labs',provNotes:'A note from Dr. Burris',provNotesEmpty:'Your provider will add a personal note here after your visit.',
+ followLabs:'Follow-up labs',provNotes:'A note from Barry Burris',provNotesEmpty:'Your provider will add a personal note here after your visit.',
  print:'Print / Save PDF',download:'Download',
- apptsTitle:'Appointments',apptsSub:'Your visits with Dr. Burris',upcoming:'Upcoming',pastV:'Past visits',noPast:'No past visits yet.',
+ apptsTitle:'Appointments',apptsSub:'Your visits with Barry Burris',upcoming:'Upcoming',pastV:'Past visits',noPast:'No past visits yet.',
  previsit:'Pre-visit checklist',pvConsent:'Telehealth consent signed',pvMeds:'Medication list up to date',pvQuiet:'A quiet, private space ready',pvCam:'Camera & microphone tested',
  booking:'Book a visit',bookType:'Visit type',bookInitial:'Initial consultation (45 min)',bookFollow:'Follow-up (25 min)',bookLab:'Lab review (25 min)',
  pickDay:'Choose a day',pickTime:'Choose a time',noSlots:'No open times that day — try another.',taken:'taken',
@@ -462,12 +462,12 @@ T.en={
  labsTitle:'Labs & Results',labsSub:'Documents you shared and results your provider releases',
  yourLabs:'Labs you uploaded',released:'Released results',underReview:'Under review',received:'Received',
  resultNote:'Sample result set — for demonstration. Your real results appear here once your provider reviews and releases them.',
- trend:'Vitamin D trend',analyte:'Marker',value:'Value',range:'Reference',statusH:'Status',provComment:'Dr. Burris’s comment',
+ trend:'Vitamin D trend',analyte:'Marker',value:'Value',range:'Reference',statusH:'Status',provComment:'Barry Burris’s comment',
  provCommentTxt:'Your vitamin D is trending up but still a little low — we’ll keep supporting it and recheck in 3 months. Everything else looks reassuring. We’ll talk it through at your visit.',
  low:'Low',high:'High',inRange:'In range',
  msgTitle:'Messages',msgSub:'Secure messages with your care team',send:'Send',msgPlaceholder:'Write a message…',
  catAll:'All',catGeneral:'General',catClinical:'Clinical',catBilling:'Billing',attach:'Attach',reply1:'The care team typically replies within 1 business day.',
- ackMsg:'Your message reached the care team. Dr. Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',
+ ackMsg:'Your message reached the care team. Barry Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',
  seen:'Seen',delivered:'Delivered',
  docsTitle:'Documents',docsSub:'Forms, consents, and files you exchange with the practice',
  docConsents:'Consents',docIntake:'Intake',docLabs:'Labs',docVisit:'Visit summaries',docInsurance:'Insurance & ID',
@@ -484,7 +484,7 @@ T.en={
  security:'Security',changePass:'Change password',lastSignin:'Last sign-in',signoutAll:'Sign out of all devices',
  insurance:'Insurance & ID',addLater:'Added with your account',
  demoNote:'Demonstration — sample data. Secure messaging, video visits and real accounts run on the HIPAA backend.',
- teleConnecting:'Connecting…',teleWaiting:'You’re in the waiting room — Dr. Burris will join shortly.',teleConnected:'Connected',
+ teleConnecting:'Connecting…',teleWaiting:'You’re in the waiting room — Barry Burris will join shortly.',teleConnected:'Connected',
  teleNoteTxt:'Demonstration room — live video runs on the secure backend (HIPAA video).',
  camOn:'Turn on camera',camOff:'Camera off',mic:'Mic',camera:'Camera',chat:'Chat',leave:'Leave',
  pjTitle:'Ready to join?',pjSub:'Check your camera and microphone before you enter the visit.',
@@ -501,7 +501,7 @@ T.vi={
  tag:'Cổng Bệnh Nhân · Y Học Chức Năng &amp; Trường Thọ',
  valueH:'Sức khỏe của bạn, gọn trong một nơi.',
  valueP:'Đăng nhập để xem kế hoạch chăm sóc, khám từ xa, xem xét nghiệm, nhắn cho đội chăm sóc và quản lý tài liệu — an toàn.',
- f1t:'Khám từ xa',f1d:'Gặp bác sĩ Burris qua video bảo mật ở bất cứ đâu.',
+ f1t:'Khám từ xa',f1d:'Gặp Barry Burris, NMD qua video bảo mật ở bất cứ đâu.',
  f2t:'Kế hoạch & xét nghiệm',f2d:'Xem kế hoạch và kết quả xét nghiệm khi được công bố.',
  f3t:'Nhắn tin bảo mật',f3d:'Nhắn cho phòng khám và chia sẻ tài liệu an toàn.',
  tabSignin:'Đăng nhập',tabCreate:'Tạo tài khoản',
@@ -516,11 +516,11 @@ T.vi={
  nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',
  gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
  menuProfile:'Hồ sơ & cài đặt',menuSecurity:'Bảo mật',menuSignout:'Đăng xuất',menuSignoutAll:'Đăng xuất mọi thiết bị',
- hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Mọi thứ về việc chăm sóc với bác sĩ Burris đều ở đây.',
- qaJoin:'Vào khám từ xa',qaCall:'Gọi BS. Burris ngay',qaMsg:'Nhắn đội chăm sóc',qaPlan:'Xem kế hoạch',qaBook:'Đặt lịch khám',
+ hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Mọi thứ về việc chăm sóc với Barry Burris, NMD đều ở đây.',
+ qaJoin:'Vào khám từ xa',qaCall:'Gọi Barry Burris, NMD ngay',qaMsg:'Nhắn đội chăm sóc',qaPlan:'Xem kế hoạch',qaBook:'Đặt lịch khám',
  actionNeeded:'Cần xử lý',allDone:'Mọi thứ đã ổn — hiện không có việc gì cần bạn.',
  taskConsent:'Ký đồng thuận khám từ xa',taskConsentD:'Bắt buộc trước buổi khám video đầu tiên.',
- taskPrevisit:'Hoàn thành danh sách trước khám',taskPrevisitD:'Vài mục nhanh trước khi gặp bác sĩ Burris.',
+ taskPrevisit:'Hoàn thành danh sách trước khám',taskPrevisitD:'Vài mục nhanh trước khi gặp Barry Burris, NMD.',
  taskConfirm:'Xác nhận lịch hẹn sắp tới',taskConfirmD:'Cho chúng tôi biết bạn sẽ đến.',
  doIt:'Làm ngay',review:'Xem',confirm:'Xác nhận',confirmed:'Đã xác nhận',done:'Xong',
  nextVisit:'Buổi khám kế tiếp',noVisit:'Chưa có lịch hẹn.',bookNow:'Đặt lịch',
@@ -528,7 +528,7 @@ T.vi={
  telehealth:'Khám từ xa',inperson:'Trực tiếp',focus:'Chúng ta đang tập trung',
  recentLabs:'Xét nghiệm gần đây',recentMsgs:'Tin nhắn gần đây',viewAll:'Xem tất cả',
  planTitle:'Kế hoạch chăm sóc',planSub:'Lập cùng bác sĩ của bạn',
- planBanner:'Kế hoạch được bác sĩ Burris xem xét và ký. Không nội dung nào là toa thuốc hay chẩn đoán cho đến khi bác sĩ xác nhận tại buổi khám.',
+ planBanner:'Kế hoạch được Barry Burris, NMD xem xét và ký. Không nội dung nào là toa thuốc hay chẩn đoán cho đến khi bác sĩ xác nhận tại buổi khám.',
  signedBy:'Ký bởi',version:'Phiên bản',goals:'Mục tiêu của bạn',
  foundations:'Nền tảng cùng xây dựng',
  fNutri:'Dinh dưỡng',fNutriB:'Đạm và rau mỗi bữa; giữ đường huyết ổn định cả ngày.',
@@ -536,9 +536,9 @@ T.vi={
  fSleep:'Giấc ngủ',fSleepB:'Giờ ngủ và thức đều đặn; thư giãn không màn hình.',
  fStress:'Căng thẳng',fStressB:'Thư giãn mỗi ngày — hít thở, đi bộ, hoặc ra ngoài trời.',
  prescribed:'Chỉ định',prescribedEmpty:'Chưa có chỉ định. Bác sĩ sẽ thêm thuốc hoặc phác đồ tại đây sau buổi khám — cổng này không bao giờ tự kê đơn.',
- followLabs:'Xét nghiệm theo dõi',provNotes:'Lời nhắn từ bác sĩ Burris',provNotesEmpty:'Bác sĩ sẽ thêm lời nhắn riêng tại đây sau buổi khám.',
+ followLabs:'Xét nghiệm theo dõi',provNotes:'Lời nhắn từ Barry Burris, NMD',provNotesEmpty:'Bác sĩ sẽ thêm lời nhắn riêng tại đây sau buổi khám.',
  print:'In / Lưu PDF',download:'Tải về',
- apptsTitle:'Lịch hẹn',apptsSub:'Các buổi khám với bác sĩ Burris',upcoming:'Sắp tới',pastV:'Đã qua',noPast:'Chưa có buổi khám nào.',
+ apptsTitle:'Lịch hẹn',apptsSub:'Các buổi khám với Barry Burris, NMD',upcoming:'Sắp tới',pastV:'Đã qua',noPast:'Chưa có buổi khám nào.',
  previsit:'Danh sách trước khám',pvConsent:'Đã ký đồng thuận khám từ xa',pvMeds:'Danh sách thuốc đã cập nhật',pvQuiet:'Không gian yên tĩnh, riêng tư',pvCam:'Đã thử camera & micro',
  booking:'Đặt lịch khám',bookType:'Loại buổi khám',bookInitial:'Tư vấn ban đầu (45 phút)',bookFollow:'Tái khám (25 phút)',bookLab:'Xem xét nghiệm (25 phút)',
  pickDay:'Chọn ngày',pickTime:'Chọn giờ',noSlots:'Ngày đó không còn giờ trống — thử ngày khác.',taken:'đã đặt',
@@ -546,12 +546,12 @@ T.vi={
  labsTitle:'Xét nghiệm & Kết quả',labsSub:'Tài liệu bạn chia sẻ và kết quả bác sĩ công bố',
  yourLabs:'Xét nghiệm bạn đã tải lên',released:'Kết quả đã công bố',underReview:'Đang xem xét',received:'Đã nhận',
  resultNote:'Bộ kết quả mẫu — để minh họa. Kết quả thật hiện tại đây khi bác sĩ xem xét và công bố.',
- trend:'Xu hướng Vitamin D',analyte:'Chỉ số',value:'Giá trị',range:'Tham chiếu',statusH:'Trạng thái',provComment:'Nhận xét của bác sĩ Burris',
+ trend:'Xu hướng Vitamin D',analyte:'Chỉ số',value:'Giá trị',range:'Tham chiếu',statusH:'Trạng thái',provComment:'Nhận xét của Barry Burris, NMD',
  provCommentTxt:'Vitamin D của bạn đang tăng nhưng vẫn hơi thấp — chúng ta sẽ tiếp tục hỗ trợ và kiểm tra lại sau 3 tháng. Các chỉ số khác đều ổn. Sẽ trao đổi kỹ tại buổi khám.',
  low:'Thấp',high:'Cao',inRange:'Bình thường',
  msgTitle:'Tin nhắn',msgSub:'Tin nhắn bảo mật với đội chăm sóc',send:'Gửi',msgPlaceholder:'Viết tin nhắn…',
  catAll:'Tất cả',catGeneral:'Chung',catClinical:'Lâm sàng',catBilling:'Thanh toán',attach:'Đính kèm',reply1:'Đội chăm sóc thường trả lời trong 1 ngày làm việc.',
- ackMsg:'Tin nhắn đã đến đội chăm sóc. Bác sĩ Burris sẽ xem và trả lời — thường trong 1 ngày làm việc. Nếu khẩn cấp, vui lòng gọi phòng khám hoặc số cấp cứu địa phương.',
+ ackMsg:'Tin nhắn đã đến đội chăm sóc. Barry Burris, NMD sẽ xem và trả lời — thường trong 1 ngày làm việc. Nếu khẩn cấp, vui lòng gọi phòng khám hoặc số cấp cứu địa phương.',
  seen:'Đã xem',delivered:'Đã gửi',
  docsTitle:'Tài liệu',docsSub:'Biểu mẫu, đồng thuận và tệp bạn trao đổi với phòng khám',
  docConsents:'Đồng thuận',docIntake:'Hồ sơ nhập',docLabs:'Xét nghiệm',docVisit:'Tóm tắt khám',docInsurance:'Bảo hiểm & CMND',
@@ -568,7 +568,7 @@ T.vi={
  security:'Bảo mật',changePass:'Đổi mật khẩu',lastSignin:'Lần đăng nhập gần nhất',signoutAll:'Đăng xuất mọi thiết bị',
  insurance:'Bảo hiểm & CMND',addLater:'Thêm cùng tài khoản của bạn',
  demoNote:'Minh họa — dữ liệu mẫu. Tin nhắn bảo mật, khám video và tài khoản thật chạy trên backend HIPAA.',
- teleConnecting:'Đang kết nối…',teleWaiting:'Bạn đang ở phòng chờ — bác sĩ Burris sẽ vào ngay.',teleConnected:'Đã kết nối',
+ teleConnecting:'Đang kết nối…',teleWaiting:'Bạn đang ở phòng chờ — Barry Burris, NMD sẽ vào ngay.',teleConnected:'Đã kết nối',
  teleNoteTxt:'Phòng minh họa — video trực tiếp chạy trên backend bảo mật (video HIPAA).',
  camOn:'Bật camera',camOff:'Camera tắt',mic:'Micro',camera:'Camera',chat:'Trò chuyện',leave:'Rời khỏi',
  pjTitle:'Sẵn sàng vào?',pjSub:'Kiểm tra camera và micro trước khi vào buổi khám.',
@@ -660,6 +660,7 @@ function go(key){
   var v=document.getElementById('view');v.innerHTML='';
   try{VIEWS[key]();}catch(e){v.innerHTML='<div class="empty"><div class="em-ic">⚠️</div><p>'+esc(t('loadError'))+'</p><button class="btn" onclick="go(\'home\')">'+esc(t('backHome'))+'</button></div>';if(window.console)console.error(e);}
   try{window.scrollTo(0,0);}catch(e){}
+  if(typeof translateThread==='function')translateThread();
   closeSideMobile();
 }
 
@@ -754,7 +755,7 @@ function renderPlan(){
     '<div class="sig" style="margin-top:8px"><div class="tk-ic" style="background:var(--teal-soft);color:var(--teal);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center">✓</div><div><div class="small">'+esc(t('signedBy'))+'</div><div class="sg">Barry Burris, NMD</div></div><div style="margin-left:auto;text-align:right"><div class="small">'+esc(t('version'))+' 1.0</div><div class="small mono">'+fmtDate(signDate,true)+'</div></div></div>'+
     '<div class="demo" style="margin:12px 0 0">✍️ <div>'+esc(t('planBanner'))+'</div></div></div>';
   h+='<div class="grid2">';
-  h+='<div class="card"><div class="lbl">'+esc(t('goals'))+'</div><p style="margin:8px 0 0;font-size:14px;line-height:1.55">'+esc(p.cc||'')+'</p></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('goals'))+'</div><p style="margin:8px 0 0;font-size:14px;line-height:1.55">'+trProv(p.cc||'')+'</p></div>';
   h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+(p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div></div>';
   h+='</div>';
   h+='<div class="card"><div class="lbl">'+esc(t('foundations'))+'</div><div class="grid2" style="margin-top:12px">'+
@@ -828,7 +829,7 @@ function drawLabChart(){
   if(typeof Chart==='undefined'){var c=document.getElementById('labChart');if(c)c.parentNode.innerHTML='<div class="small" style="padding:20px;text-align:center">'+esc(lang==='vi'?'Biểu đồ xu hướng':'Trend chart')+'</div>';return;}
   var ctx=document.getElementById('labChart');if(!ctx)return;
   try{
-   new Chart(ctx,{type:'line',data:{labels:['Dec 2025','Mar 2026','Jun 2026'],datasets:[{label:'Vitamin D (ng/mL)',data:[18,21,24],borderColor:'#0e7c84',backgroundColor:'rgba(14,124,132,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#0e7c84'},{label:'Target ≥ 30',data:[30,30,30],borderColor:'#c9992f',borderDash:[6,5],pointRadius:0,fill:false}]},
+   new Chart(ctx,{type:'line',data:{labels:['Dec 2025','Mar 2026','Jun 2026'],datasets:[{label:'Vitamin D (ng/mL)',data:[18,21,24],borderColor:'#31696a',backgroundColor:'rgba(49,105,106,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#31696a'},{label:'Target ≥ 30',data:[30,30,30],borderColor:'#c9992f',borderDash:[6,5],pointRadius:0,fill:false}]},
     options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:12}}},scales:{y:{beginAtZero:true,suggestedMax:60,ticks:{font:{family:'Inter'}}},x:{ticks:{font:{family:'Inter'}}}}}});
   }catch(e){}
 }
@@ -841,7 +842,7 @@ function docRow(ic,name,meta,right){
 
 /* ---------- messages ---------- */
 function seedMsgs(p){var f=firstName(p.name);
-  return [{from:'them',cat:'general',text:'Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.',ts:Date.now()-86400000,read:false}];}
+  return [{from:'them',cat:'general',text:'Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Barry Burris will review everything before your visit. If you have any questions, just reply here.',ts:Date.now()-86400000,read:false}];}
 function getMsgs(p){var m=read(pkey('msgs'),null);if(!m){m=seedMsgs(p);write(pkey('msgs'),m);}return m;}
 var msgCat='all';
 function renderMessages(){
@@ -863,18 +864,18 @@ function setMsgCat(c){msgCat=c;renderMessages();}
 function origLabel(){return lang==='vi'?'bản gốc':(lang==='es'?'original':'original');}
 function transLabel(){return lang==='vi'?'bản dịch':(lang==='es'?'traducción':'translation');}
 // Provider/system messages are authored in English (Barry's language) and shown in the patient's language.
-function provText(m){
-  if((m.from==='them'||m.from==='sys')&&lang!=='en'&&typeof BBTranslate!=='undefined'){
-    var o=m.text,c=BBTranslate.cachedOnly(o,lang);
-    if(c!=null&&c!==o)return '<span class="trneed" data-done="1"><span class="bt-tx">'+esc(c)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(c)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button></span>';
-    return '<span class="trneed" data-o="'+esc(o)+'">'+esc(o)+'</span>';
-  }
-  return esc(m.text);
+// Wrap any English provider-authored text so it shows in the patient's language (with a show-original toggle).
+function trProv(o){o=String(o==null?'':o);
+  if(lang==='en'||!o.trim()||typeof BBTranslate==='undefined')return esc(o);
+  var c=BBTranslate.cachedOnly(o,lang);
+  if(c!=null&&c!==o)return '<span class="trneed" data-done="1"><span class="bt-tx">'+esc(c)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(c)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button></span>';
+  return '<span class="trneed" data-o="'+esc(o)+'">'+esc(o)+'</span>';
 }
+function provText(m){return (m.from==='them'||m.from==='sys')?trProv(m.text):esc(m.text);}
 function btToggle(b){var s=b.getAttribute('data-s'),span=b.parentNode.querySelector('.bt-tx');if(!span)return;if(s==='t'){span.textContent=b.getAttribute('data-o');b.setAttribute('data-s','o');b.textContent='🌐 '+transLabel();}else{span.textContent=b.getAttribute('data-t');b.setAttribute('data-s','t');b.textContent='🌐 '+origLabel();}}
 function translateThread(){
   if(lang==='en'||typeof BBTranslate==='undefined')return;
-  var els=[].slice.call(document.querySelectorAll('#msgList .trneed:not([data-done])'));if(!els.length)return;
+  var els=[].slice.call(document.querySelectorAll('.trneed:not([data-done])'));if(!els.length)return;
   var origs=els.map(function(e){return e.getAttribute('data-o');});
   BBTranslate.batch(origs,lang).then(function(tr){els.forEach(function(e,i){var o=origs[i],t2=tr[i]||o;e.setAttribute('data-done','1');if(t2&&t2!==o)e.innerHTML='<span class="bt-tx">'+esc(t2)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(t2)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button>';else e.textContent=o;});});
 }
@@ -892,7 +893,7 @@ function sendMsg(){var inp=document.getElementById('msgIn');var txt=(inp.value||
   pushMsg(m);
   inp.value='';
   if(lang!=='en'&&typeof BBTranslate!=='undefined'){BBTranslate.to(txt,'en').then(function(en){var arr=read(msgKey(),[]);for(var i=arr.length-1;i>=0;i--){if(arr[i].ts===m.ts){arr[i].en=en;break;}}write(msgKey(),arr);});}
-  setTimeout(function(){pushMsg({from:'sys',text:'Your message reached the care team. Dr. Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
+  setTimeout(function(){pushMsg({from:'sys',text:'Your message reached the care team. Barry Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
   renderMessages();toast(t('toastSent'),'good');
 }
 function attachDemo(){var inp=document.getElementById('msgIn');pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:(inp&&inp.value.trim())||(lang==='vi'?'Đã đính kèm tài liệu.':'Attached a document.'),att:'my-document.pdf',ts:Date.now(),read:true});if(inp)inp.value='';renderMessages();toast(t('toastUploaded'),'good');}
@@ -1049,11 +1050,11 @@ function talkNow(){
   var p=current();if(!p)return;var r=BBRegion.regionOf(p);
   if(!BBRegion.telehealthLive(r))return gateVideo(r);
   var pr=profileData()||{};var name=pr.name||clean(p.name);
-  // Direct line to Dr. Burris's always-on office room (both sides land together).
+  // Direct line to Barry Burris's always-on office room (both sides land together).
   BBTele.open({
     room:BBTele.officeRoom(),
-    displayName:name,
-    subject:(lang==='vi'?'Trò chuyện với BS. Barry Burris, NMD':'Talking with Dr. Barry Burris, NMD'),
+    displayName:name,myLang:lang,
+    subject:(lang==='vi'?'Trò chuyện với Barry Burris, NMD':'Talking with Barry Burris, NMD'),
     note:teleNote(r)
   });
 }
@@ -1063,9 +1064,9 @@ function openTele(){
   var pr=profileData()||{};var name=pr.name||clean(p.name);
   // REAL video visit (bb-telehealth.js). Same room as the provider's hub side.
   BBTele.open({
-    displayName:name,
+    displayName:name,myLang:lang,
     patient:clean(p.name),
-    subject:(lang==='vi'?'Khám từ xa với BS. Barry Burris, NMD':'Visit with Dr. Barry Burris, NMD'),
+    subject:(lang==='vi'?'Khám từ xa với Barry Burris, NMD':'Visit with Barry Burris, NMD'),
     note:teleNote(r)
   });
 }
