@@ -483,6 +483,8 @@ syncFrontDesk();
  }
  try{const q=new URLSearchParams(location.search).get('intake');if(!q)return;
   const d=JSON.parse(decodeURIComponent(escape(atob(q))));const wrap=document.querySelector('.wrap');
+  window.__intake=d;
+  if(d.name){var _sx=((d.sex||'').charAt(0).toUpperCase())||CHART.sex;var _age=CHART.age;try{if(d.dob){var _by=new Date(d.dob),_n=new Date();_age=_n.getFullYear()-_by.getFullYear()-((_n.getMonth()<_by.getMonth()||(_n.getMonth()===_by.getMonth()&&_n.getDate()<_by.getDate()))?1:0);}}catch(e){}var _t=document.getElementById('title');if(_t)_t.textContent='SOAP NOTE — '+d.name+' ('+_age+_sx+')';var _sm=document.getElementById('submeta');if(_sm&&d.dob)_sm.innerHTML=_sm.innerHTML.replace(/DOB:.*/,'DOB: '+d.dob);}
   const b=document.createElement('div');b.className='banner';b.style.cssText='background:#e6f3f4;border:1px solid #bfe3e6;color:#0e5a61;border-radius:10px;padding:10px 14px;margin:10px 0';
   b.innerHTML='<b>Loaded from patient intake - '+(d.name||'patient')+'.</b> Subjective pre-filled from the questionnaire. Clinical judgment stays [FILL].';
   wrap.insertBefore(b,wrap.firstChild);
