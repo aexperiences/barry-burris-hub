@@ -177,8 +177,7 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
 
   <div class="banner lane">
     <span class="tag">WORKING DRAFT</span>
-    <b>Not a certified medical record system — secure storage is being set up. Use example data only for now.</b> The tool <b>auto-fills objective chart data and flags contraindications —
-    it does not suggest or prescribe treatments.</b> Every clinical judgment stays with the provider.
+    <b>Not a certified medical record system — secure storage is being set up. Use example data only for now.</b> The tool <b>auto-fills objective chart data, flags contraindications, and drafts possible diagnoses &amp; treatment suggestions for review.</b> Every diagnosis, medication and dose is verified and signed by the provider.
   </div>
 
   <div class="banner sample">Example note — sample data shown to illustrate the format.</div>
@@ -291,7 +290,7 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
 
       <div class="row fill">
         <div class="lbl">Add — Prescription</div>
-        <div class="prov">Provider completes and documents. This tool does not auto-suggest medications. Non-controlled (legend) drugs per practice policy; for a controlled substance, coordinate with an appropriate prescriber.</div>
+        <div class="prov">The AI drafts suggested treatment options above; the provider reviews, confirms and documents, and verifies &amp; signs every medication and dose. Non-controlled (legend) drugs per practice policy; for a controlled substance, coordinate with an appropriate prescriber.</div>
         <textarea id="pRx" style="margin-top:6px" oninput="syncFrontDesk()" data-fd placeholder="Drug — dose — route — frequency"></textarea>
       </div>
 
@@ -335,7 +334,7 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
 
   <footer>
     <b>SOAP Note Generator</b> · Barry Burris, NMD — Functional Medicine &amp; Longevity.<br>
-    Draft for provider review and completion — <b>not a final medical record</b>. Auto-fills objective chart data only; the AI does not diagnose, interpret, or recommend treatment.<br>
+    Draft for provider review and completion — <b>not a final medical record</b>. Auto-fills objective chart data and drafts possible diagnoses &amp; treatment suggestions; the provider verifies and signs every clinical decision.<br>
     Built by Accelerated Experiences, LLC · one spine, one door, no smoke.
   </footer>
 </div>
@@ -495,7 +494,7 @@ syncFrontDesk();
   var _aiHint='<div class="aihint">✨ AI draft from the questionnaire — scan &amp; edit before signing.</div>';
   var _aiDraft=d.aiHPI||d.aiROS||d.aiConsider;
   b.innerHTML='<b>Loaded from patient intake - '+(d.name||'patient')+'.</b> Subjective pre-filled from the questionnaire. Clinical judgment stays [FILL].'
-    +(_aiDraft?' <span style="display:block;margin-top:6px;color:#6b4fbb"><b>✨ HPI &amp; narrative are AI-drafted from the questionnaire for you to scan &amp; edit.</b> Not a diagnosis — the provider makes and signs every clinical decision, and medications/doses are never AI-suggested.</span>':'');
+    +(_aiDraft?' <span style="display:block;margin-top:6px;color:#6b4fbb"><b>✨ Narrative, possible diagnoses &amp; suggested plan are AI-drafted from the questionnaire for you to scan &amp; edit.</b> These are suggestions — the provider verifies and signs every diagnosis, medication and dose.</span>':'');
   wrap.insertBefore(b,wrap.firstChild);
   if(d.cc){const cc=document.getElementById('cc');if(cc)cc.value=d.cc;}
   const mini=document.querySelectorAll('input[type=number].mini');
@@ -507,7 +506,7 @@ syncFrontDesk();
   /* ✨ AI-drafted narrative — ONLY when the intake carries ai* keys (the sample). History/narrative only; never meds, doses, or a definitive diagnosis. Every field stays fully editable for the provider to verify. Plan/Rx fields are untouched (stay [FILL]). */
   if(d.aiHPI){var _hpi=document.getElementById('hpi');if(_hpi){_hpi.value=d.aiHPI;var _hr=_hpi.closest('.row');if(_hr){_hr.classList.remove('fill');_hr.classList.add('airow');var _hl=_hr.querySelector('.lbl');if(_hl)_hl.innerHTML='HPI '+_aiBadge;_hpi.insertAdjacentHTML('afterend',_aiHint);}}}
   if(d.aiROS){var _hpiA=document.getElementById('hpi');var _anchor=_hpiA?_hpiA.closest('.row'):null;var _ros=document.createElement('div');_ros.className='row airow';_ros.innerHTML='<div class="lbl">Review of systems '+_aiBadge+'</div><textarea id="rosText"></textarea>'+_aiHint;if(_anchor&&_anchor.parentNode){_anchor.parentNode.insertBefore(_ros,_anchor.nextSibling);}else{var _subj=document.querySelector('section.soap');if(_subj)_subj.appendChild(_ros);}var _rt=document.getElementById('rosText');if(_rt)_rt.value=d.aiROS;}
-  if(d.aiConsider){var _interp=document.getElementById('interp');var _irow=_interp?_interp.closest('.row'):null;var _con=document.createElement('div');_con.className='row airow';_con.innerHTML='<div class="lbl">Considerations (AI draft) '+_aiBadge+' <span class="sub">— not a diagnosis; provider decides</span></div><textarea id="considerText"></textarea>'+_aiHint;if(_irow&&_irow.parentNode){_irow.parentNode.insertBefore(_con,_irow);}else{var _asec=document.querySelectorAll('section.soap')[2];if(_asec)_asec.appendChild(_con);}var _ct=document.getElementById('considerText');if(_ct)_ct.value=d.aiConsider;}
+  if(d.aiConsider){var _interp=document.getElementById('interp');var _irow=_interp?_interp.closest('.row'):null;var _con=document.createElement('div');_con.className='row airow';_con.innerHTML='<div class="lbl">Considerations (AI draft) '+_aiBadge+' <span class="sub">— AI suggestions; provider confirms &amp; signs</span></div><textarea id="considerText"></textarea>'+_aiHint;if(_irow&&_irow.parentNode){_irow.parentNode.insertBefore(_con,_irow);}else{var _asec=document.querySelectorAll('section.soap')[2];if(_asec)_asec.appendChild(_con);}var _ct=document.getElementById('considerText');if(_ct)_ct.value=d.aiConsider;}
   if(window.syncFrontDesk)syncFrontDesk();
  }catch(e){}
 })();
@@ -595,10 +594,31 @@ syncFrontDesk();
     var ex=document.getElementById('considerText'); if(ex){ ex.value=text; return; }
     var interp=document.getElementById('interp'); var irow=interp?interp.closest('.row'):null;
     var row=document.createElement('div'); row.className='row airow';
-    row.innerHTML='<div class="lbl">Considerations (AI draft) '+AI_BADGE+' <span class="sub">— not a diagnosis; provider decides</span></div><textarea id="considerText"></textarea>'+AI_HINT;
+    row.innerHTML='<div class="lbl">Considerations (AI draft) '+AI_BADGE+' <span class="sub">— provider confirms &amp; signs</span></div><textarea id="considerText"></textarea>'+AI_HINT;
     if(irow&&irow.parentNode){ irow.parentNode.insertBefore(row,irow); }
     else { var a=document.querySelectorAll('section.soap')[2]; if(a) a.appendChild(row); }
     var ct=document.getElementById('considerText'); if(ct) ct.value=text;
+  }
+  // Differential diagnosis (possible diagnoses to consider) — editable AI draft above the interpretation.
+  function setAssessment(text){
+    var ex=document.getElementById('assessAIText'); if(ex){ ex.value=text; return; }
+    var interp=document.getElementById('interp'); var irow=interp?interp.closest('.row'):null;
+    var row=document.createElement('div'); row.className='row airow';
+    row.innerHTML='<div class="lbl">Possible diagnoses to consider (differential) '+AI_BADGE+' <span class="sub">— AI suggestions; provider confirms &amp; signs the diagnosis</span></div><textarea id="assessAIText" style="min-height:130px"></textarea>'+AI_HINT;
+    if(irow&&irow.parentNode){ irow.parentNode.insertBefore(row,irow); }
+    else { var a=document.querySelectorAll('section.soap')[2]; if(a) a.appendChild(row); }
+    var ct=document.getElementById('assessAIText'); if(ct) ct.value=text;
+  }
+  // Recommended treatment options — editable AI draft at the top of the Plan section.
+  function setPlan(text){
+    var ex=document.getElementById('planAIText'); if(ex){ ex.value=text; return; }
+    var anchorEl=document.getElementById('pAdjust')||document.getElementById('pRx');
+    var arow=anchorEl?anchorEl.closest('.row'):null;
+    var row=document.createElement('div'); row.className='row airow';
+    row.innerHTML='<div class="lbl">Recommended treatments &amp; next steps '+AI_BADGE+' <span class="sub">— AI suggestions; provider verifies &amp; signs every medication and dose</span></div><textarea id="planAIText" style="min-height:160px"></textarea>'+AI_HINT;
+    if(arow&&arow.parentNode){ arow.parentNode.insertBefore(row,arow); }
+    else { var p=document.querySelectorAll('section.soap')[3]; if(p) p.appendChild(row); }
+    var pt=document.getElementById('planAIText'); if(pt) pt.value=text;
   }
 
   window.draftWithAI=function(btn){
@@ -616,10 +636,11 @@ syncFrontDesk();
         if(data&&data.ok){
           if(data.hpi) setHPI(data.hpi);
           if(data.ros) setROS(data.ros);
-          if(data.consider) setConsider(data.consider);
+          if(data.assessment) setAssessment(data.assessment);
+          else if(data.consider) setAssessment(data.consider);
+          if(data.plan) setPlan(data.plan);
           if(window.syncFrontDesk){ try{ syncFrontDesk(); }catch(e){} }
-          var extra=(data.flags&&data.flags.length)?' (safety filter tidied '+data.flags.length+' item'+(data.flags.length>1?'s':'')+')':'';
-          toast('✨ AI draft ready — scan & edit before signing.'+extra,'ok');
+          toast('✨ AI draft ready — possible diagnoses & a suggested plan. Review, edit & sign.','ok');
         } else if(data&&data.reason==='no_key'){
           toast("Live AI drafting isn't switched on yet — needs the backend + key. Showing the fields for you to complete.",'warn');
         } else {
