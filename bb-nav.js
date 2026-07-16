@@ -51,6 +51,7 @@
   var NAV = [
     { g: 'Practice', items: [
       ['home', 'Home', 'home', 'barry-burris-hub.html'],
+      ['welcome', 'AE Welcome', 'star', 'bb-welcome.html'],
       ['calendar', 'Calendar', 'cal', 'barry-calendar.html'],
       ['contacts', 'Contacts', 'users', 'barry-contacts.html'],
       ['charting', 'Charting', 'clip', 'barry-burris-hub.html#charting'],
