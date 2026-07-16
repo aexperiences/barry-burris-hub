@@ -35,7 +35,8 @@
     team: '<circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><path d="M17 9.5a2.6 2.6 0 000-4"/><path d="M21 20c0-2.3-1.4-4-3.5-4.6"/>',
     trend: '<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>',
     gear: '<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.1 5.1l2.1 2.1M16.8 16.8l2.1 2.1M18.9 5.1l-2.1 2.1M7.2 16.8l-2.1 2.1"/>',
-    cabinet: '<rect x="4" y="3" width="16" height="18" rx="1.6"/><path d="M4 12h16"/><path d="M10 7.5h4M10 16.5h4"/>'
+    cabinet: '<rect x="4" y="3" width="16" height="18" rx="1.6"/><path d="M4 12h16"/><path d="M10 7.5h4M10 16.5h4"/>',
+    video: '<path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/>'
   };
 
   // Nav groups: [key, label, icon, url]. Internal hub views are reached
@@ -46,6 +47,7 @@
       ['calendar', 'Calendar', 'cal', 'barry-calendar.html'],
       ['contacts', 'Contacts', 'users', 'barry-contacts.html'],
       ['charting', 'Charting', 'clip', 'barry-burris-hub.html#charting'],
+      ['telehealth', 'Video visits', 'video', 'telehealth.html'],
       ['records', 'Records', 'cabinet', 'barry-records.html']
     ] },
     { g: 'Business', items: [

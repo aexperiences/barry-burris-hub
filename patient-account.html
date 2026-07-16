@@ -392,6 +392,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
 
 <script src="bb-intakes.js"></script>
 <script src="bb-portal-auth.js"></script>
+<script src="bb-telehealth.js"></script>
 <script>
 "use strict";
 /* ================= data + config ================= */
@@ -1005,30 +1006,15 @@ function addToCalendar(id){
 /* ================= telehealth ================= */
 var teleStream=null,micOn=true,camOn=false,teleTimer=null,connState='connecting',_teleReturn=null;
 function openTele(){
-  document.getElementById('teleTitle').textContent=(lang==='vi'?'Khám từ xa':'Telehealth visit');
-  document.getElementById('teleNote').textContent=t('teleNoteTxt');
-  document.getElementById('teleLeave').textContent=t('leave');
-  document.getElementById('selfPlaceholder').textContent=t('camOff');
-  document.getElementById('capMic').textContent=t('mic');
-  document.getElementById('capCam').textContent=t('camera');
-  document.getElementById('capChat').textContent=t('chat');
-  document.getElementById('pjTitle').textContent=t('pjTitle');
-  document.getElementById('pjSub').textContent=t('pjSub');
-  document.getElementById('pjCamL').textContent=t('pjCam');
-  document.getElementById('pjMicL').textContent=t('pjMic');
-  document.getElementById('pjTest').textContent=t('pjTest');
-  document.getElementById('pjJoin').textContent=t('pjJoin');
-  document.getElementById('pjNote').textContent=t('pjNote');
-  document.getElementById('pjPrevTxt').textContent=t('pjCam');
-  document.getElementById('tchH').textContent=(lang==='vi'?'Trò chuyện trong buổi khám':'In-visit chat');
-  document.getElementById('prejoin').style.display='flex';
-  document.getElementById('teleChat').classList.add('hide2');
-  _teleReturn=document.activeElement;
-  document.getElementById('tele').classList.add('on');
-  document.getElementById('tele').setAttribute('aria-hidden','false');
-  document.getElementById('app').setAttribute('aria-hidden','true');
-  setTimeout(function(){var j=document.getElementById('pjJoin');if(j)j.focus();},30);
-  enumerateDevices();
+  var p=current();if(!p)return;
+  var pr=profileData()||{};var name=pr.name||clean(p.name);
+  // REAL video visit (bb-telehealth.js). Same room as the provider's hub side.
+  BBTele.open({
+    displayName:name,
+    patient:clean(p.name),
+    subject:(lang==='vi'?'Khám từ xa với BS. Barry Burris, NMD':'Visit with Dr. Barry Burris, NMD'),
+    note:(lang==='vi'?'Video thử nghiệm trực tiếp — dịch vụ video lâm sàng bảo mật sẽ được thêm trước khi khám bệnh nhân thật.':'Live test video — a secure clinical video service is added before real patient visits.')
+  });
 }
 function enumerateDevices(){
   if(!navigator.mediaDevices||!navigator.mediaDevices.enumerateDevices)return;
