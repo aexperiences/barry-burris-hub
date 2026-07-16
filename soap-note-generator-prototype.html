@@ -191,6 +191,7 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
     <div class="tools no-print">
       <button onclick="fillDemo()">Fill demo values</button>
       <button onclick="clearFill()">Clear [FILL]</button>
+      <button id="btnDraftAI" class="primary" style="background:#6b4fbb;border-color:#6b4fbb" onclick="draftWithAI(this)">✨ Draft with AI</button>
       <button class="primary" onclick="window.print()">Print / Export PDF</button>
       <button class="primary" style="background:#12263A;border-color:#12263A" onclick="finalizePlan()">✓ Finalize → Treatment Plan</button>
     </div>
@@ -509,6 +510,132 @@ syncFrontDesk();
   if(d.aiConsider){var _interp=document.getElementById('interp');var _irow=_interp?_interp.closest('.row'):null;var _con=document.createElement('div');_con.className='row airow';_con.innerHTML='<div class="lbl">Considerations (AI draft) '+_aiBadge+' <span class="sub">— not a diagnosis; provider decides</span></div><textarea id="considerText"></textarea>'+_aiHint;if(_irow&&_irow.parentNode){_irow.parentNode.insertBefore(_con,_irow);}else{var _asec=document.querySelectorAll('section.soap')[2];if(_asec)_asec.appendChild(_con);}var _ct=document.getElementById('considerText');if(_ct)_ct.value=d.aiConsider;}
   if(window.syncFrontDesk)syncFrontDesk();
  }catch(e){}
+})();
+</script>
+
+<script>
+/* ✨ LIVE AI DRAFT — calls the serverless backend (/api/draft) to draft the NARRATIVE-ONLY
+   sections (HPI · Review of Systems · Considerations) for the provider to scan, edit & sign.
+   Backend follows the AE house pattern (DeepSeek→Anthropic, env-gated). It DEGRADES GRACEFULLY:
+   on a static host with no /api (GitHub Pages → 404) or when no AI key is set, it shows an honest
+   toast and leaves the fields for the provider to complete. It NEVER touches meds/Rx/Plan fields,
+   never suggests a medication/dose/diagnosis, and NEVER throws an uncaught error.
+   The sample intake prefill (aiHPI/aiROS/aiConsider) above is untouched — this button drafts live on top. */
+(function(){
+  var AI_BADGE='<span class="chip aidraft">✨ AI DRAFT</span>';
+  var AI_HINT='<div class="aihint">✨ AI draft — scan &amp; edit before signing.</div>';
+
+  function chartVal(k){ try{ return (typeof CHART!=='undefined' && CHART) ? (CHART[k]||'') : ''; }catch(e){ return ''; } }
+
+  // lightweight toast — no dependencies
+  function toast(msg, kind){
+    var t=document.createElement('div');
+    t.textContent=msg;
+    t.style.cssText='position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;max-width:90vw;'
+      +'background:'+(kind==='warn'?'#6b551f':kind==='err'?'#7a2620':'#0f2233')+';color:#fff;padding:11px 16px;'
+      +'border-radius:9px;font:600 13.5px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;'
+      +'box-shadow:0 6px 24px rgba(15,34,51,.28);text-align:center';
+    document.body.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){ t.remove(); },420); }, kind==='ok'?2800:4600);
+  }
+
+  // Build the /api/draft payload — prefer the intake handoff (window.__intake), else read the note fields.
+  function buildPayload(){
+    var ik=window.__intake||{};
+    var val=function(id){ var e=document.getElementById(id); return e?(e.value||'').trim():''; };
+    var mini=document.querySelectorAll('input[type=number].mini');
+    var num=function(el){ if(!el) return null; var v=el.value; return (v===''||v==null)?null:Number(v); };
+    var scores={ energy:num(mini[0]), libido:num(mini[1]), sleep:num(mini[2]), mood:num(mini[3]) };
+    if(scores.energy==null&&scores.libido==null&&scores.sleep==null&&scores.mood==null&&ik.scores) scores=ik.scores;
+    // meds: patient-reported / AUTO list — history only, never used to prescribe
+    var meds='';
+    var medEl=document.getElementById('meds');
+    if(medEl){ meds=[].map.call(medEl.querySelectorAll('li'),function(li){ return li.textContent.replace(/\s*\(patient-reported\)\s*$/,'').trim(); }).filter(Boolean).join('\n'); }
+    if(!meds) meds=ik.meds||'';
+    var allergies=(function(){ var a=document.getElementById('allergies'); return a?a.textContent.trim():''; })()||ik.allergies||'';
+    // labs: give the model context (test · result · status) from the chart, or intake attachment names
+    var labs=[];
+    var lb=document.getElementById('labs');
+    if(lb){ labs=[].map.call(lb.querySelectorAll('tr'),function(tr){
+        var td=tr.querySelectorAll('td'); if(!td.length) return '';
+        var test=td[0]?td[0].textContent.trim():'',res=td[1]?td[1].textContent.trim():'',st=td[3]?td[3].textContent.trim():'';
+        return test?(test+(res?': '+res:'')+(st?' ('+st+')':'')):'';
+      }).filter(Boolean); }
+    if(!labs.length&&Array.isArray(ik.labs)) labs=ik.labs;
+    return {
+      name: ik.name||chartVal('name'),
+      sex:  ik.sex ||chartVal('sex'),
+      dob:  ik.dob ||chartVal('dob'),
+      cc: val('cc')||ik.cc||'',
+      scores: scores, meds: meds, allergies: allergies,
+      flags: Array.isArray(ik.flags)?ik.flags:[], labs: labs
+    };
+  }
+
+  // Paint each narrative field as an editable ✨ AI DRAFT (mirrors the sample INTAKE_HANDOFF styling).
+  function setHPI(text){
+    var hpi=document.getElementById('hpi'); if(!hpi) return;
+    hpi.value=text;
+    var row=hpi.closest('.row');
+    if(row){ row.classList.remove('fill'); row.classList.add('airow');
+      var lbl=row.querySelector('.lbl'); if(lbl) lbl.innerHTML='HPI '+AI_BADGE;
+      if(!row.querySelector('.aihint')) hpi.insertAdjacentHTML('afterend',AI_HINT);
+    }
+  }
+  function setROS(text){
+    var ex=document.getElementById('rosText'); if(ex){ ex.value=text; return; }
+    var hpi=document.getElementById('hpi'); var anchor=hpi?hpi.closest('.row'):null;
+    var row=document.createElement('div'); row.className='row airow';
+    row.innerHTML='<div class="lbl">Review of systems '+AI_BADGE+'</div><textarea id="rosText"></textarea>'+AI_HINT;
+    if(anchor&&anchor.parentNode){ anchor.parentNode.insertBefore(row,anchor.nextSibling); }
+    else { var s=document.querySelector('section.soap'); if(s) s.appendChild(row); }
+    var rt=document.getElementById('rosText'); if(rt) rt.value=text;
+  }
+  function setConsider(text){
+    var ex=document.getElementById('considerText'); if(ex){ ex.value=text; return; }
+    var interp=document.getElementById('interp'); var irow=interp?interp.closest('.row'):null;
+    var row=document.createElement('div'); row.className='row airow';
+    row.innerHTML='<div class="lbl">Considerations (AI draft) '+AI_BADGE+' <span class="sub">— not a diagnosis; provider decides</span></div><textarea id="considerText"></textarea>'+AI_HINT;
+    if(irow&&irow.parentNode){ irow.parentNode.insertBefore(row,irow); }
+    else { var a=document.querySelectorAll('section.soap')[2]; if(a) a.appendChild(row); }
+    var ct=document.getElementById('considerText'); if(ct) ct.value=text;
+  }
+
+  window.draftWithAI=function(btn){
+    var label=btn?btn.textContent:'';
+    if(btn){ btn.disabled=true; btn.textContent='✨ Drafting…'; }
+    var restore=function(){ if(btn){ btn.disabled=false; btn.textContent=label||'✨ Draft with AI'; } };
+    var payload; try{ payload=buildPayload(); }catch(e){ payload={}; }
+
+    fetch('/api/draft',{ method:'POST', headers:{'content-type':'application/json'}, body:JSON.stringify(payload) })
+      .then(function(r){
+        if(!r.ok){ var err=new Error('http_'+r.status); err.__http=r.status; throw err; } // 404 on a static host, or a server status
+        return r.json();
+      })
+      .then(function(data){
+        if(data&&data.ok){
+          if(data.hpi) setHPI(data.hpi);
+          if(data.ros) setROS(data.ros);
+          if(data.consider) setConsider(data.consider);
+          if(window.syncFrontDesk){ try{ syncFrontDesk(); }catch(e){} }
+          var extra=(data.flags&&data.flags.length)?' (safety filter tidied '+data.flags.length+' item'+(data.flags.length>1?'s':'')+')':'';
+          toast('✨ AI draft ready — scan & edit before signing.'+extra,'ok');
+        } else if(data&&data.reason==='no_key'){
+          toast("Live AI drafting isn't switched on yet — needs the backend + key. Showing the fields for you to complete.",'warn');
+        } else {
+          toast('AI drafting didn’t complete — please complete the fields.'+((data&&data.message)?' ('+data.message+')':''),'err');
+        }
+      })
+      .catch(function(e){
+        // 404 / network / offline / non-JSON → backend absent (e.g. static GitHub Pages). Fail soft, never throw.
+        if(e&&e.__http&&e.__http!==404){
+          toast('AI drafting hit a server error ('+e.__http+') — please complete the fields.','err');
+        } else {
+          toast("Live AI drafting isn't switched on yet — needs the backend + key. Showing the fields for you to complete.",'warn');
+        }
+      })
+      .then(restore,restore);
+  };
 })();
 </script>
 
