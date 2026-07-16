@@ -6,28 +6,32 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Calendar · Barry Burris, NMD</title>
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#eef2f6;--paper:#fff;--ink:#1f2d3a;--mut:#6b7a89;--line:#e6ecf1;
- --navy:#12263A;--navy2:#0e1d30;--teal:#0e7c84;--teal-soft:#e6f3f4;--gold:#c6a04a;--gold-soft:#f7efd9;--shadow:0 12px 34px rgba(18,38,58,.10);
- --fc-border-color:#e6ecf1;--fc-today-bg-color:#f2f8f9;--fc-neutral-bg-color:#f6fafb;--fc-page-bg-color:#fff;
- --fc-button-bg-color:#fff;--fc-button-border-color:#e6ecf1;--fc-button-text-color:#12263A;
- --fc-button-hover-bg-color:#eef4f5;--fc-button-hover-border-color:#cfe0e2;
- --fc-button-active-bg-color:#12263A;--fc-button-active-border-color:#12263A;--fc-list-event-hover-bg-color:#f6fafb}
+:root{--bg:#faf4e8;--paper:#fffdf7;--ink:#40352a;--mut:#8a7c68;--line:#e8dcc4;
+ --navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal-soft:#e2f1f2;--gold:#c9992f;--gold-soft:#f8efd6;--shadow:0 12px 34px rgba(60,40,20,.10);
+ --fc-border-color:#e8dcc4;--fc-today-bg-color:#fbf6ea;--fc-neutral-bg-color:#f4ecdb;--fc-page-bg-color:#fffdf7;
+ --fc-button-bg-color:#fffdf7;--fc-button-border-color:#e8dcc4;--fc-button-text-color:#40352a;
+ --fc-button-hover-bg-color:#f4ecdb;--fc-button-hover-border-color:#e6c67e;
+ --fc-button-active-bg-color:#0e7c84;--fc-button-active-border-color:#0e7c84;--fc-list-event-hover-bg-color:#f4ecdb}
 *{box-sizing:border-box}html,body{margin:0}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
-header{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#eaf1f7;padding:11px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.14)}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg)}
+h1,h2,h3{font-family:Fraunces,Georgia,serif}
+header{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#f4e8d0;padding:11px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.22)}
 .hb{max-width:1240px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:11px}
-.coin{width:34px;height:34px;border-radius:50%;flex:none}
-.htitle{font-weight:800;font-size:18px}.hsub{font-size:11px;color:#9fb4c7}.sp{flex:1}
-.bb-chip{font-size:11.5px;color:#cfe0e2}.bb-chip b{color:#fff}.bb-chip a{color:#7fd0d6;text-decoration:none;margin-left:2px}
-.hbtn{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);color:#eaf1f7;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
-.hbtn:hover{background:rgba(255,255,255,.22)}
+.coin{width:34px;height:34px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.htitle{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:19px;color:#e6c67e}.hsub{font-size:11px;color:#b8a986}.sp{flex:1}
+.bb-chip{font-size:11.5px;color:#cdbfa4}.bb-chip b{color:#f4e8d0}.bb-chip a{color:#e6c67e;text-decoration:none;margin-left:2px}
+.hbtn{background:rgba(255,255,255,.10);border:1px solid rgba(230,198,126,.25);color:#f4e8d0;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.hbtn:hover{background:rgba(255,255,255,.18)}
 .wrap{max-width:1240px;margin:0 auto;padding:14px 16px 70px}
 .tools{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
 select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;background:var(--paper);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
 .tbtn:hover{border-color:var(--teal)}.tbtn.dark{background:var(--teal);color:#fff;border:none;font-weight:700}
 #cal{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:14px 16px;box-shadow:var(--shadow)}
-.fc .fc-toolbar-title{color:var(--navy);font-size:21px;font-weight:800}
+.fc .fc-toolbar-title{font-family:Fraunces,Georgia,serif;color:#0b636a;font-size:22px;font-weight:700}
 .fc .fc-button{font-weight:600;text-transform:capitalize;box-shadow:none!important}
 .fc .fc-button-primary:not(:disabled).fc-button-active{color:#fff}
 .fc-event{border-radius:6px;padding:0 3px;font-size:12px;cursor:pointer}
