@@ -111,6 +111,9 @@ button{font-family:inherit}
 @media(max-width:900px){.burger{display:flex}}
 .topbar .tt{font-family:Fraunces,serif;font-weight:700;font-size:18px}
 .sp{flex:1}
+.pathchip{font-size:11.5px;font-weight:700;border-radius:99px;padding:5px 11px;border:1px solid var(--line);background:#fffdf7;color:var(--mut);white-space:nowrap}
+.pathchip.intl{background:var(--good-soft);color:var(--good);border-color:#bcd3ab}
+.pathchip.us{background:var(--warn-soft);color:var(--warn);border-color:#e7d29a}
 .acctbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fffdf7;border-radius:10px;padding:5px 9px 5px 6px;cursor:pointer;font:inherit}
 .acctbtn .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e6c67e,#c9992f);color:#3a2b08;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
 .acctbtn .an{font-size:12.5px;font-weight:600;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
@@ -334,6 +337,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
       <button class="burger" id="burger" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
       <h1 class="tt" id="pageTitle">Home</h1>
       <div class="sp"></div>
+      <span id="pathChip" class="pathchip" style="display:none"></span>
       <div class="langtog" role="group" aria-label="Language"><button id="lEn2" onclick="setLang('en')">EN</button><button id="lVi2" onclick="setLang('vi')">VI</button></div>
       <button class="acctbtn" id="acctBtn" onclick="toggleMenu()" aria-haspopup="true" aria-expanded="false"><span class="av" id="topAv" aria-hidden="true">–</span><span class="an" id="topName">—</span></button>
     </div>
@@ -393,6 +397,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
 
 <script src="bb-intakes.js"></script>
 <script src="bb-portal-auth.js"></script>
+<script src="bb-region.js"></script>
 <script src="bb-telehealth.js"></script>
 <script>
 "use strict";
@@ -657,7 +662,19 @@ function go(key){
 }
 
 /* ================= VIEWS ================= */
-function demoBanner(){return '<div class="demo">🔒 <div>'+t('demoNote')+'</div></div>';}
+function curRegion(){var p=current();return p?BBRegion.regionOf(p):'intl';}
+function teleNote(r){return r==='intl'?(lang==='vi'?'Buổi khám video trực tiếp với đội chăm sóc của bạn.':'Live video visit with your care team.'):(lang==='vi'?'Video bảo mật (HIPAA).':'Secure video (HIPAA).');}
+function demoBanner(){
+  var r=curRegion();
+  if(r==='intl')return '<div class="demo" style="background:var(--good-soft);border-color:#bcd3ab;color:#33501f">🌏 <div>'+esc(lang==='vi'?'Bệnh nhân quốc tế — khám từ xa đang hoạt động. (Dữ liệu mẫu để minh họa.)':'International patient — telehealth is live. (Sample data shown for setup.)')+'</div></div>';
+  return '<div class="demo">🇺🇸 <div>'+esc(lang==='vi'?'Bệnh nhân Hoa Kỳ — video bảo mật sẽ bật khi phòng khám hoàn tất chế độ HIPAA.':'U.S. patient — secure video turns on once the practice completes HIPAA mode.')+'</div></div>';
+}
+function gateVideo(r){
+  var h='<button class="close" onclick="closeSheet()" aria-label="Close">×</button><h3>'+esc(lang==='vi'?'Video bảo mật sắp có':'Secure video coming soon')+'</h3>';
+  h+='<p style="font-size:13.5px;line-height:1.6;color:var(--ink)">'+esc(lang==='vi'?'Với bệnh nhân tại Hoa Kỳ, video được bật khi phòng khám hoàn tất chế độ bảo mật (HIPAA). Trong lúc chờ, bạn có thể nhắn tin cho đội chăm sóc.':'For patients in the U.S., video turns on once the practice completes secure (HIPAA) mode. In the meantime, you can message your care team.')+'</p>';
+  h+='<div style="margin-top:14px;display:flex;gap:9px"><button class="btn solid" onclick="closeSheet();go(\'messages\')">✉️ '+esc(t('qaMsg'))+'</button><button class="btn ghost" onclick="closeSheet()">'+esc(t('cancel'))+'</button></div>';
+  openSheet(h);
+}
 function emptyState(icon,msg){return '<div class="empty"><div class="em-ic">'+icon+'</div><p>'+esc(msg)+'</p></div>';}
 
 function renderHome(){
@@ -1007,25 +1024,27 @@ function addToCalendar(id){
 /* ================= telehealth ================= */
 var teleStream=null,micOn=true,camOn=false,teleTimer=null,connState='connecting',_teleReturn=null;
 function talkNow(){
-  var p=current();if(!p)return;
+  var p=current();if(!p)return;var r=BBRegion.regionOf(p);
+  if(!BBRegion.telehealthLive(r))return gateVideo(r);
   var pr=profileData()||{};var name=pr.name||clean(p.name);
   // Direct line to Dr. Burris's always-on office room (both sides land together).
   BBTele.open({
     room:BBTele.officeRoom(),
     displayName:name,
     subject:(lang==='vi'?'Trò chuyện với BS. Barry Burris, NMD':'Talking with Dr. Barry Burris, NMD'),
-    note:(lang==='vi'?'Video thử nghiệm trực tiếp — dịch vụ video lâm sàng bảo mật sẽ được thêm trước khi khám bệnh nhân thật.':'Live test video — a secure clinical video service is added before real patient visits.')
+    note:teleNote(r)
   });
 }
 function openTele(){
-  var p=current();if(!p)return;
+  var p=current();if(!p)return;var r=BBRegion.regionOf(p);
+  if(!BBRegion.telehealthLive(r))return gateVideo(r);
   var pr=profileData()||{};var name=pr.name||clean(p.name);
   // REAL video visit (bb-telehealth.js). Same room as the provider's hub side.
   BBTele.open({
     displayName:name,
     patient:clean(p.name),
     subject:(lang==='vi'?'Khám từ xa với BS. Barry Burris, NMD':'Visit with Dr. Barry Burris, NMD'),
-    note:(lang==='vi'?'Video thử nghiệm trực tiếp — dịch vụ video lâm sàng bảo mật sẽ được thêm trước khi khám bệnh nhân thật.':'Live test video — a secure clinical video service is added before real patient visits.')
+    note:teleNote(r)
   });
 }
 function enumerateDevices(){
@@ -1164,7 +1183,7 @@ function setLang(l){lang=l;try{localStorage.setItem('bb_pt_lang',l)}catch(e){}
   ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='en');e.setAttribute('aria-pressed',(l==='en').toString());}});
   ['lVi','lVi2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='vi');e.setAttribute('aria-pressed',(l==='vi').toString());}});
   var appVisible=!document.getElementById('app').classList.contains('hide');
-  if(appVisible&&current()){buildMenu();document.getElementById('secTxt').textContent=t('secTxt');document.getElementById('footBuilt').textContent=t('built');var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
+  if(appVisible&&current()){buildMenu();document.getElementById('secTxt').textContent=t('secTxt');document.getElementById('footBuilt').textContent=t('built');paintPathChip();var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
   else{paintSignin();if(pickOpen)renderPick();}
 }
 
@@ -1201,6 +1220,13 @@ document.addEventListener('keydown',function(e){
 });
 
 /* ================= boot ================= */
+function paintPathChip(){
+  var pc=document.getElementById('pathChip');if(!pc)return;var p=current();
+  if(!p){pc.style.display='none';return;}
+  var r=BBRegion.regionOf(p);var b=BBRegion.badge(r,lang);
+  pc.style.display='';pc.textContent=b.flag+' '+b.label+((r==='us'&&!b.live)?' · '+(lang==='vi'?'chờ':'pending'):'');
+  pc.className='pathchip '+r;pc.title=b.desc;
+}
 function boot(){
   // paint language toggles
   ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',lang==='en');e.setAttribute('aria-pressed',(lang==='en').toString());}});
@@ -1226,6 +1252,7 @@ function boot(){
   document.getElementById('whoRole').textContent=(lang==='vi'?'Bệnh nhân':'Patient');
   document.getElementById('secTxt').textContent=t('secTxt');
   document.getElementById('footBuilt').textContent=t('built');
+  paintPathChip();
   buildMenu();armIdle();
   var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';go(key);
 }
