@@ -65,19 +65,19 @@
 
   var CSS = [
     "#bb-side,#bb-side *{box-sizing:border-box}",
-    "#bb-side{position:fixed;top:0;left:0;width:252px;height:100vh;z-index:15;display:flex;flex-direction:column;background:linear-gradient(180deg,#16171d,#101116);color:#f4e8d0;border-right:1px solid #25262e;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;transform:translateX(0);transition:transform .22s ease}",
+    "#bb-side{position:fixed;top:0;left:0;width:252px;height:100vh;z-index:15;display:flex;flex-direction:column;background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f2f0e2;border-right:1px solid #3a5340;font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;transform:translateX(0);transition:transform .22s ease}",
     "#bb-side .bbn-brand{display:flex;align-items:center;gap:11px;padding:20px 16px 14px}",
     "#bb-side .bbn-brand img{width:42px;height:42px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}",
     "#bb-side .bbn-bn{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:18px;color:#e6c67e;line-height:1.06;letter-spacing:-.01em}",
-    "#bb-side .bbn-bt{font-family:Oswald,sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#9a8a6a;margin-top:3px}",
+    "#bb-side .bbn-bt{font-family:Oswald,sans-serif;font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:#c6d3bd;margin-top:3px}",
     "#bb-side .bbn-nav{flex:1;overflow-y:auto;padding:6px 12px}",
-    "#bb-side .bbn-grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9a8a6a;margin:15px 8px 5px;padding-top:12px;border-top:1px solid #1f2027}",
+    "#bb-side .bbn-grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#c6d3bd;margin:15px 8px 5px;padding-top:12px;border-top:1px solid #3f5c48}",
     "#bb-side .bbn-grp:first-child{margin-top:4px;padding-top:0;border-top:none}",
-    "#bb-side a.bbn-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#cdbfa4;text-decoration:none;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}",
+    "#bb-side a.bbn-link{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#d9e2d0;text-decoration:none;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:background .15s,color .15s}",
     "#bb-side a.bbn-link:hover{background:rgba(255,255,255,.06);color:#fff}",
-    "#bb-side a.bbn-link.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f4e8d0;box-shadow:inset 3px 0 0 #e6c67e}",
+    "#bb-side a.bbn-link.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f2f0e2;box-shadow:inset 3px 0 0 #e6c67e}",
     "#bb-side a.bbn-link svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}",
-    "#bb-side .bbn-foot{padding:13px 16px;border-top:1px solid #25262e;font-size:10.5px;color:#8f8267;line-height:1.5}",
+    "#bb-side .bbn-foot{padding:13px 16px;border-top:1px solid #3a5340;font-size:10.5px;color:#b3c3aa;line-height:1.5}",
     "#bb-side .bbn-foot b{color:#e6c67e;font-weight:600}",
     "#bb-burger{display:none;position:fixed;top:12px;left:12px;z-index:1150;width:42px;height:42px;align-items:center;justify-content:center;padding:0;border:1px solid #e8dcc4;background:#fffdf7;color:#0e7c84;border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(60,40,20,.16)}",
     "#bb-burger:hover{background:#f4ecdb;border-color:#e6c67e}",
@@ -111,6 +111,7 @@
   function build() {
     if (document.getElementById('bb-side')) return;
     ensureFonts();
+    try { var _f = document.querySelector('link[rel="icon"]'); if (!_f) { _f = document.createElement('link'); _f.rel = 'icon'; document.head.appendChild(_f); } _f.type = 'image/svg+xml'; _f.href = 'bee-coin.svg'; } catch (e) {}
 
     var style = document.createElement('style');
     style.id = 'bb-nav-style';
@@ -120,7 +121,7 @@
     var active = String(window.BB_NAV_ACTIVE || '').trim();
 
     var html = '<div class="bbn-brand">' +
-      '<img src="' + COIN + '" alt="BB coin">' +
+      '<img src="bee-coin.svg" alt="Barry Burris, NMD">' +
       '<div><div class="bbn-bn">Barry Burris</div><div class="bbn-bt">NMD &middot; Functional Medicine</div></div>' +
       '</div><nav class="bbn-nav" aria-label="Sections">';
     for (var i = 0; i < NAV.length; i++) {
