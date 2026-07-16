@@ -1,0 +1,726 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Patient Portal · Barry Burris, NMD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf4e8;--paper:#fffdf7;--card:#fffdf7;--ink:#40352a;--mut:#8a7c68;--line:#e8dcc4;
+ --navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal2:#0b5a61;--teal-soft:#e2f1f2;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
+ --good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;--bad-soft:#f7e4e2;
+ --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:Fraunces,Georgia,serif;margin:0}
+a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
+.lbl{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--mut);font-weight:600}
+.hide{display:none!important}
+
+/* ---------- sign-in ---------- */
+#signin{min-height:100vh;display:flex;flex-direction:column}
+.si-ribbon{background:var(--gold-soft);border-bottom:1px solid #e7d29a;color:#6b551f;font-size:12.5px;text-align:center;padding:7px 14px}
+.si-wrap{flex:1;max-width:940px;width:100%;margin:0 auto;padding:26px 18px 60px}
+.si-head{display:flex;align-items:center;gap:14px;margin:8px 0 22px}
+.si-head .coin{width:54px;height:54px;border-radius:50%;box-shadow:0 0 0 1px rgba(230,198,126,.5)}
+.si-head .bn{font-family:Fraunces,serif;font-weight:700;font-size:26px;color:var(--ink);line-height:1.05}
+.si-head .bt{font-family:Oswald,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-top:3px}
+.si-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}@media(max-width:820px){.si-grid{grid-template-columns:1fr}}
+.si-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 22px 24px}
+.si-card h2{font-size:20px;margin-bottom:4px}
+.si-sub{color:var(--mut);font-size:13.5px;margin-bottom:16px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:340px;overflow:auto;padding-right:4px}
+@media(max-width:520px){.pick{grid-template-columns:1fr}}
+.pcard{text-align:left;border:1px solid var(--line);background:#fff;border-radius:13px;padding:11px 13px;cursor:pointer;transition:.15s;font:inherit;color:inherit}
+.pcard:hover{border-color:var(--teal);box-shadow:0 6px 18px rgba(14,124,132,.12);transform:translateY(-1px)}
+.pcard .pn{font-weight:700;font-size:14px}
+.pcard .pm{color:var(--mut);font-size:11.5px;margin-top:2px}
+.pcard .ptag{display:inline-block;margin-top:8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:2px 9px}
+.si-form .fld{margin-bottom:12px}
+.si-form label{display:block}.si-form input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;background:#fbf7ee;margin-top:5px}
+.si-form input:focus{outline:none;border-color:var(--teal);background:#fff}
+.bigbtn{width:100%;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),var(--teal2));font-family:Inter}
+.bigbtn:hover{filter:brightness(1.05)}
+.si-mini{font-size:12px;color:var(--mut);margin-top:12px;line-height:1.55}
+.si-foot{text-align:center;color:#9aa6b2;font-size:11.5px;padding:16px}
+
+/* ---------- app shell ---------- */
+#app .side{position:fixed;top:0;left:0;width:240px;height:100vh;z-index:20;display:flex;flex-direction:column;
+ background:linear-gradient(180deg,var(--navy),var(--navy2));color:#f4e8d0;border-right:1px solid #25262e;transform:translateX(0);transition:transform .22s}
+.side .brand{display:flex;align-items:center;gap:11px;padding:18px 15px 13px}
+.side .brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.side .bn{font-family:Fraunces,serif;font-weight:700;font-size:17px;color:var(--gold2);line-height:1.05}
+.side .bt{font-family:Oswald,sans-serif;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#9a8a6a;margin-top:3px}
+.side .who{margin:4px 14px 8px;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid #26272f;border-radius:11px}
+.side .who .wn{font-weight:700;font-size:13.5px;color:#f4e8d0}
+.side .who .wr{font-size:10.5px;color:#b6a686;font-family:Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.side nav{flex:1;overflow-y:auto;padding:6px 12px}
+.side .grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9a8a6a;margin:14px 8px 5px;padding-top:11px;border-top:1px solid #1f2027}
+.side .grp:first-child{margin-top:2px;padding-top:0;border-top:none}
+.side a.nl{display:flex;align-items:center;gap:11px;padding:9px 12px;border-radius:9px;color:#cdbfa4;text-decoration:none;font-family:Oswald,sans-serif;font-weight:500;font-size:13px;letter-spacing:.045em;text-transform:uppercase;margin:2px 0;cursor:pointer;transition:.15s}
+.side a.nl:hover{background:rgba(255,255,255,.06);color:#fff;text-decoration:none}
+.side a.nl.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f4e8d0;box-shadow:inset 3px 0 0 var(--gold2)}
+.side a.nl svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.side a.nl .badge{margin-left:auto;background:var(--teal);color:#fff;font-family:Inter;font-size:10px;font-weight:800;border-radius:99px;padding:1px 7px}
+.side .foot{padding:12px 15px;border-top:1px solid #25262e;font-size:10px;color:#8f8267;line-height:1.5}
+.side .foot b{color:var(--gold2);font-weight:600}
+.side .foot a{color:#cdbfa4}
+
+.main{padding-left:240px}
+@media(max-width:900px){#app .side{z-index:1200;transform:translateX(-100%);box-shadow:2px 0 22px rgba(0,0,0,.4)}#app .side.open{transform:translateX(0)}.main{padding-left:0}}
+.topbar{position:sticky;top:0;z-index:12;background:rgba(250,244,232,.92);backdrop-filter:blur(7px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:11px 20px}
+.burger{display:none;width:40px;height:40px;border:1px solid var(--line);background:#fffdf7;color:var(--teal);border-radius:10px;cursor:pointer;align-items:center;justify-content:center}
+@media(max-width:900px){.burger{display:flex}}
+.topbar .tt{font-family:Fraunces,serif;font-weight:700;font-size:18px}
+.sp{flex:1}
+.langtog{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fffdf7}
+.langtog button{border:none;background:none;padding:7px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--mut);font-family:Oswald,sans-serif;letter-spacing:.06em}
+.langtog button.on{background:var(--teal);color:#fff}
+.tbtn{border:1px solid var(--line);background:#fffdf7;border-radius:9px;padding:8px 12px;font:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;font-weight:600}
+.tbtn:hover{border-color:var(--teal)}
+.content{max-width:1080px;margin:0 auto;padding:20px 20px 90px}
+
+/* banners + cards */
+.demo{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:12px;padding:9px 13px;font-size:12.5px;margin-bottom:16px;display:flex;gap:9px;align-items:flex-start}
+.demo b{font-weight:700}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px}
+.card h3{font-size:17px;margin-bottom:3px}
+.card .csub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}@media(max-width:760px){.grid3{grid-template-columns:1fr}}
+.hero{background:linear-gradient(120deg,#0e7c84,#0b5a61);color:#eafafb;border:none}
+.hero h2{color:#fff;font-size:23px}
+.hero p{color:#cdeef0;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
+.qa{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+.qa button{border:none;border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;background:rgba(255,255,255,.15);color:#fff;display:flex;gap:8px;align-items:center}
+.qa button:hover{background:rgba(255,255,255,.26)}
+.qa button.gold{background:var(--gold2);color:#3a2b08}.qa button.gold:hover{background:#f0d69a}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
+.chip{font-size:12px;background:var(--teal-soft);color:var(--teal);border-radius:99px;padding:4px 11px;font-weight:600}
+.chip.g{background:var(--gold-soft);color:#8a6a1e}
+.kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.kv:last-child{border-bottom:none}.kv .k{color:var(--mut)}.kv .v{font-weight:600;text-align:right}
+.status{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 9px;border-radius:99px}
+.status.rev{background:var(--warn-soft);color:var(--warn)}.status.ok{background:var(--good-soft);color:var(--good)}
+.status.conf{background:var(--teal-soft);color:var(--teal)}.status.act{background:var(--bad-soft);color:var(--bad)}
+.appt{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-bottom:11px;background:#fff}
+.appt .date{text-align:center;flex:none;width:58px}
+.appt .date .mo{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em}
+.appt .date .dy{font-family:Fraunces,serif;font-size:26px;font-weight:700;line-height:1}
+.appt .info{flex:1;min-width:0}
+.appt .info .ti{font-weight:700;font-size:14.5px}
+.appt .info .me{color:var(--mut);font-size:12.5px;margin-top:2px}
+.mono{font-variant-numeric:tabular-nums}
+table.lab{width:100%;border-collapse:collapse;font-size:13px}
+table.lab th{text-align:left;background:#f4ecdb;color:var(--mut);font-family:Oswald,sans-serif;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px}
+table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+.flagpill{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:99px}
+.flagpill.low{background:var(--warn-soft);color:var(--warn)}.flagpill.high{background:var(--bad-soft);color:var(--bad)}.flagpill.norm{background:var(--good-soft);color:var(--good)}
+.doc{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:9px;background:#fff}
+.doc .ic{width:34px;height:34px;border-radius:9px;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;flex:none}
+.doc .dn{font-weight:600;font-size:13.5px}.doc .dm{color:var(--mut);font-size:11.5px;margin-top:1px}
+.doc .da{margin-left:auto;display:flex;gap:7px}
+.msgs{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow:auto;padding:6px 2px}
+.bub{max-width:76%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.45}
+.bub.them{align-self:flex-start;background:#f4ecdb;border:1px solid var(--line);border-bottom-left-radius:5px}
+.bub.me{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:5px}
+.bub .mm{font-size:10px;opacity:.7;margin-top:4px}
+.composer{display:flex;gap:9px;margin-top:12px}
+.composer input{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;font-size:14px;background:#fff}
+.composer input:focus{outline:none;border-color:var(--teal)}
+.composer button{border:none;background:var(--teal);color:#fff;border-radius:11px;padding:0 18px;font-weight:700;cursor:pointer}
+.small{font-size:12px;color:var(--mut)}
+.note-inline{font-size:12px;color:var(--mut);background:#f7f2e6;border:1px dashed var(--line);border-radius:10px;padding:9px 12px;margin-top:10px}
+
+/* telehealth */
+#tele{position:fixed;inset:0;z-index:2000;background:#0c1116;display:none;flex-direction:column}
+#tele.on{display:flex}
+.tele-top{display:flex;align-items:center;gap:12px;padding:12px 18px;color:#dfe7ee;border-bottom:1px solid #1d2630}
+.tele-top .dot{width:9px;height:9px;border-radius:50%;background:#e6c67e;box-shadow:0 0 0 4px rgba(230,198,126,.16)}
+.tele-top .tt{font-family:Fraunces,serif;font-weight:700;font-size:15px;color:#fff}
+.tele-top .ts{font-size:11.5px;color:#8ea1b2}
+.tele-stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden}
+.provtile{width:min(760px,92%);aspect-ratio:16/9;border-radius:18px;background:radial-gradient(120% 120% at 50% 30%,#14303a,#0c1a22);border:1px solid #1d2630;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#cfe;position:relative}
+.provtile .pcoin{width:96px;height:96px;border-radius:50%;box-shadow:0 0 0 2px rgba(230,198,126,.5),0 10px 30px rgba(0,0,0,.4)}
+.provtile .pnm{font-family:Fraunces,serif;font-weight:700;font-size:20px;color:#fff;margin-top:14px}
+.provtile .pst{font-size:13px;color:#8ea1b2;margin-top:5px;display:flex;align-items:center;gap:8px}
+.provtile .spin{width:14px;height:14px;border:2px solid rgba(230,198,126,.35);border-top-color:#e6c67e;border-radius:50%;animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.selftile{position:absolute;right:26px;bottom:26px;width:210px;aspect-ratio:4/3;border-radius:13px;overflow:hidden;background:#10171d;border:1px solid #26323d;display:flex;align-items:center;justify-content:center;color:#66788a;font-size:12px}
+.selftile video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.selftile .selflbl{position:absolute;left:8px;bottom:6px;font-size:10px;color:#cfe;background:rgba(0,0,0,.45);padding:2px 7px;border-radius:6px}
+@media(max-width:560px){.selftile{width:128px;right:14px;bottom:96px}}
+.tele-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;border-top:1px solid #1d2630;background:#0a0f14}
+.tbtn2{width:52px;height:52px;border-radius:50%;border:1px solid #2a3742;background:#18222b;color:#dfe7ee;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.tbtn2:hover{background:#22303b}.tbtn2.off{background:#3a2326;border-color:#5a3138;color:#ffb4b0}
+.tbtn2.end{background:#b3261e;border-color:#b3261e;color:#fff;width:auto;padding:0 22px;border-radius:26px;font-weight:800;font-family:Inter;gap:8px}
+.tbtn2 svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tele-note{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:11.5px;color:#8ea1b2;background:rgba(10,15,20,.7);border:1px solid #1d2630;border-radius:99px;padding:5px 13px}
+
+/* modal */
+.scrim{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:1500;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:26px 12px}
+.scrim.on{display:flex}
+.sheet{background:var(--paper);width:100%;max-width:620px;border-radius:18px;box-shadow:var(--shadow2);padding:22px 24px 26px;margin:auto}
+.sheet h3{font-size:19px;margin-bottom:10px}
+.sheet .close{float:right;border:none;background:none;font-size:22px;color:var(--mut);cursor:pointer;line-height:1}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:3000}
+.toast.on{opacity:1;transform:translateX(-50%)}
+#scrim2{display:none;position:fixed;inset:0;background:rgba(15,25,40,.5);z-index:1150}#scrim2.on{display:block}
+</style>
+</head>
+<body>
+
+<!-- ============ SIGN-IN ============ -->
+<div id="signin">
+  <div class="si-ribbon" id="siRibbon">Demonstration portal — sample patients only · no real health information</div>
+  <div class="si-wrap">
+    <div class="si-head">
+      <img class="coin" id="siCoin" alt="BB">
+      <div><div class="bn">Barry Burris, <span style="color:var(--teal)">NMD</span></div><div class="bt" id="siTag">Patient Portal · Functional Medicine &amp; Longevity</div></div>
+    </div>
+    <div class="si-grid">
+      <div class="si-card">
+        <h2 id="siPickH">Preview a patient account</h2>
+        <div class="si-sub" id="siPickS">This demo has 15 patients who completed the questionnaire. Choose one to see their portal.</div>
+        <div class="pick" id="pickGrid"></div>
+      </div>
+      <div class="si-card">
+        <h2 id="siLoginH">Patient sign in</h2>
+        <div class="si-sub" id="siLoginS">Your secure account.</div>
+        <form class="si-form" id="siForm" onsubmit="return demoLogin(event)">
+          <div class="fld"><label class="lbl" id="siEmailL">Email</label><input type="email" id="siEmail" placeholder="you@email.com" autocomplete="off"></div>
+          <div class="fld"><label class="lbl" id="siPassL">Password</label><input type="password" id="siPass" placeholder="••••••••" autocomplete="off"></div>
+          <button class="bigbtn" type="submit" id="siBtn">Sign in</button>
+          <div class="si-mini" id="siMini"></div>
+        </form>
+        <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
+          <div class="lbl" style="margin-bottom:6px" id="siNewL">New here?</div>
+          <a href="patient-portal.html" id="siIntakeLink">Start the new-patient questionnaire →</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="si-foot">Barry Burris, NMD · Functional Medicine &amp; Longevity — built by <b>Accelerated Experiences, LLC</b></div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app" class="hide">
+  <aside class="side" id="side">
+    <div class="brand"><img id="navCoin" alt="BB"><div><div class="bn">Barry Burris</div><div class="bt">Patient Portal</div></div></div>
+    <div class="who"><div class="wn" id="whoName">—</div><div class="wr" id="whoRole">Patient</div></div>
+    <nav id="navList"></nav>
+    <div class="foot" id="navFoot">Questions? <a href="#messages" onclick="go('messages')">Message the practice</a><br>Built by <b>Accelerated Experiences, LLC</b></div>
+  </aside>
+  <div id="scrim2"></div>
+
+  <div class="main">
+    <div class="topbar">
+      <button class="burger" id="burger" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <div class="tt" id="pageTitle">Home</div>
+      <div class="sp"></div>
+      <div class="langtog"><button id="langEn" onclick="setLang('en')">EN</button><button id="langVi" onclick="setLang('vi')">VI</button></div>
+      <button class="tbtn" id="signoutBtn" onclick="signOut()">Sign out</button>
+    </div>
+    <div class="content" id="view"></div>
+  </div>
+</div>
+
+<!-- telehealth room -->
+<div id="tele">
+  <div class="tele-top"><span class="dot"></span><div><div class="tt" id="teleTitle">Telehealth visit</div><div class="ts" id="teleSub">Barry Burris, NMD</div></div></div>
+  <div class="tele-stage">
+    <div class="tele-note" id="teleNote">Demonstration room — live video runs on the secure backend</div>
+    <div class="provtile">
+      <img class="pcoin" id="teleCoin" alt="Dr. Burris">
+      <div class="pnm">Dr. Barry Burris, NMD</div>
+      <div class="pst" id="teleStatus"><span class="spin"></span> <span id="teleStatusTxt">Connecting…</span></div>
+    </div>
+    <div class="selftile" id="selfTile"><span id="selfPlaceholder">Camera off</span><span class="selflbl" id="selfLbl" style="display:none">You</span></div>
+  </div>
+  <div class="tele-bar">
+    <button class="tbtn2" id="micBtn" title="Microphone" onclick="toggleMic()"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
+    <button class="tbtn2" id="camBtn" title="Camera" onclick="toggleCam()"><svg viewBox="0 0 24 24"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></button>
+    <button class="tbtn2 end" onclick="leaveTele()"><svg viewBox="0 0 24 24"><path d="M3 10c5-4 13-4 18 0l-2.5 3-3.2-1.2-.3-2.4c-2.9-.8-5.7-.8-8.6 0l-.3 2.4L3 13z"/></svg> <span id="teleLeave">Leave</span></button>
+  </div>
+</div>
+
+<div class="scrim" id="scrim" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
+<div class="toast" id="toast"></div>
+
+<script src="bb-intakes.js"></script>
+<script>
+/* ---------- data ---------- */
+var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
+var PATIENTS=(window.BB_INTAKES||[]);
+var SKEY='bb_patient_sess';
+document.getElementById('siCoin').src=COIN;
+document.getElementById('navCoin').src=COIN;
+document.getElementById('teleCoin').src=COIN;
+
+/* ---------- i18n ---------- */
+var lang=(function(){try{return localStorage.getItem('bb_pt_lang')||'en'}catch(e){return 'en'}})();
+var T={
+ en:{ribbon:'Demonstration portal — sample patients only · no real health information',ptag:'Patient Portal · Functional Medicine & Longevity',
+  pickH:'Preview a patient account',pickS:'This demo has 15 patients who completed the questionnaire. Choose one to see their portal.',
+  loginH:'Patient sign in',loginS:'Your secure account.',email:'Email',pass:'Password',signin:'Sign in',
+  mini:'Demo mode — real logins arrive with the secure (HIPAA) backend. Pick a name on the left to preview a portal.',
+  newL:'New here?',intake:'Start the new-patient questionnaire →',
+  nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',
+  gCare:'My Care',gRecords:'My Records',gAcct:'Account',
+  signout:'Sign out',msgPractice:'Message the practice',
+  hello:'Hello',welcome:'Welcome to your care portal. Here you can see your plan, join your telehealth visit, review your labs, message the practice, and manage your documents — all in one place.',
+  qaJoin:'Join telehealth',qaMsg:'Message practice',qaPlan:'View care plan',qaLabs:'View labs',
+  nextVisit:'Your next visit',noVisit:'No upcoming visit yet — your provider will schedule your consultation after reviewing your intake.',
+  planTitle:'My Care Plan',planSub:'Prepared with your provider',
+  planBanner:'Your plan is reviewed and signed by Dr. Burris. Nothing here is a prescription or a diagnosis until your provider confirms it with you at your visit.',
+  goals:'Your goals',focus:'What we’re focusing on',foundations:'Foundations we build together',
+  fNutri:'Nutrition',fNutriB:'Protein and vegetables at each meal; steady blood sugar through the day.',
+  fMove:'Movement',fMoveB:'20–30 minutes of walking most days, plus light strength work.',
+  fSleep:'Sleep',fSleepB:'A consistent sleep and wake time; wind-down without screens.',
+  fStress:'Stress',fStressB:'A daily down-shift — breathing, a walk, or time outdoors.',
+  provNotes:'Provider notes',provNotesEmpty:'Your provider will add personalized notes here after your visit.',
+  labsUnderReview:'Your labs are under review',
+  apptsTitle:'Appointments',apptsSub:'Your visits with Dr. Burris',upcoming:'Upcoming',past:'Past visits',noPast:'No past visits yet.',
+  join:'Join',reschedule:'Reschedule',details:'Details',telehealth:'Telehealth',inperson:'In-person',
+  labsTitle:'Labs & Results',labsSub:'Documents you shared and results your provider releases',
+  yourLabs:'Labs you uploaded',released:'Results released by your provider',sampleResult:'Sample result panel',
+  sampleResultNote:'Illustration of the results view. Your real results appear here once your provider reviews and releases them.',
+  analyte:'Marker',value:'Value',range:'Reference',status:'Status',
+  received:'Received',underReview:'Under review',
+  msgTitle:'Messages',msgSub:'Secure messages with the practice',send:'Send',msgPlaceholder:'Write a message…',
+  docsTitle:'Documents',docsSub:'Forms, consents, and files you exchange with the practice',
+  upload:'Upload a document',view:'View',sign:'Sign',download:'Download',actionNeeded:'Action needed',
+  profileTitle:'Profile',profileSub:'Your details',name:'Name',sexL:'Sex',dobL:'Date of birth',ageL:'Age',langPref:'Preferred language',
+  contact:'Contact',update:'Update',
+  demoNote:'Demonstration — sample data. Secure messaging, video visits and real accounts run on the HIPAA backend.',
+  intakeAnswers:'Your questionnaire',cc:'Main concern',meds:'Medications',allergies:'Allergies',selfScores:'How you rated yourself',
+  energy:'Energy',libido:'Libido',sleepS:'Sleep',mood:'Mood',
+  teleConnecting:'Connecting…',teleWaiting:'You’re in the waiting room — your provider will join shortly.',
+  camOn:'Turn on camera',camOff:'Camera off',leave:'Leave',
+  toastSent:'Message sent',toastUploaded:'Document added',toastSigned:'Signed — thank you',toastDemo:'Demo — not enabled in the preview'},
+ vi:{ribbon:'Cổng minh họa — chỉ bệnh nhân mẫu · không có thông tin sức khỏe thật',ptag:'Cổng Bệnh Nhân · Y Học Chức Năng & Trường Thọ',
+  pickH:'Xem thử tài khoản bệnh nhân',pickS:'Bản demo có 15 bệnh nhân đã hoàn thành bảng câu hỏi. Chọn một người để xem cổng của họ.',
+  loginH:'Đăng nhập bệnh nhân',loginS:'Tài khoản bảo mật của bạn.',email:'Email',pass:'Mật khẩu',signin:'Đăng nhập',
+  mini:'Chế độ demo — đăng nhập thật sẽ có khi backend bảo mật (HIPAA) sẵn sàng. Chọn một tên bên trái để xem thử.',
+  newL:'Bạn mới đến?',intake:'Bắt đầu bảng câu hỏi bệnh nhân mới →',
+  nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',
+  gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
+  signout:'Đăng xuất',msgPractice:'Nhắn cho phòng khám',
+  hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Tại đây bạn có thể xem kế hoạch, tham gia buổi khám từ xa, xem xét nghiệm, nhắn tin cho phòng khám và quản lý tài liệu — tất cả một nơi.',
+  qaJoin:'Vào khám từ xa',qaMsg:'Nhắn phòng khám',qaPlan:'Xem kế hoạch',qaLabs:'Xem xét nghiệm',
+  nextVisit:'Buổi khám kế tiếp',noVisit:'Chưa có lịch hẹn — bác sĩ sẽ sắp lịch tư vấn sau khi xem hồ sơ của bạn.',
+  planTitle:'Kế hoạch chăm sóc',planSub:'Lập cùng bác sĩ của bạn',
+  planBanner:'Kế hoạch được bác sĩ Burris xem xét và ký. Không có nội dung nào là toa thuốc hay chẩn đoán cho đến khi bác sĩ xác nhận với bạn tại buổi khám.',
+  goals:'Mục tiêu của bạn',focus:'Chúng ta đang tập trung',foundations:'Nền tảng cùng xây dựng',
+  fNutri:'Dinh dưỡng',fNutriB:'Đạm và rau trong mỗi bữa; giữ đường huyết ổn định cả ngày.',
+  fMove:'Vận động',fMoveB:'Đi bộ 20–30 phút hầu hết các ngày, thêm bài tập sức mạnh nhẹ.',
+  fSleep:'Giấc ngủ',fSleepB:'Giờ ngủ và thức đều đặn; thư giãn không màn hình.',
+  fStress:'Căng thẳng',fStressB:'Thư giãn mỗi ngày — hít thở, đi bộ, hoặc ra ngoài trời.',
+  provNotes:'Ghi chú của bác sĩ',provNotesEmpty:'Bác sĩ sẽ thêm ghi chú riêng tại đây sau buổi khám.',
+  labsUnderReview:'Xét nghiệm đang được xem xét',
+  apptsTitle:'Lịch hẹn',apptsSub:'Các buổi khám với bác sĩ Burris',upcoming:'Sắp tới',past:'Buổi khám đã qua',noPast:'Chưa có buổi khám nào.',
+  join:'Vào',reschedule:'Đổi lịch',details:'Chi tiết',telehealth:'Khám từ xa',inperson:'Trực tiếp',
+  labsTitle:'Xét nghiệm & Kết quả',labsSub:'Tài liệu bạn chia sẻ và kết quả bác sĩ công bố',
+  yourLabs:'Xét nghiệm bạn đã tải lên',released:'Kết quả do bác sĩ công bố',sampleResult:'Bảng kết quả mẫu',
+  sampleResultNote:'Minh họa cách xem kết quả. Kết quả thật của bạn hiện tại đây khi bác sĩ xem xét và công bố.',
+  analyte:'Chỉ số',value:'Giá trị',range:'Tham chiếu',status:'Trạng thái',
+  received:'Đã nhận',underReview:'Đang xem xét',
+  msgTitle:'Tin nhắn',msgSub:'Tin nhắn bảo mật với phòng khám',send:'Gửi',msgPlaceholder:'Viết tin nhắn…',
+  docsTitle:'Tài liệu',docsSub:'Biểu mẫu, đồng thuận và tệp bạn trao đổi với phòng khám',
+  upload:'Tải tài liệu lên',view:'Xem',sign:'Ký',download:'Tải về',actionNeeded:'Cần xử lý',
+  profileTitle:'Hồ sơ',profileSub:'Thông tin của bạn',name:'Tên',sexL:'Giới tính',dobL:'Ngày sinh',ageL:'Tuổi',langPref:'Ngôn ngữ ưu tiên',
+  contact:'Liên hệ',update:'Cập nhật',
+  demoNote:'Minh họa — dữ liệu mẫu. Tin nhắn bảo mật, khám video và tài khoản thật chạy trên backend HIPAA.',
+  intakeAnswers:'Bảng câu hỏi của bạn',cc:'Vấn đề chính',meds:'Thuốc đang dùng',allergies:'Dị ứng',selfScores:'Bạn tự đánh giá',
+  energy:'Năng lượng',libido:'Ham muốn',sleepS:'Giấc ngủ',mood:'Tâm trạng',
+  teleConnecting:'Đang kết nối…',teleWaiting:'Bạn đang ở phòng chờ — bác sĩ sẽ vào ngay.',
+  camOn:'Bật camera',camOff:'Camera tắt',leave:'Rời khỏi',
+  toastSent:'Đã gửi tin nhắn',toastUploaded:'Đã thêm tài liệu',toastSigned:'Đã ký — cảm ơn bạn',toastDemo:'Demo — chưa bật trong bản xem thử'}
+};
+function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
+
+/* ---------- helpers ---------- */
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function clean(n){return String(n||'').replace(/\s*\(SAMPLE\)\s*/i,'').trim();}
+function firstName(n){var c=clean(n).split(/\s+/);return c.length>2?c[c.length-1]:c[0];}
+function ageOf(dob){if(!dob)return '—';var d=new Date(dob),n=new Date();var a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return a;}
+function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function fmtDate(d,withYr){var mo=(lang==='vi'?['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);return mo[d.getMonth()]+' '+d.getDate()+(withYr?', '+d.getFullYear():'');}
+function toast(m){var e=document.getElementById('toast');e.textContent=m;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('on')},1900);}
+
+/* ---------- session ---------- */
+function getSess(){return read(SKEY,null);}
+function setSess(idx){write(SKEY,{idx:idx,ts:Date.now()});}
+function signOut(){try{localStorage.removeItem(SKEY)}catch(e){}location.hash='';boot();}
+function current(){var s=getSess();if(!s)return null;return PATIENTS[s.idx]?Object.assign({__i:s.idx},PATIENTS[s.idx]):null;}
+
+/* ---------- appointments (deterministic from intake) ---------- */
+function apptsFor(p){
+  var sub=p.submitted?new Date(p.submitted+'T00:00:00'):new Date();
+  var next=new Date(sub);next.setDate(next.getDate()+5);next.setHours(10,0,0,0);
+  // if that date is already in the past relative to "today", push to a near-future slot
+  var today=new Date();today.setHours(0,0,0,0);
+  if(next<today){next=new Date(today);next.setDate(next.getDate()+3);next.setHours(10,0,0,0);}
+  return {
+    upcoming:[{title:(lang==='vi'?'Tư vấn ban đầu':'Initial consultation'),
+      sub:(lang==='vi'?'Xem lại hồ sơ & xét nghiệm của bạn · 45 phút':'Review your intake & labs · 45 min'),
+      when:next,mode:'telehealth',status:'conf'}],
+    past:[]
+  };
+}
+
+/* ---------- sample lab panel (illustrative) ---------- */
+function sampleLabs(p){
+  var male=(String(p.sex||'').toLowerCase().charAt(0)==='m');
+  var rows=[
+    {a:'Vitamin D, 25-OH',v:'24 ng/mL',r:'30–100',s:'low'},
+    {a:'HbA1c',v:'5.9 %',r:'< 5.7',s:'high'},
+    {a:'TSH',v:'2.1 mIU/L',r:'0.4–4.0',s:'norm'},
+    {a:'Ferritin',v:'58 ng/mL',r:'30–300',s:'norm'}
+  ];
+  if(male)rows.push({a:'Testosterone, total',v:'305 ng/dL',r:'300–900',s:'low'});
+  return rows;
+}
+
+/* ---------- NAV ---------- */
+var ICN={home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
+ plan:'<rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M8 11h8M8 15h6"/>',
+ cal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
+ flask:'<path d="M9 3h6M10 3v6l-5.2 9.2A2 2 0 006.6 21h10.8a2 2 0 001.8-2.8L14 9V3"/><path d="M7 15h10"/>',
+ msg:'<path d="M21 15a2 2 0 01-2 2H8l-4 4V5a2 2 0 012-2h13a2 2 0 012 2z"/>',
+ doc:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/>',
+ gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.1 5.1l2.1 2.1M16.8 16.8l2.1 2.1M18.9 5.1l-2.1 2.1M7.2 16.8l-2.1 2.1"/>'};
+var NAV=[
+ {g:'gCare',items:[['home','nHome','home'],['plan','nPlan','plan'],['appts','nAppts','cal']]},
+ {g:'gRecords',items:[['labs','nLabs','flask'],['messages','nMsg','msg'],['docs','nDocs','doc']]},
+ {g:'gAcct',items:[['profile','nProfile','gear']]}
+];
+function renderNav(active){
+  var msgN=unreadCount();
+  var h='';
+  NAV.forEach(function(grp){
+    h+='<div class="grp">'+esc(t(grp.g))+'</div>';
+    grp.items.forEach(function(it){
+      var key=it[0],lblK=it[1],ic=it[2];
+      var badge=(key==='messages'&&msgN)?'<span class="badge">'+msgN+'</span>':'';
+      h+='<a class="nl'+(key===active?' active':'')+'" href="#'+key+'" onclick="go(\''+key+'\')"><svg viewBox="0 0 24 24">'+ICN[ic]+'</svg><span>'+esc(t(lblK))+'</span>'+badge+'</a>';
+    });
+  });
+  document.getElementById('navList').innerHTML=h;
+}
+function unreadCount(){return 0;} // messages open on click; keep simple
+
+/* ---------- ROUTER ---------- */
+var VIEWS={home:renderHome,plan:renderPlan,appts:renderAppts,labs:renderLabs,messages:renderMessages,docs:renderDocs,profile:renderProfile};
+var TITLES={home:'nHome',plan:'nPlan',appts:'nAppts',labs:'nLabs',messages:'nMsg',docs:'nDocs',profile:'nProfile'};
+function go(key){
+  if(!VIEWS[key])key='home';
+  if(location.hash!=='#'+key)location.hash='#'+key;
+  renderNav(key);
+  document.getElementById('pageTitle').textContent=t(TITLES[key]);
+  var v=document.getElementById('view');v.innerHTML='';VIEWS[key]();v.scrollTop=0;try{window.scrollTo(0,0);}catch(e){}
+  closeSideMobile();
+}
+
+/* ---------- VIEWS ---------- */
+function demoBanner(){return '<div class="demo">🔒 <div>'+esc(t('demoNote'))+'</div></div>';}
+
+function renderHome(){
+  var p=current();var f=firstName(p.name);var ap=apptsFor(p);
+  var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card hero"><h2>'+esc(t('hello'))+', '+esc(f)+' 👋</h2><p>'+esc(t('welcome'))+'</p>'+
+    '<div class="qa">'+
+    '<button class="gold" onclick="openTele()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> '+esc(t('qaJoin'))+'</button>'+
+    '<button onclick="go(\'messages\')">✉️ '+esc(t('qaMsg'))+'</button>'+
+    '<button onclick="go(\'plan\')">📋 '+esc(t('qaPlan'))+'</button>'+
+    '<button onclick="go(\'labs\')">🧪 '+esc(t('qaLabs'))+'</button>'+
+    '</div></div>';
+  h+='<div class="grid2">';
+  // next visit
+  h+='<div class="card"><div class="lbl">'+esc(t('nextVisit'))+'</div>';
+  if(ap.upcoming.length){var a=ap.upcoming[0];h+=apptRow(a,true);}
+  else h+='<p class="small" style="margin-top:8px">'+esc(t('noVisit'))+'</p>';
+  h+='</div>';
+  // plan snapshot
+  h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+
+    (p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div>'+
+    '<div style="margin-top:14px"><a href="#plan" onclick="go(\'plan\')">'+esc(t('qaPlan'))+' →</a></div></div>';
+  h+='</div>';
+  // labs snapshot
+  h+='<div class="card"><div class="lbl">'+esc(t('yourLabs'))+'</div><div style="margin-top:10px">';
+  if((p.labs||[]).length){p.labs.forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+t('underReview'),'<span class="status rev">'+esc(t('underReview'))+'</span>');});}
+  else h+='<p class="small">'+esc(lang==='vi'?'Chưa có xét nghiệm nào được tải lên.':'No labs uploaded yet.')+'</p>';
+  h+='<div style="margin-top:10px"><a href="#labs" onclick="go(\'labs\')">'+esc(t('nLabs'))+' →</a></div></div>';
+  v.innerHTML=h;
+}
+
+function apptRow(a,withJoin){
+  var d=a.when;
+  var timeStr=d.toLocaleTimeString(lang==='vi'?'vi-VN':'en-US',{hour:'numeric',minute:'2-digit'});
+  var mode=a.mode==='telehealth'?t('telehealth'):t('inperson');
+  var join=withJoin&&a.mode==='telehealth'?'<button class="tbtn" style="background:var(--teal);color:#fff;border:none;font-weight:700" onclick="openTele()">'+esc(t('join'))+'</button>':'';
+  return '<div class="appt"><div class="date"><div class="mo">'+fmtDate(d,false).split(' ')[0]+'</div><div class="dy">'+d.getDate()+'</div></div>'+
+    '<div class="info"><div class="ti">'+esc(a.title)+'</div><div class="me">'+esc(a.sub||'')+'</div>'+
+    '<div style="margin-top:6px"><span class="status conf">'+esc(mode)+'</span> <span class="small mono">· '+timeStr+'</span></div></div>'+
+    '<div>'+join+'</div></div>';
+}
+
+function renderPlan(){
+  var p=current();var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('planTitle'))+'</h3><div class="csub">'+esc(t('planSub'))+' · Barry Burris, NMD</div>'+
+    '<div class="demo" style="margin:0 0 4px">✍️ <div>'+esc(t('planBanner'))+'</div></div></div>';
+  h+='<div class="grid2">';
+  h+='<div class="card"><div class="lbl">'+esc(t('goals'))+'</div><p style="margin:8px 0 0;font-size:14px;line-height:1.55">'+esc(p.cc||'')+'</p></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+
+    (p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div></div>';
+  h+='</div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('foundations'))+'</div><div class="grid2" style="margin-top:12px">'+
+    foundCard('🥗',t('fNutri'),t('fNutriB'))+foundCard('🚶',t('fMove'),t('fMoveB'))+
+    foundCard('😴',t('fSleep'),t('fSleepB'))+foundCard('🧘',t('fStress'),t('fStressB'))+'</div></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('provNotes'))+'</div><div class="note-inline" style="margin-top:10px">'+esc(t('provNotesEmpty'))+'</div></div>';
+  v.innerHTML=h;
+}
+function foundCard(ic,ti,body){return '<div style="border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:#fff"><div style="font-size:20px">'+ic+'</div><div style="font-weight:700;margin-top:5px;font-size:14px">'+esc(ti)+'</div><div class="small" style="margin-top:4px;line-height:1.5">'+esc(body)+'</div></div>';}
+
+function renderAppts(){
+  var p=current();var ap=apptsFor(p);var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('apptsTitle'))+'</h3><div class="csub">'+esc(t('apptsSub'))+'</div>'+
+    '<div class="lbl" style="margin-top:6px">'+esc(t('upcoming'))+'</div><div style="margin-top:10px">';
+  if(ap.upcoming.length)ap.upcoming.forEach(function(a){h+=apptRow(a,true);});
+  else h+='<p class="small">'+esc(t('noVisit'))+'</p>';
+  h+='</div><div class="lbl" style="margin-top:16px">'+esc(t('past'))+'</div><div style="margin-top:10px">';
+  if(ap.past.length)ap.past.forEach(function(a){h+=apptRow(a,false);});
+  else h+='<p class="small">'+esc(t('noPast'))+'</p>';
+  h+='</div></div>';
+  v.innerHTML=h;
+}
+
+function renderLabs(){
+  var p=current();var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('labsTitle'))+'</h3><div class="csub">'+esc(t('labsSub'))+'</div>'+
+    '<div class="lbl" style="margin-top:6px">'+esc(t('yourLabs'))+'</div><div style="margin-top:10px">';
+  if((p.labs||[]).length)p.labs.forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+(p.submitted||''),'<span class="status rev">'+esc(t('underReview'))+'</span>');});
+  else h+='<p class="small">'+esc(lang==='vi'?'Chưa có xét nghiệm nào.':'No labs uploaded yet.')+'</p>';
+  h+='</div></div>';
+  // sample results panel
+  h+='<div class="card"><div style="display:flex;align-items:center;gap:9px"><h3 style="font-size:16px">'+esc(t('sampleResult'))+'</h3><span class="chip g">SAMPLE</span></div>'+
+    '<div class="csub" style="margin-top:6px">'+esc(t('sampleResultNote'))+'</div>'+
+    '<div style="overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px"><table class="lab"><thead><tr><th>'+esc(t('analyte'))+'</th><th>'+esc(t('value'))+'</th><th>'+esc(t('range'))+'</th><th>'+esc(t('status'))+'</th></tr></thead><tbody>';
+  sampleLabs(p).forEach(function(r){
+    var pill=r.s==='low'?'<span class="flagpill low">'+(lang==='vi'?'Thấp':'Low')+'</span>':r.s==='high'?'<span class="flagpill high">'+(lang==='vi'?'Cao':'High')+'</span>':'<span class="flagpill norm">'+(lang==='vi'?'Bình thường':'In range')+'</span>';
+    h+='<tr><td style="font-weight:600">'+esc(r.a)+'</td><td class="mono">'+esc(r.v)+'</td><td class="mono small">'+esc(r.r)+'</td><td>'+pill+'</td></tr>';
+  });
+  h+='</tbody></table></div><div class="note-inline" style="margin-top:12px">'+esc(t('released'))+'.</div></div>';
+  v.innerHTML=h;
+}
+
+function docRow(ic,name,meta,right){
+  var icons={flask:ICN.flask,doc:ICN.doc,plan:ICN.plan};
+  return '<div class="doc"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(icons[ic]||ICN.doc)+'</svg></div>'+
+    '<div style="min-width:0"><div class="dn">'+esc(name)+'</div><div class="dm">'+esc(meta)+'</div></div>'+
+    '<div class="da">'+(right||'')+'</div></div>';
+}
+
+/* ---------- messages ---------- */
+function msgKey(){return 'bb_pt_msgs_'+(getSess()||{}).idx;}
+function seedMsgs(p){
+  var f=firstName(p.name);
+  return [{from:'them',text:(lang==='vi'?('Xin chào '+f+'! Chúng tôi đã nhận được bảng câu hỏi và xét nghiệm của bạn. Bác sĩ Burris sẽ xem trước buổi khám. Có câu hỏi gì, cứ nhắn tại đây nhé.'):('Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.')),ts:Date.now()-86400000,seed:true}];
+}
+function getMsgs(p){var m=read(msgKey(),null);if(!m){m=seedMsgs(p);write(msgKey(),m);}return m;}
+function renderMessages(){
+  var p=current();var v=document.getElementById('view');var msgs=getMsgs(p);
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('msgTitle'))+'</h3><div class="csub">'+esc(t('msgSub'))+'</div>';
+  h+='<div class="msgs" id="msgList">';
+  msgs.forEach(function(m){h+=bubble(m);});
+  h+='</div>';
+  h+='<div class="composer"><input id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()"><button onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
+  h+='</div>';
+  v.innerHTML=h;
+  var l=document.getElementById('msgList');l.scrollTop=l.scrollHeight;
+}
+function bubble(m){
+  var d=new Date(m.ts);var when=fmtDate(d,false)+' · '+d.toLocaleTimeString(lang==='vi'?'vi-VN':'en-US',{hour:'numeric',minute:'2-digit'});
+  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+esc(m.text)+'<div class="mm">'+(m.from==='me'?(lang==='vi'?'Bạn':'You'):'Barry Burris, NMD')+' · '+when+'</div></div>';
+}
+function sendMsg(){
+  var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
+  var msgs=read(msgKey(),[]);msgs.push({from:'me',text:txt,ts:Date.now()});write(msgKey(),msgs);
+  inp.value='';renderMessages();toast(t('toastSent'));
+}
+
+/* ---------- documents ---------- */
+function docKey(){return 'bb_pt_docs_'+(getSess()||{}).idx;}
+function renderDocs(){
+  var p=current();var v=document.getElementById('view');
+  var extra=read(docKey(),[]);
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('docsTitle'))+'</h3><div class="csub">'+esc(t('docsSub'))+'</div><div style="margin-top:10px">';
+  // intake questionnaire
+  h+=docRow('plan',t('intakeAnswers'),(t('received'))+' · '+(p.submitted||''),'<button class="tbtn" onclick="showIntake()">'+esc(t('view'))+'</button>');
+  // consent (action needed)
+  h+=docRow('doc',(lang==='vi'?'Đồng thuận khám từ xa':'Telehealth consent'),t('actionNeeded'),'<span class="status act" style="margin-right:6px">'+esc(t('actionNeeded'))+'</span><button class="tbtn" onclick="signConsent()">'+esc(t('sign'))+'</button>');
+  // labs
+  (p.labs||[]).forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+t('underReview'),'<button class="tbtn" onclick="toast(t(\'toastDemo\'))">'+esc(t('view'))+'</button>');});
+  // uploaded extras
+  extra.forEach(function(d){h+=docRow('doc',d.name,(lang==='vi'?'Bạn đã tải lên':'You uploaded')+' · '+fmtDate(new Date(d.ts),true),'<span class="status ok">'+esc(lang==='vi'?'Đã gửi':'Sent')+'</span>');});
+  h+='</div>';
+  h+='<div style="margin-top:14px"><button class="bigbtn" style="max-width:260px" onclick="uploadDoc()">⬆︎ '+esc(t('upload'))+'</button></div>';
+  h+='<div class="note-inline" style="margin-top:12px">'+esc(t('demoNote'))+'</div></div>';
+  v.innerHTML=h;
+}
+function uploadDoc(){
+  var name=prompt(lang==='vi'?'Tên tài liệu để tải lên (demo):':'Name of the document to upload (demo):');
+  if(!name)return;var d=read(docKey(),[]);d.push({name:name,ts:Date.now()});write(docKey(),d);renderDocs();toast(t('toastUploaded'));
+}
+function signConsent(){toast(t('toastSigned'));}
+function showIntake(){
+  var p=current();
+  var sc=p.scores||{};
+  var h='<button class="close" onclick="closeSheet()">×</button><h3>'+esc(t('intakeAnswers'))+'</h3>';
+  h+='<div class="kv"><span class="k">'+esc(t('name'))+'</span><span class="v">'+esc(clean(p.name))+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('cc'))+'</span><span class="v" style="max-width:60%">'+esc(p.cc||'')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('meds'))+'</span><span class="v" style="max-width:60%;white-space:pre-line">'+esc(p.meds||'—')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('allergies'))+'</span><span class="v">'+esc(p.allergies||'—')+'</span></div>';
+  h+='<div class="lbl" style="margin:14px 0 6px">'+esc(t('selfScores'))+'</div>';
+  h+='<div class="grid2">'+scoreCard(t('energy'),sc.energy)+scoreCard(t('libido'),sc.libido)+scoreCard(t('sleepS'),sc.sleep)+scoreCard(t('mood'),sc.mood)+'</div>';
+  h+='<div class="note-inline" style="margin-top:14px">'+esc(t('demoNote'))+'</div>';
+  openSheet(h);
+}
+function scoreCard(lbl,val){val=val==null?'—':val;var pct=(typeof val==='number')?(val*10):0;
+  return '<div style="border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:#fff"><div class="small">'+esc(lbl)+'</div>'+
+   '<div style="font-family:Fraunces,serif;font-weight:700;font-size:20px">'+esc(String(val))+'<span class="small" style="font-weight:400"> / 10</span></div>'+
+   '<div style="height:6px;background:#eee4cf;border-radius:99px;margin-top:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--teal)"></div></div></div>';}
+
+/* ---------- profile ---------- */
+function renderProfile(){
+  var p=current();var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('profileTitle'))+'</h3><div class="csub">'+esc(t('profileSub'))+'</div><div style="margin-top:8px">';
+  h+='<div class="kv"><span class="k">'+esc(t('name'))+'</span><span class="v">'+esc(clean(p.name))+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('sexL'))+'</span><span class="v">'+esc(p.sex||'—')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('dobL'))+'</span><span class="v mono">'+esc(p.dob||'—')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('ageL'))+'</span><span class="v">'+esc(String(ageOf(p.dob)))+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('langPref'))+'</span><span class="v">'+(lang==='vi'?'Tiếng Việt':'English')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('contact'))+'</span><span class="v small">'+esc(lang==='vi'?'Thêm khi có tài khoản thật':'Added with your real account')+'</span></div>';
+  h+='</div><div style="margin-top:14px"><button class="tbtn" onclick="toast(t(\'toastDemo\'))">'+esc(t('update'))+'</button></div>';
+  h+='<div class="note-inline" style="margin-top:12px">'+esc(t('demoNote'))+'</div></div>';
+  v.innerHTML=h;
+}
+
+/* ---------- telehealth ---------- */
+var teleStream=null,micOn=true,camOn=false;
+function openTele(){
+  var p=current();
+  document.getElementById('teleTitle').textContent=(lang==='vi'?'Khám từ xa':'Telehealth visit');
+  document.getElementById('teleSub').textContent='Barry Burris, NMD';
+  document.getElementById('teleNote').textContent=(lang==='vi'?'Phòng minh họa — video trực tiếp chạy trên backend bảo mật':'Demonstration room — live video runs on the secure backend');
+  document.getElementById('teleStatusTxt').textContent=t('teleConnecting');
+  document.getElementById('teleLeave').textContent=t('leave');
+  document.getElementById('selfPlaceholder').textContent=t('camOff');
+  document.getElementById('tele').classList.add('on');
+  // simulate the provider joining a "waiting room"
+  clearTimeout(window._teleT);
+  window._teleT=setTimeout(function(){
+    var st=document.getElementById('teleStatus');
+    st.innerHTML='<span style="width:9px;height:9px;border-radius:50%;background:#57d38a;display:inline-block"></span> <span>'+esc(t('teleWaiting'))+'</span>';
+  },2600);
+}
+function leaveTele(){
+  document.getElementById('tele').classList.remove('on');
+  stopCam();
+}
+function toggleMic(){micOn=!micOn;document.getElementById('micBtn').classList.toggle('off',!micOn);}
+function toggleCam(){camOn?stopCam():startCam();}
+function startCam(){
+  var tile=document.getElementById('selfTile');
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast(t('toastDemo'));return;}
+  navigator.mediaDevices.getUserMedia({video:true,audio:false}).then(function(s){
+    teleStream=s;camOn=true;document.getElementById('camBtn').classList.remove('off');
+    var vid=document.createElement('video');vid.autoplay=true;vid.playsInline=true;vid.muted=true;vid.srcObject=s;
+    tile.innerHTML='';tile.appendChild(vid);var lb=document.createElement('span');lb.className='selflbl';lb.textContent=(lang==='vi'?'Bạn':'You');tile.appendChild(lb);
+  }).catch(function(){toast(lang==='vi'?'Không truy cập được camera':'Camera not available');});
+}
+function stopCam(){
+  camOn=false;document.getElementById('camBtn').classList.add('off');
+  if(teleStream){teleStream.getTracks().forEach(function(tk){tk.stop();});teleStream=null;}
+  var tile=document.getElementById('selfTile');tile.innerHTML='<span id="selfPlaceholder">'+esc(t('camOff'))+'</span>';
+}
+
+/* ---------- sheet ---------- */
+function openSheet(html){document.getElementById('sheet').innerHTML=html;document.getElementById('scrim').classList.add('on');}
+function closeSheet(){document.getElementById('scrim').classList.remove('on');}
+
+/* ---------- sign-in ---------- */
+function renderPick(){
+  var g=document.getElementById('pickGrid');
+  g.innerHTML=PATIENTS.map(function(p,i){
+    return '<button class="pcard" onclick="enter('+i+')"><div class="pn">'+esc(clean(p.name))+'</div>'+
+      '<div class="pm">'+esc(ageOf(p.dob))+' · '+esc(p.sex||'')+' · '+esc(lang==='vi'?'Nộp':'Submitted')+' '+esc(p.submitted||'')+'</div>'+
+      '<span class="ptag">'+esc(p.tag||'')+'</span></button>';
+  }).join('');
+}
+function enter(i){setSess(i);location.hash='#home';boot();}
+function demoLogin(e){e.preventDefault();toast(t('mini'));return false;}
+
+/* ---------- language ---------- */
+function setLang(l){lang=l;try{localStorage.setItem('bb_pt_lang',l)}catch(e){}
+  document.getElementById('langEn').classList.toggle('on',l==='en');
+  document.getElementById('langVi').classList.toggle('on',l==='vi');
+  document.documentElement.lang=(l==='vi'?'vi':'en');
+  paintStatic();
+  if(!document.getElementById('app').classList.contains('hide')&&current()){var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
+  else renderPick();
+}
+function paintStatic(){
+  // sign-in static strings
+  document.getElementById('siRibbon').textContent=t('ribbon');
+  document.getElementById('siTag').innerHTML=esc(t('ptag'));
+  document.getElementById('siPickH').textContent=t('pickH');
+  document.getElementById('siPickS').textContent=t('pickS');
+  document.getElementById('siLoginH').textContent=t('loginH');
+  document.getElementById('siLoginS').textContent=t('loginS');
+  document.getElementById('siEmailL').textContent=t('email');
+  document.getElementById('siPassL').textContent=t('pass');
+  document.getElementById('siBtn').textContent=t('signin');
+  document.getElementById('siMini').textContent=t('mini');
+  document.getElementById('siNewL').textContent=t('newL');
+  document.getElementById('siIntakeLink').textContent=t('intake');
+  document.getElementById('signoutBtn').textContent=t('signout');
+  // whoRole
+  document.getElementById('whoRole').textContent=(lang==='vi'?'Bệnh nhân':'Patient');
+}
+
+/* ---------- mobile side ---------- */
+function closeSideMobile(){document.getElementById('side').classList.remove('open');document.getElementById('scrim2').classList.remove('on');}
+document.getElementById('burger').addEventListener('click',function(){var s=document.getElementById('side');s.classList.toggle('open');document.getElementById('scrim2').classList.toggle('on',s.classList.contains('open'));});
+document.getElementById('scrim2').addEventListener('click',closeSideMobile);
+
+/* ---------- boot ---------- */
+function boot(){
+  setLang(lang); // paints toggle + static
+  var p=current();
+  if(!p){document.getElementById('signin').classList.remove('hide');document.getElementById('app').classList.add('hide');renderPick();return;}
+  document.getElementById('signin').classList.add('hide');document.getElementById('app').classList.remove('hide');
+  document.getElementById('whoName').textContent=clean(p.name);
+  var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';go(key);
+}
+window.addEventListener('hashchange',function(){
+  if(document.getElementById('app').classList.contains('hide'))return;
+  var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';go(key);
+});
+// URL ?p=INDEX quick-enter
+(function(){var m=location.search.match(/[?&]p=(\d+)/);if(m){var i=+m[1];if(PATIENTS[i]){setSess(i);if(!location.hash)location.hash='#home';}}})();
+boot();
+</script>
+</body>
+</html>

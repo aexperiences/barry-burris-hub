@@ -133,7 +133,7 @@
           '<span>' + esc(label) + '</span></a>';
       }
     }
-    html += '</nav><div class="bbn-foot">Barry Burris, NMD &middot; Functional Medicine &amp; Longevity<br>Built by <b>Accelerated Experiences, LLC</b></div>';
+    html += '</nav><div class="bbn-foot"><a href="patient-account.html" target="_blank" rel="noopener" style="color:#e6c67e;text-decoration:none">&#9636; Patient portal &#8599;</a><br><span style="opacity:.85">Barry Burris, NMD &middot; Functional Medicine</span><br>Built by <b>Accelerated Experiences, LLC</b></div>';
 
     var aside = document.createElement('aside');
     aside.id = 'bb-side';
