@@ -225,6 +225,9 @@ function buildNav(){
 function setActive(k){document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.k===k));}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
 const SOAP="soap-note-generator-prototype.html", PORTAL="patient-portal.html", CONTACTS="barry-contacts.html", CALENDAR="barry-calendar.html";
+/* Worked SAMPLE of a received intake (demo of the full loop: patient-portal questionnaire -> auto-drafted SOAP note -> treatment plan). Base64 built + encoded EXACTLY like patient-portal.html toSOAP(): btoa(unescape(encodeURIComponent(JSON.stringify(payload)))). Decodes cleanly in the SOAP tool's INTAKE_HANDOFF reader. Sample only -- not a real patient. */
+const INTAKE_SAMPLE="eyJuYW1lIjoiTWFyY3VzIERlbGdhZG8gKFNBTVBMRSkiLCJzZXgiOiJNYWxlIiwiZG9iIjoiMTk3My0wOC0xNCIsImNjIjoiRmF0aWd1ZSBhbmQgbG93IGVuZXJneSBmb3IgfjEyIG1vbnRocywgd2l0aCBsb3cgbGliaWRvLCBicmFpbiBmb2csIH4xNSBsYiBtaWQtc2VjdGlvbiB3ZWlnaHQgZ2FpbiBhbmQgdW5yZWZyZXNoaW5nIHNsZWVwIOKAlCB3YW50cyB0byBvcHRpbWl6ZSBlbmVyZ3ksIGJvZHkgY29tcG9zaXRpb24gYW5kIGxvbmdldml0eS4iLCJzY29yZXMiOnsiZW5lcmd5IjozLCJsaWJpZG8iOjIsInNsZWVwIjo0LCJtb29kIjo0fSwibWVkcyI6IkF0b3J2YXN0YXRpbiAxMCBtZyDigJQgb25jZSBkYWlseSAoc2luY2UgMjAyNClcblZpdGFtaW4gRDMgMjAwMCBJVSDigJQgb25jZSBkYWlseVxuT2NjYXNpb25hbCBpYnVwcm9mZW4g4oCUIGFzIG5lZWRlZCIsImFsbGVyZ2llcyI6Ik5LREEgKG5vIGtub3duIGRydWcgYWxsZXJnaWVzKSIsImxhYnMiOlsiTGFiQ29ycF9Ib3Jtb25lX1BhbmVsXzIwMjYtMDYtMjgucGRmIiwiUXVlc3RfQ01QX0hiQTFjXzIwMjYtMDYtMjgucGRmIiwiTGlwaWRfYW5kX2hzQ1JQXzIwMjYtMDYtMjgucGRmIl0sImZsYWdzIjpbIlRlc3Rvc3Rlcm9uZSB0aOG6pXAgLyBtw6NuIGThu6VjIG5hbSAoTG93IHRlc3Rvc3Rlcm9uZSAvIGFuZHJvcGF1c2UpIiwiR2nhuqVjIG5n4bunIC8gY8SDbmcgdGjhurNuZyAoU2xlZXAgLyBzdHJlc3MpIl19";
+const INTAKE_URL=SOAP+"?intake="+encodeURIComponent(INTAKE_SAMPLE);
 
 function pageHead(t,s){return `<div class="ph">${t}</div><div class="psub">${s}</div>`;}
 
@@ -237,6 +240,11 @@ function renderHome(){
    <div class="sub">${dstr}. ${m.today?('You have '+m.today+' visit'+(m.today>1?'s':'')+' today.'):'A clean slate — let’s set up your practice.'} Helping people feel and function better, for longer.</div></div>
    <img class="seal" src="${COIN}"></div>
  <div class="grid tiles" style="margin-top:16px">${tiles.map(t=>`<div class="tile"><div class="l">${t[0]}</div><div class="v" style="${String(t[1]).length>10?'font-size:16px':''}">${t[1]}</div>${t[2]?`<div class="s ${t[2].startsWith('up')?'up':''}">${t[2].replace('up ','▲ ').replace(/^s$/,'')}</div>`:''}</div>`).join('')}</div>
+ <a onclick="go('charting')" title="Review the new patient intake" style="margin-top:14px;display:flex;align-items:center;gap:11px;cursor:pointer;text-decoration:none;color:inherit;background:linear-gradient(180deg,var(--teal-soft),var(--card));border:1px solid var(--gold2);border-radius:12px;padding:11px 15px">
+   <span style="font-size:17px">📥</span>
+   <span style="flex:1;font-size:13.5px"><b style="color:var(--teal3)">1 new patient intake to review</b> <span class="muted">— Marcus Delgado submitted the questionnaire today</span></span>
+   <span style="background:var(--gold-soft);color:#7a5f22;border:1px solid var(--goldsoft);font-family:Oswald,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.06em;padding:2px 7px;border-radius:20px">SAMPLE</span>
+   <span style="color:var(--teal2);font-weight:800">→</span></a>
  <div class="two" style="margin-top:16px">
   <div class="grid" style="gap:16px">
    <div class="card"><div class="sec-h"><h3 style="margin:0">Today's schedule</h3><button class="btn sm" onclick="go('schedule')">Open</button></div>
@@ -277,7 +285,21 @@ function renderPatients(){
 }
 function renderCharting(){
  return pageHead('Charting','Clinical documentation.')+`
- <div class="gate"><b>Secure record storage is being finalized.</b> The note generator drafts from chart data and marks provider fields <b>[FILL]</b> — it never suggests or prescribes. Until secure storage is live, use example data only.</div>
+ <div class="card" style="margin-top:16px;border:1px solid var(--teal);background:linear-gradient(180deg,var(--teal-soft),var(--card));box-shadow:0 10px 26px rgba(10,74,80,.13)">
+  <div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+   <div style="width:46px;height:46px;border-radius:50%;background:#fff;border:1px solid var(--teal);display:flex;align-items:center;justify-content:center;font-size:22px;flex:none">📥</div>
+   <div style="flex:1;min-width:220px">
+    <div style="font-family:Fraunces,Georgia,serif;font-weight:700;font-size:16.5px;color:var(--teal3)">New patient intake received <span style="display:inline-block;vertical-align:middle;background:var(--gold-soft);color:#7a5f22;border:1px solid var(--goldsoft);font-family:Oswald,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:20px;margin-left:5px">SAMPLE</span></div>
+    <div class="muted" style="margin-top:2px"><b style="color:var(--ink)">Marcus Delgado</b> · submitted the questionnaire · today</div>
+   </div>
+   <a class="btn p" href="${INTAKE_URL}" target="_blank">Open the auto-drafted SOAP note →</a>
+  </div>
+  <div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.5;color:var(--ink2)">
+   <b style="color:var(--ink)">52 y/o male.</b> Fatigue &amp; low energy for ~12 months — low libido, brain fog, ~15 lb weight gain, unrefreshing sleep. Self-scores (0–10): <b>Energy 3 · Libido 2 · Sleep 4 · Mood 4</b>. Meds: atorvastatin 10 mg, vitamin D3. Allergies: NKDA. 3 lab PDFs attached (hormone panel · metabolic + HbA1c · lipids + hs-CRP). Goal: optimize energy, body composition &amp; longevity.
+   <div class="muted" style="margin-top:7px;font-size:12px">The questionnaire pre-fills the objective chart; every clinical decision stays with you. Opens in the SOAP note tool → finalize to a treatment plan.</div>
+  </div>
+ </div>
+ <div class="gate" style="margin-top:16px"><b>Secure record storage is being finalized.</b> The note generator drafts from chart data and marks provider fields <b>[FILL]</b> — it never suggests or prescribes. Until secure storage is live, use example data only.</div>
  <div class="card" style="margin-top:16px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
   <img src="${COIN}" style="width:56px;height:56px;border-radius:50%">
   <div style="flex:1;min-width:220px"><div style="font-weight:800;font-size:16px">SOAP Note Generator</div><div class="muted">Auto-fills demographics, labs (with ranges + trend), problem list & safety alerts. Provider completes the clinical calls.</div></div>
