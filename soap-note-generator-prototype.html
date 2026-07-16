@@ -68,6 +68,10 @@
   .auto{background:var(--auto-soft);border-left:3px solid var(--auto);padding:6px 10px;border-radius:6px}
   .fill{background:var(--fill-soft);border:1px dashed var(--fill-line);padding:6px 10px;border-radius:6px}
   .fill .lbl:after{content:" [FILL]";color:var(--fill);font-weight:800;font-size:11px;letter-spacing:.3px}
+  /* AI-draft (violet) — sample demo only; a clearly-badged editable draft the provider verifies. History/narrative only, never meds/doses/diagnosis. */
+  .airow{background:#f6f2fc;border:1px dashed #c9b8ec;padding:6px 10px;border-radius:6px}
+  .chip.aidraft{background:#efe9fb;color:#6b4fbb}
+  .aihint{display:block;font-size:11px;color:#6b4fbb;margin-top:4px;font-weight:600}
   input[type=text],input[type=number],textarea,select{
     font:inherit;width:100%;border:1px solid var(--fill-line);background:#fffdf6;border-radius:6px;
     padding:6px 8px;color:var(--ink)}
@@ -235,7 +239,7 @@ body.tpmode #tpWrap{display:block;max-width:840px;margin:0 auto;padding:14px 10p
 
       <div class="row fill">
         <div class="lbl">HPI</div>
-        <textarea placeholder="History of present illness — provider narrative"></textarea>
+        <textarea id="hpi" placeholder="History of present illness — provider narrative"></textarea>
       </div>
     </section>
 
@@ -486,7 +490,11 @@ syncFrontDesk();
   window.__intake=d;
   if(d.name){var _sx=((d.sex||'').charAt(0).toUpperCase())||CHART.sex;var _age=CHART.age;try{if(d.dob){var _by=new Date(d.dob),_n=new Date();_age=_n.getFullYear()-_by.getFullYear()-((_n.getMonth()<_by.getMonth()||(_n.getMonth()===_by.getMonth()&&_n.getDate()<_by.getDate()))?1:0);}}catch(e){}var _t=document.getElementById('title');if(_t)_t.textContent='SOAP NOTE — '+d.name+' ('+_age+_sx+')';var _sm=document.getElementById('submeta');if(_sm&&d.dob)_sm.innerHTML=_sm.innerHTML.replace(/DOB:.*/,'DOB: '+d.dob);}
   const b=document.createElement('div');b.className='banner';b.style.cssText='background:#e6f3f4;border:1px solid #bfe3e6;color:#0e5a61;border-radius:10px;padding:10px 14px;margin:10px 0';
-  b.innerHTML='<b>Loaded from patient intake - '+(d.name||'patient')+'.</b> Subjective pre-filled from the questionnaire. Clinical judgment stays [FILL].';
+  var _aiBadge='<span class="chip aidraft">✨ AI DRAFT</span>';
+  var _aiHint='<div class="aihint">✨ AI draft from the questionnaire — scan &amp; edit before signing.</div>';
+  var _aiDraft=d.aiHPI||d.aiROS||d.aiConsider;
+  b.innerHTML='<b>Loaded from patient intake - '+(d.name||'patient')+'.</b> Subjective pre-filled from the questionnaire. Clinical judgment stays [FILL].'
+    +(_aiDraft?' <span style="display:block;margin-top:6px;color:#6b4fbb"><b>✨ HPI &amp; narrative are AI-drafted from the questionnaire for you to scan &amp; edit.</b> Not a diagnosis — the provider makes and signs every clinical decision, and medications/doses are never AI-suggested.</span>':'');
   wrap.insertBefore(b,wrap.firstChild);
   if(d.cc){const cc=document.getElementById('cc');if(cc)cc.value=d.cc;}
   const mini=document.querySelectorAll('input[type=number].mini');
@@ -495,6 +503,10 @@ syncFrontDesk();
   if(d.allergies){const a=document.getElementById('allergies');if(a)a.textContent=d.allergies;}
   if(d.labs&&d.labs.length){const at=document.createElement('div');at.className='banner';at.style.cssText='background:#fff7e6;border:1px solid #e7d29a;color:#6b551f;border-radius:10px;padding:8px 12px;margin:8px 0';at.innerHTML='Intake attachments: '+d.labs.join(', ')+' - enter values with Add lab.';wrap.insertBefore(at,b.nextSibling);}
   if(d.flags&&d.flags.length){const fl=document.createElement('div');fl.className='alerts';fl.style.marginTop='10px';fl.innerHTML='<h3>Patient-reported focus areas (not diagnoses)</h3><ul>'+d.flags.map(x=>'<li>'+x+'</li>').join('')+'</ul>';wrap.insertBefore(fl,wrap.children[1]);}
+  /* ✨ AI-drafted narrative — ONLY when the intake carries ai* keys (the sample). History/narrative only; never meds, doses, or a definitive diagnosis. Every field stays fully editable for the provider to verify. Plan/Rx fields are untouched (stay [FILL]). */
+  if(d.aiHPI){var _hpi=document.getElementById('hpi');if(_hpi){_hpi.value=d.aiHPI;var _hr=_hpi.closest('.row');if(_hr){_hr.classList.remove('fill');_hr.classList.add('airow');var _hl=_hr.querySelector('.lbl');if(_hl)_hl.innerHTML='HPI '+_aiBadge;_hpi.insertAdjacentHTML('afterend',_aiHint);}}}
+  if(d.aiROS){var _hpiA=document.getElementById('hpi');var _anchor=_hpiA?_hpiA.closest('.row'):null;var _ros=document.createElement('div');_ros.className='row airow';_ros.innerHTML='<div class="lbl">Review of systems '+_aiBadge+'</div><textarea id="rosText"></textarea>'+_aiHint;if(_anchor&&_anchor.parentNode){_anchor.parentNode.insertBefore(_ros,_anchor.nextSibling);}else{var _subj=document.querySelector('section.soap');if(_subj)_subj.appendChild(_ros);}var _rt=document.getElementById('rosText');if(_rt)_rt.value=d.aiROS;}
+  if(d.aiConsider){var _interp=document.getElementById('interp');var _irow=_interp?_interp.closest('.row'):null;var _con=document.createElement('div');_con.className='row airow';_con.innerHTML='<div class="lbl">Considerations (AI draft) '+_aiBadge+' <span class="sub">— not a diagnosis; provider decides</span></div><textarea id="considerText"></textarea>'+_aiHint;if(_irow&&_irow.parentNode){_irow.parentNode.insertBefore(_con,_irow);}else{var _asec=document.querySelectorAll('section.soap')[2];if(_asec)_asec.appendChild(_con);}var _ct=document.getElementById('considerText');if(_ct)_ct.value=d.aiConsider;}
   if(window.syncFrontDesk)syncFrontDesk();
  }catch(e){}
 })();

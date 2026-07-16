@@ -259,7 +259,7 @@ function summary(){
    <div class="sumgrp"><h4>Symptoms</h4>${(STATE.symptoms||[]).length?STATE.symptoms.map(x=>`<span class="pill">${tr(x)}</span>`).join(''):'<span class="muted">—</span>'}</div>
    <div class="sumgrp"><h4>Labs uploaded</h4>${STATE.labFiles.length?STATE.labFiles.map(f=>`<span class="pill">📄 ${f}</span>`).join(''):'<span class="muted">None</span>'}</div>
    ${areas.length?`<div class="flag"><b>${tr('Vùng cần bác sĩ đánh giá (Areas for the doctor to evaluate):')}</b> ${areas.join(' · ')}.<br><span class="muted">${tr('Từ bộ quy tắc thủ công — không phải chẩn đoán, không tra cứu internet. (From a manual rule set — not a diagnosis, no internet search.)')}</span></div>`:''}
-   <div class="howai"><b>${tr('Cách hoạt động (How this works).')}</b> ${tr('Câu trả lời của bạn điền sẵn phần khách quan của hồ sơ; bác sĩ quyết định mọi vấn đề lâm sàng. (Your answers pre-fill the objective parts of the chart; the doctor makes every clinical decision.)')}</div>
+   <div class="howai"><b>${tr('Cách hoạt động (How this works).')}</b> ${tr('Câu trả lời của bạn điền sẵn phần khách quan của hồ sơ và soạn sẵn bản nháp HPI để bác sĩ xem lại; bác sĩ quyết định mọi vấn đề lâm sàng. (Your answers pre-fill the objective parts of the chart and auto-draft the HPI for the provider to scan & edit — not a diagnosis; the doctor makes every clinical decision.)')}</div>
    <div class="nav"><button class="btn" onclick="step=${STEPS.length-1};render()">← ${tr('Quay lại (Back)')}</button>
      <button class="btn p" onclick="toSOAP()">${tr('Gửi vào bản nháp (Send to draft note)')} →</button></div>
    <div style="text-align:center;margin-top:12px"><button class="btn" onclick="dl()">${tr('Tải bản tóm tắt (Download summary)')}</button></div>`;
