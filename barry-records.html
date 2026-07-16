@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Records · Barry Burris, NMD</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf4e8;--card:#fffdf7;--ink:#40352a;--ink2:#63543f;--mut:#8a7c68;--line:#e8dcc4;
+ --navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal2:#0b636a;--teal-soft:#e2f1f2;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;--goldsoft:#efdcae;
+ --good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;
+ --shadow:0 10px 30px rgba(60,40,20,.09)}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
+a{color:inherit}
+h1,h2,h3{font-family:Fraunces,Georgia,serif}
+header{background:linear-gradient(180deg,var(--navy),var(--navy2));color:#f4e8d0;padding:12px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.hbar{max-width:1220px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:11px}
+.hbar .back{font-size:20px;text-decoration:none;color:#e6c67e;flex:none}
+.hbar .coin{width:36px;height:36px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.htitle{font-family:Fraunces,Georgia,serif;font-weight:700;font-size:20px;line-height:1;color:#e6c67e}
+.hsub{font-size:11px;color:#b8a986;margin-top:2px}
+.hspace{flex:1}
+.bb-chip{font-size:11.5px;color:#cdbfa4}.bb-chip b{color:#f4e8d0}.bb-chip a{color:#e6c67e;text-decoration:none;margin-left:2px}
+.hbtn{background:rgba(255,255,255,.10);border:1px solid rgba(230,198,126,.25);color:#f4e8d0;border-radius:9px;padding:8px 12px;font-size:12.5px;cursor:pointer;font-weight:600;white-space:nowrap;text-decoration:none}
+.hbtn:hover{background:rgba(255,255,255,.18)}
+.wrap{max-width:1220px;margin:0 auto;padding:14px 16px 90px}
+.note{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:11px;padding:10px 14px;font-size:12.5px;margin-bottom:12px;line-height:1.5}
+.note b{color:#5a4413}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.schip{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:8px 13px;font-size:12.5px;color:var(--mut)}
+.schip b{font-size:16px;color:var(--ink);margin-right:5px;font-weight:800}
+.tools{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.sp{flex:1}
+.search{flex:1;min-width:200px;position:relative}
+.search input{width:100%;padding:10px 12px 10px 34px;border-radius:11px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:14px}
+.search .mag{position:absolute;left:12px;top:50%;transform:translateY(-50%);opacity:.45}
+select,.tbtn{padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:var(--card);font:inherit;font-size:13px;color:var(--ink);cursor:pointer}
+.tbtn:hover{border-color:var(--teal)}
+.tbtn.dark{background:var(--teal);color:#fff;border:none;font-weight:700}
+.tbtn.dark:hover{background:#0b5a61}
+.tbtn.gold{background:linear-gradient(180deg,#e6c67e,#c9992f);color:#3a2b08;border:none;font-weight:700}
+.tablewrap{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+thead th{text-align:left;background:#f4ecdb;color:var(--mut);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.4px;padding:10px 12px;white-space:nowrap;position:sticky;top:0;z-index:2}
+tbody tr{border-top:1px solid var(--line);cursor:pointer}
+tbody tr:hover{background:#f4ecdb}
+td{padding:9px 12px;vertical-align:middle;white-space:nowrap}
+.tcell-ic{width:46px}
+.ftile{width:34px;height:34px;border-radius:9px;background:#f4ecdb;display:flex;align-items:center;justify-content:center;font-size:17px}
+.nm{font-weight:700;white-space:normal}
+.muted{color:var(--mut)}
+.catb{display:inline-block;font-size:10.5px;font-weight:700;letter-spacing:.2px;padding:2px 9px;border-radius:99px;border:1px solid transparent;white-space:nowrap}
+.samp{display:inline-block;background:var(--gold-soft);color:#7a5f22;border:1px solid var(--goldsoft);font-family:Oswald,sans-serif;font-size:9px;font-weight:600;letter-spacing:.06em;padding:1px 6px;border-radius:20px;margin-left:6px;vertical-align:middle}
+.empty{padding:36px;text-align:center;color:var(--mut)}
+.cred{margin:16px 0 0;text-align:center;color:#9aa6b2;font-size:11px}
+.scrim{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:60;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:24px 12px}
+.scrim.on{display:flex}
+.sheet{background:var(--card);width:100%;max-width:600px;border-radius:18px;padding:20px 22px 24px;box-shadow:0 20px 60px rgba(0,0,0,.35);margin:auto}
+.sheet h3{font-size:19px;margin:0 0 14px;font-weight:800;display:flex;align-items:center;gap:9px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}@media(max-width:560px){.grid2{grid-template-columns:1fr}}
+.fld{margin-bottom:12px}
+.fld label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin:0 0 5px}
+.fld input,.fld select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:9px 11px;font:inherit;font-size:14px;background:#fff}
+.fld input:focus,.fld select:focus{outline:none;border-color:var(--teal)}
+.req{color:var(--bad)}
+.imnote{font-size:12px;color:var(--mut);line-height:1.5;margin-top:6px}
+.kindtog{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.kindtog button{flex:1;border:none;background:var(--card);padding:10px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;color:var(--mut)}
+.kindtog button.on{background:var(--teal);color:#fff}
+.pv{margin:2px 0 14px;border:1px solid var(--line);border-radius:12px;background:#fbf6ea;overflow:hidden}
+.pv-img{display:block;max-width:100%;max-height:340px;margin:0 auto}
+.pv-frame{width:100%;height:340px;border:0;background:#fff}
+.pv-link,.pv-ph{padding:22px;text-align:center}
+.pv-ic{font-size:34px}
+.pv-url{font-size:12.5px;color:var(--mut);word-break:break-all;margin:8px 0 12px}
+.pv-fn{font-weight:800;margin:8px 0 6px}
+.pv-note{font-size:12px;color:var(--mut);max-width:430px;margin:8px auto 0;line-height:1.5}
+.rowbtns{display:flex;gap:9px;margin-top:16px;align-items:center;flex-wrap:wrap}
+.rowbtns a.tbtn{text-decoration:none;display:inline-flex;align-items:center;justify-content:center}
+.save{flex:1;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),#0b5a61)}
+.del{background:none;border:1px solid #e6bdb9;color:#b3261e;border-radius:11px;padding:11px 15px;font-weight:600;cursor:pointer}
+.cancel{background:none;border:none;color:var(--mut);font-size:13.5px;cursor:pointer;padding:11px}
+.dmsg{font-size:13px;margin-top:10px;min-height:1px}.dmsg.err{color:#b23b3b}.dmsg.ok{color:var(--good)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;opacity:0;transition:.25s;z-index:120;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<header>
+  <div class="hbar">
+    <a class="back" href="barry-burris-hub.html" title="Back to the hub">&#8592;</a>
+    <img class="coin" id="coin" alt="BB">
+    <div><div class="htitle">Records</div><div class="hsub">Barry Burris, NMD &middot; the practice filing cabinet</div></div>
+    <div class="hspace"></div>
+    <span id="chip"></span>
+    <a class="hbtn" href="barry-signin.html">Menu</a>
+  </div>
+</header>
+
+<div class="wrap" id="main">
+  <div class="note"><b>Demo filing cabinet (Lane A).</b> This organizes documents on this device only &mdash; a front-end preview. Real, secure document storage (encrypted, access-logged, HIPAA-eligible hosting) turns on with the secure-hosting step. Use sample or synthetic files only &mdash; <b>no real patient records yet</b>.</div>
+
+  <div class="sum" id="summary"></div>
+
+  <div class="tools">
+    <div class="search"><span class="mag">&#128269;</span><input id="q" placeholder="Search document or patient…"></div>
+    <select id="fPatient"><option value="">All patients</option></select>
+    <select id="fCat"><option value="">All categories</option></select>
+    <select id="fSort">
+      <option value="date">Sort: Date (newest)</option>
+      <option value="name">Sort: Name</option>
+      <option value="patient">Sort: Patient</option>
+    </select>
+    <button class="tbtn" id="dirBtn" title="Reverse order">&#9650;&#9660;</button>
+    <button class="tbtn" id="clearBtn">Clear</button>
+    <div class="sp"></div>
+    <button class="tbtn dark" id="uploadBtn">&#8593; Upload</button>
+    <button class="tbtn gold" id="linkBtn">&#128279; Attach link</button>
+  </div>
+
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th></th><th>Document</th><th>Patient</th><th>Category</th><th>Date</th></tr></thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="empty hide" id="empty"></div>
+  </div>
+  <div class="cred">Records by Accelerated Experiences, LLC</div>
+</div>
+
+<!-- add / view / edit document -->
+<div class="scrim" id="docScrim" onclick="if(event.target===this)closeDoc()">
+  <div class="sheet">
+    <h3 id="docTitle">Add a document</h3>
+    <div id="srcRow" class="kindtog" style="margin-bottom:12px">
+      <button type="button" id="srcFileBtn" onclick="setSrc('file')">&#8593; Upload a file</button>
+      <button type="button" id="srcLinkBtn" onclick="setSrc('link')">&#128279; Attach a link</button>
+    </div>
+    <div class="fld" id="fileFld">
+      <label>Choose a file</label>
+      <input type="file" id="dFile" onchange="onFilePick()">
+      <div class="imnote">Demo: images preview here; other files are filed by name on this device. No file leaves your browser &mdash; secure upload turns on with the HIPAA hosting step.</div>
+    </div>
+    <div class="fld" id="linkFld">
+      <label>Link (Google Drive, Dropbox, any URL)</label>
+      <input id="dUrl" placeholder="https://drive.google.com/…">
+    </div>
+    <div id="pvWrap"></div>
+    <div class="grid2">
+      <div class="fld"><label>Document name <span class="req">*</span></label><input id="dName" placeholder="e.g. LabCorp Hormone Panel.pdf"></div>
+      <div class="fld"><label>Date</label><input id="dDate" type="date"></div>
+    </div>
+    <div class="grid2">
+      <div class="fld"><label>Patient <span class="req">*</span></label><input id="dPatient" list="patientList" placeholder="Start typing a name…"><datalist id="patientList"></datalist></div>
+      <div class="fld"><label>Category <span class="req">*</span></label><select id="dCat"></select></div>
+    </div>
+    <div class="rowbtns">
+      <button class="save" id="dSave" onclick="saveDoc()">File it</button>
+      <a class="tbtn openbtn hide" id="dOpen" target="_blank" rel="noopener">Open &#8599;</a>
+      <button class="del hide" id="dDel" onclick="delDoc()">Delete</button>
+      <button class="cancel" onclick="closeDoc()">Cancel</button>
+    </div>
+    <div class="dmsg" id="dMsg"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="bb-auth.js"></script>
+<script>
+var LS='bb_records';
+var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
+
+/* ---- fixed filing schema (so filing can't drift) ---- */
+var CATS=['Labs','Imaging','Consents','Referrals & letters','Insurance & ID','Visit notes','Treatment plans','Prescriptions/orders','Intake forms','Misc'];
+var CAT_HUE={'Labs':'#b07a2e','Imaging':'#6b3fa0','Consents':'#0e7c84','Referrals & letters':'#2b6cb0','Insurance & ID':'#4e7433','Visit notes':'#0b636a','Treatment plans':'#b3261e','Prescriptions/orders':'#8a5a2b','Intake forms':'#5b6b86','Misc':'#8a7c68'};
+/* the 15 SAMPLE patients that seed the rest of the hub (bb-intakes.js) */
+var SAMPLE_PATIENTS=['Marcus Delgado','Nguyễn Thị Mai','Trần Thị Hương','David Whitfield','Emily Foster','Lê Minh Tuấn','Sarah Chen','Phạm Thị Ngọc','Robert Nguyen','Jake Morrison','Daniel Pham','Vũ Thị Lan','Margaret O’Brien','Đặng Văn Hải','Rachel Kim'];
+
+var ALL=[];
+var FS={q:'',patient:'',cat:'',by:'date',dir:-1};
+var SRC='file', PENDING=null, edId=null;
+var el=function(id){return document.getElementById(id);};
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function toast(m){var t=el('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
+function todayISO(){var d=new Date();var p=function(n){return String(n).padStart(2,'0');};return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());}
+function dstr(iso){if(!iso)return'';try{var d=new Date(iso+'T00:00:00');if(isNaN(d))return iso;return d.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});}catch(e){return iso;}}
+
+/* file-type detection + icons */
+function extKind(s){s=String(s||'').toLowerCase();
+  if(/\.(png|jpe?g|gif|webp|bmp|svg|heic)(\?|#|$)/.test(s))return 'image';
+  if(/\.pdf(\?|#|$)/.test(s))return 'pdf';
+  if(/\.(docx?|txt|rtf|csv|xlsx?|pages)(\?|#|$)/.test(s))return 'doc';
+  return '';}
+function fileKind(r){
+  if(r&&r.kind)return r.kind;
+  var byName=extKind(r&&(r.fileName||r.name));
+  if(byName)return byName;
+  var byUrl=extKind(r&&r.url);
+  if(byUrl)return byUrl;
+  if((r&&r.mime||'').indexOf('image')===0)return 'image';
+  if((r&&r.mime||'')==='application/pdf')return 'pdf';
+  if(r&&r.src==='link')return 'link';
+  return 'doc';}
+function icon(k){return {pdf:'📄',image:'🖼️',link:'🔗',doc:'📄'}[k]||'📄';}
+function catBadge(c){var hue=CAT_HUE[c]||'#8a7c68';return '<span class="catb" style="color:'+hue+';background:'+hue+'14;border-color:'+hue+'33">'+esc(c)+'</span>';}
+
+/* ---- store (device-local, demo) ---- */
+function readAll(){try{return JSON.parse(localStorage.getItem(LS))||null;}catch(e){return null;}}
+function persist(){
+  try{localStorage.setItem(LS,JSON.stringify(ALL));return true;}
+  catch(e){
+    /* likely quota — drop inline file data (keep the filing) and retry */
+    ALL.forEach(function(r){if(r.url&&String(r.url).indexOf('data:')===0){r.url='';r.stored='ref';}});
+    try{localStorage.setItem(LS,JSON.stringify(ALL));toast('Filed — preview dropped to save space (demo).');return true;}
+    catch(e2){toast('Storage full — this is a demo (no secure storage yet).');return false;}
+  }
+}
+
+/* ---- synthetic insurance-card image (no real PHI) ---- */
+function insuranceImg(){
+  var svg="<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 200'>"+
+    "<rect width='320' height='200' rx='14' fill='#0e7c84'/>"+
+    "<rect width='320' height='54' fill='#0b5a61'/>"+
+    "<text x='18' y='34' font-family='Arial' font-size='18' font-weight='700' fill='#f4e8d0'>HEALTH PLAN</text>"+
+    "<text x='232' y='34' font-family='Arial' font-size='12' fill='#bfe6e8'>PPO</text>"+
+    "<text x='18' y='86' font-family='Arial' font-size='10' fill='#bfe6e8'>MEMBER</text>"+
+    "<text x='18' y='104' font-family='Arial' font-size='16' font-weight='700' fill='#ffffff'>SAMPLE PATIENT</text>"+
+    "<text x='18' y='134' font-family='Arial' font-size='10' fill='#bfe6e8'>MEMBER ID</text>"+
+    "<text x='18' y='152' font-family='Arial' font-size='15' font-weight='700' fill='#ffffff'>SAMPLE-000-000</text>"+
+    "<text x='18' y='186' font-family='Arial' font-size='10' fill='#e6c67e'>SYNTHETIC · DEMO · NO REAL PHI</text>"+
+    "</svg>";
+  return 'data:image/svg+xml,'+encodeURIComponent(svg);
+}
+
+/* ---- seed SAMPLE records so it looks alive ---- */
+function seed(){
+  var mk=function(o){o.id='r'+Math.random().toString(36).slice(2,9);o.sample=true;o.createdAt=new Date().toISOString();return o;};
+  ALL=[
+    mk({name:'LabCorp Hormone Panel.pdf',patient:'Marcus Delgado',category:'Labs',date:'2026-06-28',src:'file',kind:'pdf',url:'',fileName:'LabCorp Hormone Panel.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'CMP + HbA1c.pdf',patient:'David Whitfield',category:'Labs',date:'2026-06-15',src:'file',kind:'pdf',url:'',fileName:'CMP + HbA1c.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Thyroid panel (TSH, free T4).pdf',patient:'Trần Thị Hương',category:'Labs',date:'2026-06-20',src:'file',kind:'pdf',url:'',fileName:'Thyroid panel (TSH, free T4).pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Signed telehealth consent.pdf',patient:'Marcus Delgado',category:'Consents',date:'2026-07-08',src:'file',kind:'pdf',url:'',fileName:'Signed telehealth consent.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Insurance card.jpg',patient:'Emily Foster',category:'Insurance & ID',date:'2026-07-01',src:'file',kind:'image',url:insuranceImg(),fileName:'Insurance card.jpg',mime:'image/svg+xml',stored:'local'}),
+    mk({name:'Referral — endocrinology.pdf',patient:'Nguyễn Thị Mai',category:'Referrals & letters',date:'2026-07-05',src:'file',kind:'pdf',url:'',fileName:'Referral — endocrinology.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Treatment plan — energy & longevity.pdf',patient:'Marcus Delgado',category:'Treatment plans',date:'2026-07-10',src:'file',kind:'pdf',url:'',fileName:'Treatment plan — energy & longevity.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Treatment plan — perimenopause support.pdf',patient:'Nguyễn Thị Mai',category:'Treatment plans',date:'2026-07-06',src:'file',kind:'pdf',url:'',fileName:'Treatment plan — perimenopause support.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'New-patient intake.pdf',patient:'David Whitfield',category:'Intake forms',date:'2026-07-12',src:'file',kind:'pdf',url:'',fileName:'New-patient intake.pdf',mime:'application/pdf',stored:'ref'}),
+    mk({name:'Sleep study summary (shared drive)',patient:'Lê Minh Tuấn',category:'Referrals & letters',date:'2026-07-03',src:'link',kind:'link',url:'https://drive.google.com/file/d/SAMPLE-sleep-study/view',fileName:'',stored:'link'})
+  ];
+  persist();
+}
+
+/* ---- filters + render ---- */
+function patientList(){
+  var s={};ALL.forEach(function(r){if(r.patient)s[r.patient]=1;});
+  return Object.keys(s).sort(function(a,b){return a.localeCompare(b);});
+}
+function buildFilters(){
+  var cur=FS.patient;
+  el('fPatient').innerHTML='<option value="">All patients</option>'+patientList().map(function(p){return '<option value="'+esc(p)+'">'+esc(p)+'</option>';}).join('');
+  el('fPatient').value=cur;
+  el('fCat').innerHTML='<option value="">All categories</option>'+CATS.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+  el('fCat').value=FS.cat;
+  el('dCat').innerHTML=CATS.map(function(c){return '<option value="'+esc(c)+'">'+esc(c)+'</option>';}).join('');
+  var names={};SAMPLE_PATIENTS.forEach(function(p){names[p]=1;});ALL.forEach(function(r){if(r.patient)names[r.patient]=1;});
+  el('patientList').innerHTML=Object.keys(names).sort(function(a,b){return a.localeCompare(b);}).map(function(p){return '<option value="'+esc(p)+'"></option>';}).join('');
+}
+function sortVal(r){
+  if(FS.by==='name')return String(r.name||'').toLowerCase();
+  if(FS.by==='patient')return String(r.patient||'').toLowerCase();
+  return String(r.date||'');
+}
+function filtered(){
+  var q=FS.q.trim().toLowerCase();
+  var arr=ALL.filter(function(r){
+    if(FS.patient&&r.patient!==FS.patient)return false;
+    if(FS.cat&&r.category!==FS.cat)return false;
+    if(q){var hay=(r.name+' '+r.patient+' '+r.category).toLowerCase();if(hay.indexOf(q)<0)return false;}
+    return true;
+  });
+  arr.sort(function(a,b){var x=sortVal(a),y=sortVal(b);return x<y?-1*FS.dir:x>y?1*FS.dir:0;});
+  return arr;
+}
+function render(){
+  var arr=filtered();
+  var pats=patientList().length;
+  var labs=ALL.filter(function(r){return r.category==='Labs';}).length;
+  var cons=ALL.filter(function(r){return r.category==='Consents';}).length;
+  var plans=ALL.filter(function(r){return r.category==='Treatment plans';}).length;
+  el('summary').innerHTML=
+    '<div class="schip"><b>'+ALL.length+'</b>documents</div>'+
+    '<div class="schip"><b>'+pats+'</b>patients</div>'+
+    '<div class="schip"><b>'+labs+'</b>labs</div>'+
+    '<div class="schip"><b>'+cons+'</b>consents</div>'+
+    '<div class="schip"><b>'+plans+'</b>treatment plans</div>'+
+    (arr.length!==ALL.length?'<div class="schip" style="color:var(--teal)">'+arr.length+' shown</div>':'');
+  var tb=el('tbody'),emp=el('empty');
+  if(!arr.length){tb.innerHTML='';emp.classList.remove('hide');emp.textContent=ALL.length?'No documents match your filters.':'No documents filed yet — use Upload or Attach link up top.';return;}
+  emp.classList.add('hide');
+  tb.innerHTML=arr.map(function(r){
+    return '<tr onclick="openDoc(\''+r.id+'\')">'+
+      '<td class="tcell-ic"><span class="ftile">'+icon(fileKind(r))+'</span></td>'+
+      '<td class="nm">'+esc(r.name)+(r.sample?'<span class="samp">SAMPLE</span>':'')+'</td>'+
+      '<td class="muted">'+esc(r.patient)+'</td>'+
+      '<td>'+catBadge(r.category)+'</td>'+
+      '<td class="muted">'+esc(dstr(r.date))+'</td></tr>';
+  }).join('');
+}
+
+/* ---- preview (universal viewer idea) ---- */
+function previewHTML(r){
+  var k=fileKind(r),url=r.url||'';
+  if(k==='image'&&url)return '<div class="pv"><img class="pv-img" src="'+esc(url)+'" alt="'+esc(r.name)+'"></div>';
+  if(url&&k==='pdf')return '<div class="pv"><iframe class="pv-frame" src="'+esc(url)+'" title="'+esc(r.name)+'"></iframe></div>';
+  if(url)return '<div class="pv pv-link"><div class="pv-ic">🔗</div><div class="pv-url">'+esc(url)+'</div><a class="tbtn dark" href="'+esc(url)+'" target="_blank" rel="noopener">Open ↗</a><div class="pv-note">External links (Google Drive, Dropbox…) open in a new tab.</div></div>';
+  return '<div class="pv pv-ph"><div class="pv-ic">'+icon(k)+'</div><div class="pv-fn">'+esc(r.fileName||r.name)+'</div><div class="pv-note">Filed on this device for the demo — the file itself isn’t uploaded. Secure viewing turns on with the HIPAA hosting step.</div></div>';
+}
+
+/* ---- modal: add / view / edit ---- */
+function setSrc(mode){
+  SRC=mode;
+  el('srcFileBtn').classList.toggle('on',mode==='file');
+  el('srcLinkBtn').classList.toggle('on',mode==='link');
+  el('fileFld').classList.toggle('hide',mode!=='file');
+  el('linkFld').classList.toggle('hide',mode!=='link');
+}
+function onFilePick(){
+  var f=el('dFile').files&&el('dFile').files[0];PENDING=null;el('pvWrap').innerHTML='';
+  if(!f)return;
+  if(!el('dName').value.trim())el('dName').value=f.name;
+  var isImg=(f.type||'').indexOf('image/')===0;
+  if(isImg&&f.size<1600000){
+    var rd=new FileReader();
+    rd.onload=function(){PENDING={kind:'image',url:String(rd.result),fileName:f.name,mime:f.type,stored:'local'};el('pvWrap').innerHTML=previewHTML({kind:'image',url:PENDING.url,name:f.name});};
+    rd.readAsDataURL(f);
+  }else{
+    var k=extKind(f.name)||(f.type==='application/pdf'?'pdf':'doc');
+    PENDING={kind:k,url:'',fileName:f.name,mime:f.type,stored:'ref'};
+    el('pvWrap').innerHTML=previewHTML({kind:k,url:'',fileName:f.name,name:f.name});
+  }
+}
+function dmsg(t,c){var m=el('dMsg');m.textContent=t||'';m.className='dmsg'+(c?' '+c:'');}
+function openDoc(id,preset){
+  edId=id||null;PENDING=null;dmsg('');
+  var r=id?ALL.find(function(x){return x.id===id;}):null;
+  el('docTitle').textContent=r?'Document':'Add a document';
+  el('dDel').classList.toggle('hide',!r);
+  el('dSave').textContent=r?'Save changes':'File it';
+  el('srcRow').classList.toggle('hide',!!r);
+  if(r){
+    el('fileFld').classList.add('hide');el('linkFld').classList.add('hide');
+    el('pvWrap').innerHTML=previewHTML(r);
+    el('dName').value=r.name||'';el('dDate').value=r.date||'';el('dPatient').value=r.patient||'';el('dCat').value=r.category||CATS[0];
+    if(r.url){var o=el('dOpen');o.href=r.url;o.classList.remove('hide');}else{el('dOpen').classList.add('hide');}
+  }else{
+    el('pvWrap').innerHTML='';el('dOpen').classList.add('hide');
+    el('dFile').value='';el('dUrl').value='';el('dName').value='';el('dPatient').value='';
+    el('dDate').value=todayISO();el('dCat').value=CATS[0];
+    setSrc(preset||'file');
+  }
+  el('docScrim').classList.add('on');
+}
+function closeDoc(){el('docScrim').classList.remove('on');}
+function saveDoc(){
+  var name=el('dName').value.trim(),patient=el('dPatient').value.trim(),category=el('dCat').value,date=el('dDate').value;
+  if(!name){dmsg('Give the document a name.','err');return;}
+  if(!patient){dmsg('Which patient does this belong to?','err');return;}
+  if(edId){
+    var i=ALL.findIndex(function(x){return x.id===edId;});
+    if(i>=0){ALL[i].name=name;ALL[i].patient=patient;ALL[i].category=category;ALL[i].date=date;persist();}
+    closeDoc();buildFilters();render();toast('Saved');return;
+  }
+  var rec={id:'r'+Date.now().toString(36)+Math.floor(Math.random()*900+100),name:name,patient:patient,category:category,date:date||todayISO(),sample:false,createdAt:new Date().toISOString()};
+  if(SRC==='file'){
+    if(!PENDING){dmsg('Choose a file, or switch to Attach a link.','err');return;}
+    rec.src='file';rec.kind=PENDING.kind;rec.url=PENDING.url||'';rec.fileName=PENDING.fileName;rec.mime=PENDING.mime;rec.stored=PENDING.stored;
+  }else{
+    var url=el('dUrl').value.trim();
+    if(!url){dmsg('Paste a link, or switch to Upload a file.','err');return;}
+    rec.src='link';rec.url=url;rec.fileName='';rec.stored='link';rec.kind=extKind(url)||'link';
+  }
+  ALL.unshift(rec);persist();
+  PENDING=null;closeDoc();buildFilters();render();toast('Filed');
+}
+function delDoc(){
+  if(!edId||!confirm('Remove this document from the cabinet? (demo — nothing is deleted from any real system)'))return;
+  ALL=ALL.filter(function(x){return x.id!==edId;});persist();closeDoc();buildFilters();render();toast('Removed');
+}
+
+/* ---- wiring ---- */
+function clearF(){FS.q='';FS.patient='';FS.cat='';FS.by='date';FS.dir=-1;el('q').value='';el('fSort').value='date';buildFilters();render();}
+function init(){
+  if(BBAuth&&BBAuth.requireGate)BBAuth.requireGate();
+  el('coin').src=COIN;
+  if(BBAuth&&BBAuth.chipHTML)el('chip').innerHTML=BBAuth.chipHTML();
+  var raw=readAll();
+  ALL=raw||[];
+  if(!ALL.length){seed();}
+  buildFilters();render();
+  el('q').addEventListener('input',function(){FS.q=this.value;render();});
+  el('fPatient').addEventListener('change',function(){FS.patient=this.value;render();});
+  el('fCat').addEventListener('change',function(){FS.cat=this.value;render();});
+  el('fSort').addEventListener('change',function(){FS.by=this.value;FS.dir=(this.value==='date'?-1:1);render();});
+  el('dirBtn').addEventListener('click',function(){FS.dir=-FS.dir;render();});
+  el('clearBtn').addEventListener('click',clearF);
+  el('uploadBtn').addEventListener('click',function(){openDoc(null,'file');});
+  el('linkBtn').addEventListener('click',function(){openDoc(null,'link');});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDoc();});
+}
+init();
+</script>
+<script>window.BB_NAV_ACTIVE='records'</script>
+<script src="bb-nav.js"></script>
+</body>
+</html>
