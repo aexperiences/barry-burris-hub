@@ -183,6 +183,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
 .bub.me{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:5px}
 .bub.sys{align-self:center;background:var(--info-soft);color:var(--info);font-size:12px;border-radius:99px;padding:6px 13px;max-width:90%;text-align:center}
 .bub .mm{font-size:10px;opacity:.7;margin-top:4px}.bub.me .mm{opacity:.92}
+.bt-og{border:none;background:none;color:inherit;opacity:.62;font-size:10.5px;cursor:pointer;text-decoration:underline;padding:0 2px;font-family:inherit}.bt-og:hover{opacity:1}
 .bub .att{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.25);border-radius:8px;padding:4px 8px;font-size:11.5px;margin-top:6px}
 .bub.them .att{background:#efe7d5}
 .composer{display:flex;gap:9px;margin-top:12px;align-items:center}
@@ -279,7 +280,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
 <!-- ============ SIGN-IN ============ -->
 <div id="signin">
   <div class="si-ribbon" id="siRibbon"></div>
-  <div class="si-topbar"><div class="sp"></div><div class="langtog" role="group" aria-label="Language"><button id="lEn" onclick="setLang('en')">EN</button><button id="lVi" onclick="setLang('vi')">VI</button></div></div>
+  <div class="si-topbar"><div class="sp"></div><div class="langtog" role="group" aria-label="Language"><button id="lEn" onclick="setLang('en')">EN</button><button id="lVi" onclick="setLang('vi')">VI</button><button id="lEs" onclick="setLang('es')">ES</button></div></div>
   <div class="si-wrap">
     <div class="si-head">
       <img class="coin" id="siCoin" alt="Barry Burris, NMD">
@@ -338,7 +339,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
       <h1 class="tt" id="pageTitle">Home</h1>
       <div class="sp"></div>
       <span id="pathChip" class="pathchip" style="display:none"></span>
-      <div class="langtog" role="group" aria-label="Language"><button id="lEn2" onclick="setLang('en')">EN</button><button id="lVi2" onclick="setLang('vi')">VI</button></div>
+      <div class="langtog" role="group" aria-label="Language"><button id="lEn2" onclick="setLang('en')">EN</button><button id="lVi2" onclick="setLang('vi')">VI</button><button id="lEs2" onclick="setLang('es')">ES</button></div>
       <button class="acctbtn" id="acctBtn" onclick="toggleMenu()" aria-haspopup="true" aria-expanded="false"><span class="av" id="topAv" aria-hidden="true">–</span><span class="an" id="topName">—</span></button>
     </div>
     <div id="acctMenu" class="menu hide"></div>
@@ -398,6 +399,7 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:mi
 <script src="bb-intakes.js"></script>
 <script src="bb-portal-auth.js"></script>
 <script src="bb-region.js"></script>
+<script src="bb-translate.js"></script>
 <script src="bb-telehealth.js"></script>
 <script>
 "use strict";
@@ -839,7 +841,7 @@ function docRow(ic,name,meta,right){
 
 /* ---------- messages ---------- */
 function seedMsgs(p){var f=firstName(p.name);
-  return [{from:'them',cat:'general',text:(lang==='vi'?('Xin chào '+f+'! Chúng tôi đã nhận được bảng câu hỏi và xét nghiệm của bạn. Bác sĩ Burris sẽ xem trước buổi khám. Có câu hỏi gì, cứ nhắn tại đây nhé.'):('Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.')),ts:Date.now()-86400000,read:false}];}
+  return [{from:'them',cat:'general',text:'Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.',ts:Date.now()-86400000,read:false}];}
 function getMsgs(p){var m=read(pkey('msgs'),null);if(!m){m=seedMsgs(p);write(pkey('msgs'),m);}return m;}
 var msgCat='all';
 function renderMessages(){
@@ -852,25 +854,45 @@ function renderMessages(){
   msgs.filter(function(m){return msgCat==='all'||m.cat===msgCat||m.from==='sys';}).forEach(function(m){h+=bubble(m);});
   h+='</div>';
   h+='<div class="composer"><button class="btn sm" onclick="attachDemo()" title="'+esc(t('attach'))+'" aria-label="'+esc(t('attach'))+'">📎</button><input type="text" id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()" aria-label="'+esc(t('msgPlaceholder'))+'"><button class="btn solid" onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
-  h+='<div class="small" style="margin-top:8px">🔒 '+esc(t('reply1'))+'</div></div>';
+  h+='<div class="small" style="margin-top:8px">🔒 '+esc(t('reply1'))+(lang!=='en'?' · 🌐 '+esc(lang==='vi'?'Tin nhắn từ đội chăm sóc hiển thị bằng ngôn ngữ của bạn.':(lang==='es'?'Los mensajes del equipo se muestran en tu idioma.':'Messages from your care team are shown in your language.')):'')+'</div></div>';
   v.innerHTML=h;
   var l=document.getElementById('msgList');if(l)l.scrollTop=l.scrollHeight;
-  renderNav('messages');
+  renderNav('messages');translateThread();
 }
 function setMsgCat(c){msgCat=c;renderMessages();}
+function origLabel(){return lang==='vi'?'bản gốc':(lang==='es'?'original':'original');}
+function transLabel(){return lang==='vi'?'bản dịch':(lang==='es'?'traducción':'translation');}
+// Provider/system messages are authored in English (Barry's language) and shown in the patient's language.
+function provText(m){
+  if((m.from==='them'||m.from==='sys')&&lang!=='en'&&typeof BBTranslate!=='undefined'){
+    var o=m.text,c=BBTranslate.cachedOnly(o,lang);
+    if(c!=null&&c!==o)return '<span class="trneed" data-done="1"><span class="bt-tx">'+esc(c)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(c)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button></span>';
+    return '<span class="trneed" data-o="'+esc(o)+'">'+esc(o)+'</span>';
+  }
+  return esc(m.text);
+}
+function btToggle(b){var s=b.getAttribute('data-s'),span=b.parentNode.querySelector('.bt-tx');if(!span)return;if(s==='t'){span.textContent=b.getAttribute('data-o');b.setAttribute('data-s','o');b.textContent='🌐 '+transLabel();}else{span.textContent=b.getAttribute('data-t');b.setAttribute('data-s','t');b.textContent='🌐 '+origLabel();}}
+function translateThread(){
+  if(lang==='en'||typeof BBTranslate==='undefined')return;
+  var els=[].slice.call(document.querySelectorAll('#msgList .trneed:not([data-done])'));if(!els.length)return;
+  var origs=els.map(function(e){return e.getAttribute('data-o');});
+  BBTranslate.batch(origs,lang).then(function(tr){els.forEach(function(e,i){var o=origs[i],t2=tr[i]||o;e.setAttribute('data-done','1');if(t2&&t2!==o)e.innerHTML='<span class="bt-tx">'+esc(t2)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(t2)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button>';else e.textContent=o;});});
+}
 function bubble(m){
-  if(m.from==='sys')return '<div class="bub sys">'+esc(m.text)+'</div>';
+  if(m.from==='sys')return '<div class="bub sys">'+provText(m)+'</div>';
   var d=new Date(m.ts);var when=fmtDate(d,false)+' · '+fmtTime(d);
   var att=m.att?'<div class="att">📎 '+esc(m.att)+'</div>':'';
-  var who=(m.from==='me'?(lang==='vi'?'Bạn':'You'):'Barry Burris, NMD');
+  var who=(m.from==='me'?(lang==='vi'?'Bạn':(lang==='es'?'Tú':'You')):'Barry Burris, NMD');
   var seen=(m.from==='me'?' · '+t('seen'):'');
-  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+esc(m.text)+att+'<div class="mm">'+who+' · '+when+seen+'</div></div>';
+  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+provText(m)+att+'<div class="mm">'+who+' · '+when+seen+'</div></div>';
 }
 function pushMsg(m){var arr=read(pkey('msgs'),[]);arr.push(m);write(pkey('msgs'),arr);}
 function sendMsg(){var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
-  pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:txt,ts:Date.now(),read:true});
+  var m={from:'me',cat:(msgCat==='all'?'general':msgCat),text:txt,mlang:lang,ts:Date.now(),read:true};
+  pushMsg(m);
   inp.value='';
-  setTimeout(function(){pushMsg({from:'sys',text:t('ackMsg'),ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
+  if(lang!=='en'&&typeof BBTranslate!=='undefined'){BBTranslate.to(txt,'en').then(function(en){var arr=read(msgKey(),[]);for(var i=arr.length-1;i>=0;i--){if(arr[i].ts===m.ts){arr[i].en=en;break;}}write(msgKey(),arr);});}
+  setTimeout(function(){pushMsg({from:'sys',text:'Your message reached the care team. Dr. Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
   renderMessages();toast(t('toastSent'),'good');
 }
 function attachDemo(){var inp=document.getElementById('msgIn');pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:(inp&&inp.value.trim())||(lang==='vi'?'Đã đính kèm tài liệu.':'Attached a document.'),att:'my-document.pdf',ts:Date.now(),read:true});if(inp)inp.value='';renderMessages();toast(t('toastUploaded'),'good');}
@@ -1178,13 +1200,34 @@ function enterDemo(i){Auth.demoEnter(i,clean(PATIENTS[i].name));location.hash='#
 function signOut(){Auth.signOut();location.hash='';boot();}
 
 /* ================= language ================= */
-function setLang(l){lang=l;try{localStorage.setItem('bb_pt_lang',l)}catch(e){}
-  document.documentElement.lang=(l==='vi'?'vi':'en');
-  ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='en');e.setAttribute('aria-pressed',(l==='en').toString());}});
-  ['lVi','lVi2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='vi');e.setAttribute('aria-pressed',(l==='vi').toString());}});
-  var appVisible=!document.getElementById('app').classList.contains('hide');
-  if(appVisible&&current()){buildMenu();document.getElementById('secTxt').textContent=t('secTxt');document.getElementById('footBuilt').textContent=t('built');paintPathChip();var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
+function paintLangToggles(cur){
+  [['en','lEn','lEn2'],['vi','lVi','lVi2'],['es','lEs','lEs2']].forEach(function(row){
+    [row[1],row[2]].forEach(function(id){var e=document.getElementById(id);if(e){var on=cur===row[0];e.classList.toggle('on',on);e.setAttribute('aria-pressed',on.toString());}});
+  });
+}
+// Auto-localize the UI for any language beyond the hand-written en/vi, via /api/translate (cached).
+var _uiLoading={};
+function ensureLang(l){
+  if(l==='en'||l==='vi'||T[l])return Promise.resolve(true);
+  try{var cached=JSON.parse(localStorage.getItem('bb_ui_'+l));if(cached&&Object.keys(cached).length){T[l]=cached;return Promise.resolve(true);}}catch(e){}
+  if(_uiLoading[l])return _uiLoading[l];
+  if(typeof BBTranslate==='undefined')return Promise.resolve(false);
+  var keys=Object.keys(T.en).filter(function(k){return k!=='ribbon'&&k!=='tag'&&k!=='foot';});
+  var chunks=[];for(var i=0;i<keys.length;i+=28)chunks.push(keys.slice(i,i+28));
+  var dict={};
+  var p=chunks.reduce(function(acc,ks){return acc.then(function(){return BBTranslate.batch(ks.map(function(k){return T.en[k];}),l).then(function(tr){ks.forEach(function(k,j){dict[k]=tr[j]||T.en[k];});});});},Promise.resolve());
+  _uiLoading[l]=p.then(function(){T[l]=dict;try{localStorage.setItem('bb_ui_'+l,JSON.stringify(dict));}catch(e){}return true;}).catch(function(){return false;});
+  return _uiLoading[l];
+}
+function renderLang(){
+  if(!document.getElementById('app').classList.contains('hide')&&current()){buildMenu();var s1=document.getElementById('secTxt');if(s1)s1.textContent=t('secTxt');var fb=document.getElementById('footBuilt');if(fb)fb.textContent=t('built');paintPathChip();var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
   else{paintSignin();if(pickOpen)renderPick();}
+}
+function setLang(l){lang=l;try{localStorage.setItem('bb_pt_lang',l)}catch(e){}
+  document.documentElement.lang=(l==='en'||l==='vi'||l==='es')?l:'en';
+  paintLangToggles(l);
+  renderLang();
+  ensureLang(l).then(function(ok){if(ok&&lang===l)renderLang();});
 }
 
 /* ================= idle security ================= */
@@ -1229,9 +1272,9 @@ function paintPathChip(){
 }
 function boot(){
   // paint language toggles
-  ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',lang==='en');e.setAttribute('aria-pressed',(lang==='en').toString());}});
-  ['lVi','lVi2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',lang==='vi');e.setAttribute('aria-pressed',(lang==='vi').toString());}});
-  document.documentElement.lang=(lang==='vi'?'vi':'en');
+  paintLangToggles(lang);
+  document.documentElement.lang=(lang==='en'||lang==='vi'||lang==='es')?lang:'en';
+  ensureLang(lang).then(function(ok){if(ok&&lang!=='en'){if(!document.getElementById('app').classList.contains('hide')&&current()){var _c=(location.hash||'#home').slice(1);go(VIEWS[_c]?_c:'home');}else paintSignin();}});
   if(!window.__stChk){window.__stChk=true;if(!storageOK())setTimeout(function(){toast(t('storageWarn'),'bad');},600);}
   var s=Auth.session();var p=current();
   if(!s||!p){
