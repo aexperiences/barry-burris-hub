@@ -4,59 +4,93 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light">
 <title>Patient Portal · Barry Burris, NMD</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js" defer></script>
 <style>
-:root{--bg:#faf4e8;--paper:#fffdf7;--card:#fffdf7;--ink:#40352a;--mut:#8a7c68;--line:#e8dcc4;
+:root{--bg:#faf4e8;--paper:#fffdf7;--card:#fffdf7;--ink:#40352a;--mut:#6f6047;--line:#e8dcc4;
  --navy:#16171d;--navy2:#101116;--teal:#0e7c84;--teal2:#0b5a61;--teal-soft:#e2f1f2;--gold:#c9992f;--gold2:#e6c67e;--gold-soft:#f8efd6;
- --good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;--bad-soft:#f7e4e2;
- --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16)}
+ --good:#3f6b2b;--good-soft:#e7f0dc;--warn:#7c5417;--warn-soft:#f7ead0;--bad:#a51f16;--bad-soft:#f6e2df;--info:#0e5f84;--info-soft:#e0eef5;
+ --shadow:0 10px 30px rgba(60,40,20,.09);--shadow2:0 18px 48px rgba(60,40,20,.16);--ring:0 0 0 3px rgba(14,124,132,.35)}
 *{box-sizing:border-box}html,body{margin:0}
 body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
 h1,h2,h3,h4{font-family:Fraunces,Georgia,serif;margin:0}
 a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
 .lbl{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.12em;font-size:11px;color:var(--mut);font-weight:600}
-.hide{display:none!important}
+.hide{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.skip{position:absolute;left:8px;top:-60px;background:var(--teal);color:#fff;padding:10px 15px;border-radius:9px;z-index:3000;font-weight:700;transition:top .15s}.skip:focus{top:8px;text-decoration:none}
+.mono{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--teal);outline-offset:2px;box-shadow:none;border-radius:8px}
+.tabs button:focus-visible,.langtog button:focus-visible,.seg button:focus-visible,.tbtn2:focus-visible{outline-offset:-2px}
+.side a.nl:focus-visible{outline-color:var(--gold2)}
+button{font-family:inherit}
+.demo-flag{position:fixed;right:-34px;top:20px;transform:rotate(45deg);background:var(--gold);color:#3a2b08;font-family:Oswald,sans-serif;font-weight:700;font-size:10.5px;letter-spacing:.18em;padding:5px 40px;z-index:2500;box-shadow:0 2px 8px rgba(0,0,0,.2);pointer-events:none}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 
 /* ---------- sign-in ---------- */
 #signin{min-height:100vh;display:flex;flex-direction:column}
-.si-ribbon{background:var(--gold-soft);border-bottom:1px solid #e7d29a;color:#6b551f;font-size:12.5px;text-align:center;padding:7px 14px}
-.si-wrap{flex:1;max-width:940px;width:100%;margin:0 auto;padding:26px 18px 60px}
-.si-head{display:flex;align-items:center;gap:14px;margin:8px 0 22px}
+.si-ribbon{background:var(--gold-soft);border-bottom:1px solid #e7d29a;color:#6b551f;font-size:12.5px;text-align:center;padding:8px 14px}
+.si-ribbon b{font-weight:700}
+.si-topbar{max-width:980px;width:100%;margin:0 auto;padding:14px 18px 0;display:flex;align-items:center;gap:12px}
+.si-wrap{flex:1;max-width:980px;width:100%;margin:0 auto;padding:12px 18px 50px}
+.si-head{display:flex;align-items:center;gap:14px;margin:6px 0 20px}
 .si-head .coin{width:54px;height:54px;border-radius:50%;box-shadow:0 0 0 1px rgba(230,198,126,.5)}
 .si-head .bn{font-family:Fraunces,serif;font-weight:700;font-size:26px;color:var(--ink);line-height:1.05}
 .si-head .bt{font-family:Oswald,sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-top:3px}
-.si-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:22px}@media(max-width:820px){.si-grid{grid-template-columns:1fr}}
-.si-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 22px 24px}
-.si-card h2{font-size:20px;margin-bottom:4px}
-.si-sub{color:var(--mut);font-size:13.5px;margin-bottom:16px}
-.pick{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-height:340px;overflow:auto;padding-right:4px}
+.si-grid{display:grid;grid-template-columns:1fr .9fr;gap:24px;align-items:start}@media(max-width:820px){.si-grid{grid-template-columns:1fr}}
+.si-card{background:var(--paper);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow);padding:22px 24px 24px}
+.si-value h2{font-size:23px;line-height:1.15;margin-bottom:10px}
+.si-value p{color:var(--mut);font-size:14px;line-height:1.6;margin:0 0 16px}
+.si-feat{display:flex;gap:11px;align-items:flex-start;margin:11px 0}
+.si-feat .fi{width:34px;height:34px;border-radius:10px;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;flex:none}
+.si-feat .ft{font-weight:700;font-size:13.5px}.si-feat .fd{color:var(--mut);font-size:12.5px;margin-top:1px}
+.tabs{display:flex;border:1px solid var(--line);border-radius:11px;overflow:hidden;margin-bottom:16px}
+.tabs button{flex:1;border:none;background:var(--paper);padding:11px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;color:var(--mut)}
+.tabs button.on{background:var(--teal);color:#fff}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--mut);margin-bottom:5px;font-family:Oswald,sans-serif}
+.inp{position:relative}
+.fld input,.fld select,.fld textarea{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;background:#fbf7ee;color:var(--ink)}
+.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--teal);background:#fff;box-shadow:var(--ring)}
+.fld input.bad{border-color:var(--bad);background:#fdf4f3}
+.peek{position:absolute;right:5px;top:50%;transform:translateY(-50%);border:none;background:none;color:var(--teal);cursor:pointer;font-size:12px;min-height:40px;padding:6px 10px;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+.err{color:var(--bad);font-size:12px;margin-top:5px;min-height:0}
+.err:empty{display:none}
+.strength{height:6px;border-radius:99px;background:#eee4cf;overflow:hidden;margin-top:8px}
+.strength i{display:block;height:100%;width:0;transition:width .2s,background .2s}
+.hint{font-size:11.5px;color:var(--mut);margin-top:6px}
+.bigbtn{width:100%;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;gap:9px}
+.bigbtn:hover{filter:brightness(1.06)}.bigbtn:disabled{opacity:.6;cursor:progress}
+.linkbtn{border:none;background:none;color:var(--teal);cursor:pointer;font:inherit;font-size:13px;padding:0}
+.linkbtn:hover{text-decoration:underline}
+.si-alt{margin-top:16px;border-top:1px solid var(--line);padding-top:14px;text-align:center}
+.si-foot{text-align:center;color:var(--mut);font-size:11.5px;padding:16px}
+.spinner{width:16px;height:16px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 1s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pickwrap{margin-top:14px}
+.pick{display:grid;grid-template-columns:1fr 1fr;gap:9px;max-height:280px;overflow:auto;padding:2px}
 @media(max-width:520px){.pick{grid-template-columns:1fr}}
-.pcard{text-align:left;border:1px solid var(--line);background:#fff;border-radius:13px;padding:11px 13px;cursor:pointer;transition:.15s;font:inherit;color:inherit}
-.pcard:hover{border-color:var(--teal);box-shadow:0 6px 18px rgba(14,124,132,.12);transform:translateY(-1px)}
-.pcard .pn{font-weight:700;font-size:14px}
-.pcard .pm{color:var(--mut);font-size:11.5px;margin-top:2px}
-.pcard .ptag{display:inline-block;margin-top:8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:2px 9px}
-.si-form .fld{margin-bottom:12px}
-.si-form label{display:block}.si-form input{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 12px;font:inherit;font-size:14px;background:#fbf7ee;margin-top:5px}
-.si-form input:focus{outline:none;border-color:var(--teal);background:#fff}
-.bigbtn{width:100%;border:none;border-radius:12px;padding:13px;font-weight:800;font-size:15px;color:#fff;cursor:pointer;background:linear-gradient(180deg,var(--teal),var(--teal2));font-family:Inter}
-.bigbtn:hover{filter:brightness(1.05)}
-.si-mini{font-size:12px;color:var(--mut);margin-top:12px;line-height:1.55}
-.si-foot{text-align:center;color:#9aa6b2;font-size:11.5px;padding:16px}
+.pcard{text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 12px;cursor:pointer;transition:.14s;font:inherit;color:inherit}
+.pcard:hover,.pcard:focus-visible{border-color:var(--teal);box-shadow:0 6px 16px rgba(14,124,132,.12);transform:translateY(-1px)}
+.pcard .pn{font-weight:700;font-size:13.5px}.pcard .pm{color:var(--mut);font-size:11px;margin-top:2px}
+.pcard .ptag{display:inline-block;margin-top:7px;font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--teal);background:var(--teal-soft);border-radius:99px;padding:2px 8px}
 
 /* ---------- app shell ---------- */
-#app .side{position:fixed;top:0;left:0;width:240px;height:100vh;z-index:20;display:flex;flex-direction:column;
- background:linear-gradient(180deg,var(--navy),var(--navy2));color:#f4e8d0;border-right:1px solid #25262e;transform:translateX(0);transition:transform .22s}
-.side .brand{display:flex;align-items:center;gap:11px;padding:18px 15px 13px}
-.side .brand img{width:40px;height:40px;border-radius:50%;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
-.side .bn{font-family:Fraunces,serif;font-weight:700;font-size:17px;color:var(--gold2);line-height:1.05}
+.langtog{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fffdf7}
+.langtog button{border:none;background:none;padding:7px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--mut);font-family:Oswald,sans-serif;letter-spacing:.06em}
+.langtog button.on{background:var(--teal);color:#fff}
+#app .side{position:fixed;top:0;left:0;width:242px;height:100vh;z-index:20;display:flex;flex-direction:column;background:linear-gradient(180deg,var(--navy),var(--navy2));color:#f4e8d0;border-right:1px solid #25262e;transform:translateX(0);transition:transform .22s}
+.side .brand{display:flex;align-items:center;gap:11px;padding:17px 15px 12px}
+.side .brand img{width:38px;height:38px;border-radius:50%;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.side .bn{font-family:Fraunces,serif;font-weight:700;font-size:16px;color:var(--gold2);line-height:1.05}
 .side .bt{font-family:Oswald,sans-serif;font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:#9a8a6a;margin-top:3px}
-.side .who{margin:4px 14px 8px;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid #26272f;border-radius:11px}
-.side .who .wn{font-weight:700;font-size:13.5px;color:#f4e8d0}
-.side .who .wr{font-size:10.5px;color:#b6a686;font-family:Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+.side .who{margin:4px 14px 8px;padding:10px 12px;background:rgba(255,255,255,.05);border:1px solid #26272f;border-radius:11px;display:flex;align-items:center;gap:10px}
+.side .who .av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#e6c67e,#c9992f);color:#3a2b08;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex:none}
+.side .who .wn{font-weight:700;font-size:13px;color:#f4e8d0;line-height:1.1}
+.side .who .wr{font-size:10px;color:#b6a686;font-family:Oswald,sans-serif;letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
 .side nav{flex:1;overflow-y:auto;padding:6px 12px}
 .side .grp{font-family:Oswald,sans-serif;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:#9a8a6a;margin:14px 8px 5px;padding-top:11px;border-top:1px solid #1f2027}
 .side .grp:first-child{margin-top:2px;padding-top:0;border-top:none}
@@ -64,76 +98,111 @@ a{color:var(--teal);text-decoration:none}a:hover{text-decoration:underline}
 .side a.nl:hover{background:rgba(255,255,255,.06);color:#fff;text-decoration:none}
 .side a.nl.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f4e8d0;box-shadow:inset 3px 0 0 var(--gold2)}
 .side a.nl svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.side a.nl .badge{margin-left:auto;background:var(--teal);color:#fff;font-family:Inter;font-size:10px;font-weight:800;border-radius:99px;padding:1px 7px}
-.side .foot{padding:12px 15px;border-top:1px solid #25262e;font-size:10px;color:#8f8267;line-height:1.5}
-.side .foot b{color:var(--gold2);font-weight:600}
-.side .foot a{color:#cdbfa4}
-
-.main{padding-left:240px}
+.side a.nl .badge{margin-left:auto;background:var(--teal);color:#fff;font-family:Inter;font-size:10px;font-weight:800;border-radius:99px;padding:1px 7px;min-width:18px;text-align:center}
+.side a.nl .tdot{margin-left:auto;width:8px;height:8px;border-radius:50%;background:var(--gold2)}
+.side .foot{padding:11px 15px;border-top:1px solid #25262e;font-size:10px;color:#8f8267;line-height:1.5}
+.side .foot b{color:var(--gold2);font-weight:600}.side .foot a{color:#cdbfa4}
+.side .secure{display:flex;align-items:center;gap:6px;color:#8fae93;font-size:10px;margin-bottom:6px}
+.main{padding-left:242px}
 @media(max-width:900px){#app .side{z-index:1200;transform:translateX(-100%);box-shadow:2px 0 22px rgba(0,0,0,.4)}#app .side.open{transform:translateX(0)}.main{padding-left:0}}
-.topbar{position:sticky;top:0;z-index:12;background:rgba(250,244,232,.92);backdrop-filter:blur(7px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:11px 20px}
+.topbar{position:sticky;top:0;z-index:12;background:rgba(250,244,232,.93);backdrop-filter:blur(7px);border-bottom:1px solid var(--line);display:flex;align-items:center;gap:12px;padding:10px 20px}
 .burger{display:none;width:40px;height:40px;border:1px solid var(--line);background:#fffdf7;color:var(--teal);border-radius:10px;cursor:pointer;align-items:center;justify-content:center}
 @media(max-width:900px){.burger{display:flex}}
 .topbar .tt{font-family:Fraunces,serif;font-weight:700;font-size:18px}
 .sp{flex:1}
-.langtog{display:flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;background:#fffdf7}
-.langtog button{border:none;background:none;padding:7px 11px;font:inherit;font-size:12px;font-weight:700;cursor:pointer;color:var(--mut);font-family:Oswald,sans-serif;letter-spacing:.06em}
-.langtog button.on{background:var(--teal);color:#fff}
-.tbtn{border:1px solid var(--line);background:#fffdf7;border-radius:9px;padding:8px 12px;font:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;font-weight:600}
-.tbtn:hover{border-color:var(--teal)}
+.acctbtn{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#fffdf7;border-radius:10px;padding:5px 9px 5px 6px;cursor:pointer;font:inherit}
+.acctbtn .av{width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#e6c67e,#c9992f);color:#3a2b08;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+.acctbtn .an{font-size:12.5px;font-weight:600;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.menu{position:absolute;right:20px;top:54px;background:var(--paper);border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow2);padding:7px;z-index:40;min-width:190px}
+.menu a,.menu button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;border:none;background:none;padding:9px 11px;border-radius:9px;font:inherit;font-size:13.5px;color:var(--ink);cursor:pointer;text-decoration:none}
+.menu a:hover,.menu button:hover{background:#f4ecdb}
+.menu .sep{height:1px;background:var(--line);margin:5px 0}
 .content{max-width:1080px;margin:0 auto;padding:20px 20px 90px}
+.idlebar{background:var(--warn-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:12px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;gap:10px;font-size:13px}
+.idlebar button{margin-left:auto;border:1px solid var(--warn);background:#fff;color:var(--warn);border-radius:8px;padding:6px 12px;font-weight:700;cursor:pointer;font-size:12.5px}
 
-/* banners + cards */
+/* banners + cards + components */
 .demo{background:var(--gold-soft);border:1px solid #e7d29a;color:#6b551f;border-radius:12px;padding:9px 13px;font-size:12.5px;margin-bottom:16px;display:flex;gap:9px;align-items:flex-start}
-.demo b{font-weight:700}
 .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:18px 20px;margin-bottom:16px}
-.card h3{font-size:17px;margin-bottom:3px}
-.card .csub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
+.card h3{font-size:17px;margin-bottom:3px}.card .csub{color:var(--mut);font-size:12.5px;margin-bottom:12px}
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:760px){.grid2{grid-template-columns:1fr}}
-.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}@media(max-width:760px){.grid3{grid-template-columns:1fr}}
-.hero{background:linear-gradient(120deg,#0e7c84,#0b5a61);color:#eafafb;border:none}
-.hero h2{color:#fff;font-size:23px}
-.hero p{color:#cdeef0;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}@media(max-width:760px){.grid3{grid-template-columns:1fr}}
+.hero{background:linear-gradient(120deg,#0e7c84,#0b5a61);color:#eafafb;border:none;position:relative;overflow:hidden}
+.hero h2{color:#fff;font-size:23px}.hero p{color:#e9f7f8;font-size:13.5px;margin:6px 0 0;max-width:640px;line-height:1.5}
 .qa{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
-.qa button{border:none;border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;background:rgba(255,255,255,.15);color:#fff;display:flex;gap:8px;align-items:center}
-.qa button:hover{background:rgba(255,255,255,.26)}
+.qa button{border:1px solid rgba(255,255,255,.28);border-radius:11px;padding:11px 15px;font:inherit;font-weight:700;font-size:13.5px;cursor:pointer;background:rgba(0,0,0,.24);color:#fff;display:flex;gap:8px;align-items:center}
+.qa button:hover{background:rgba(0,0,0,.36)}
 .qa button.gold{background:var(--gold2);color:#3a2b08}.qa button.gold:hover{background:#f0d69a}
 .chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:4px}
-.chip{font-size:12px;background:var(--teal-soft);color:var(--teal);border-radius:99px;padding:4px 11px;font-weight:600}
-.chip.g{background:var(--gold-soft);color:#8a6a1e}
+.chip{font-size:12px;background:var(--teal-soft);color:#0a5960;border-radius:99px;padding:4px 11px;font-weight:600}
+.chip.g{background:var(--gold-soft);color:#75570f}
 .kv{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
 .kv:last-child{border-bottom:none}.kv .k{color:var(--mut)}.kv .v{font-weight:600;text-align:right}
 .status{display:inline-block;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;padding:3px 9px;border-radius:99px}
 .status.rev{background:var(--warn-soft);color:var(--warn)}.status.ok{background:var(--good-soft);color:var(--good)}
-.status.conf{background:var(--teal-soft);color:var(--teal)}.status.act{background:var(--bad-soft);color:var(--bad)}
-.appt{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-bottom:11px;background:#fff}
-.appt .date{text-align:center;flex:none;width:58px}
+.status.conf{background:var(--teal-soft);color:#0a5960}.status.act{background:var(--bad-soft);color:var(--bad)}.status.info{background:var(--info-soft);color:var(--info)}
+.task{display:flex;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.task:last-child{border-bottom:none}
+.task .tk-ic{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex:none;background:var(--warn-soft);color:var(--warn)}
+.task.done .tk-ic{background:var(--good-soft);color:var(--good)}
+.task .tk-t{font-weight:600;font-size:13.5px}.task .tk-d{color:var(--mut);font-size:12px;margin-top:1px}
+.task.done .tk-t{text-decoration:line-through;color:var(--mut)}
+.task .tk-a{margin-left:auto}
+.btn{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 13px;font:inherit;font-size:12.5px;color:var(--ink);cursor:pointer;font-weight:600}
+.btn:hover{border-color:var(--teal)}
+.btn.solid{background:var(--teal);color:#fff;border:none}.btn.solid:hover{filter:brightness(1.06)}
+.btn.solid:disabled{background:#c8d6d3;cursor:not-allowed;filter:none}
+.btn.ghost{background:none}.btn.gold{background:linear-gradient(180deg,#e6c67e,#c9992f);color:#3a2b08;border:none}
+.btn.sm{padding:6px 10px;font-size:12px}
+.appt{display:flex;gap:14px;align-items:center;border:1px solid var(--line);border-radius:13px;padding:13px 15px;margin-bottom:11px;background:#fff;flex-wrap:wrap}
+.appt .date{text-align:center;flex:none;width:56px}
 .appt .date .mo{font-family:Oswald,sans-serif;text-transform:uppercase;font-size:11px;color:var(--teal);font-weight:700;letter-spacing:.06em}
 .appt .date .dy{font-family:Fraunces,serif;font-size:26px;font-weight:700;line-height:1}
-.appt .info{flex:1;min-width:0}
-.appt .info .ti{font-weight:700;font-size:14.5px}
-.appt .info .me{color:var(--mut);font-size:12.5px;margin-top:2px}
-.mono{font-variant-numeric:tabular-nums}
+.appt .info{flex:1;min-width:150px}.appt .info .ti{font-weight:700;font-size:14.5px}.appt .info .me{color:var(--mut);font-size:12.5px;margin-top:2px}
+.appt .acts{display:flex;gap:7px;flex-wrap:wrap}
+.check{display:flex;align-items:center;gap:9px;padding:8px 0;font-size:13.5px;cursor:pointer}
+.check input{width:17px;height:17px;accent-color:var(--teal);flex:none;cursor:pointer}
 table.lab{width:100%;border-collapse:collapse;font-size:13px}
 table.lab th{text-align:left;background:#f4ecdb;color:var(--mut);font-family:Oswald,sans-serif;font-weight:600;font-size:10.5px;text-transform:uppercase;letter-spacing:.4px;padding:8px 10px}
-table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:top}
+table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:middle}
+.rng{position:relative;height:8px;background:linear-gradient(90deg,#f3d9b8,#dbead0 22%,#dbead0 78%,#f3d9b8);border-radius:99px;min-width:120px}
+.rng i{position:absolute;top:-3px;width:3px;height:14px;border-radius:2px;background:var(--ink);transform:translateX(-1px)}
 .flagpill{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.3px;padding:2px 8px;border-radius:99px}
 .flagpill.low{background:var(--warn-soft);color:var(--warn)}.flagpill.high{background:var(--bad-soft);color:var(--bad)}.flagpill.norm{background:var(--good-soft);color:var(--good)}
-.doc{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:9px;background:#fff}
+.doc{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:11px 14px;margin-bottom:9px;background:#fff;flex-wrap:wrap}
 .doc .ic{width:34px;height:34px;border-radius:9px;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center;flex:none}
 .doc .dn{font-weight:600;font-size:13.5px}.doc .dm{color:var(--mut);font-size:11.5px;margin-top:1px}
-.doc .da{margin-left:auto;display:flex;gap:7px}
-.msgs{display:flex;flex-direction:column;gap:10px;max-height:400px;overflow:auto;padding:6px 2px}
-.bub{max-width:76%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.45}
+.doc .da{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+.msgs{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow:auto;padding:6px 2px}
+.bub{max-width:78%;padding:10px 13px;border-radius:14px;font-size:13.5px;line-height:1.45}
 .bub.them{align-self:flex-start;background:#f4ecdb;border:1px solid var(--line);border-bottom-left-radius:5px}
 .bub.me{align-self:flex-end;background:var(--teal);color:#fff;border-bottom-right-radius:5px}
-.bub .mm{font-size:10px;opacity:.7;margin-top:4px}
-.composer{display:flex;gap:9px;margin-top:12px}
-.composer input{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;font-size:14px;background:#fff}
-.composer input:focus{outline:none;border-color:var(--teal)}
-.composer button{border:none;background:var(--teal);color:#fff;border-radius:11px;padding:0 18px;font-weight:700;cursor:pointer}
+.bub.sys{align-self:center;background:var(--info-soft);color:var(--info);font-size:12px;border-radius:99px;padding:6px 13px;max-width:90%;text-align:center}
+.bub .mm{font-size:10px;opacity:.7;margin-top:4px}.bub.me .mm{opacity:.92}
+.bub .att{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.25);border-radius:8px;padding:4px 8px;font-size:11.5px;margin-top:6px}
+.bub.them .att{background:#efe7d5}
+.composer{display:flex;gap:9px;margin-top:12px;align-items:center}
+.composer input[type=text]{flex:1;border:1.5px solid var(--line);border-radius:11px;padding:11px 13px;font:inherit;font-size:14px;background:#fff}
+.composer input[type=text]:focus{outline:none;border-color:var(--teal);box-shadow:var(--ring)}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.seg button{border:1px solid var(--line);background:#fff;border-radius:99px;padding:6px 13px;font:inherit;font-size:12.5px;cursor:pointer;color:var(--mut);font-weight:600}
+.seg button.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.switch{position:relative;width:42px;height:24px;flex:none}
+.switch input{opacity:0;width:0;height:0}
+.switch .sl{position:absolute;inset:0;background:#d8ccb4;border-radius:99px;transition:.2s;cursor:pointer}
+.switch .sl:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s}
+.switch input:checked+.sl{background:var(--teal)}.switch input:checked+.sl:before{transform:translateX(18px)}
 .small{font-size:12px;color:var(--mut)}
 .note-inline{font-size:12px;color:var(--mut);background:#f7f2e6;border:1px dashed var(--line);border-radius:10px;padding:9px 12px;margin-top:10px}
+.sig{border:1px solid var(--line);border-radius:12px;background:#fbf7ee;padding:12px 15px;display:flex;align-items:center;gap:12px}
+.sig .sg{font-family:'Fraunces',cursive;font-size:22px;font-weight:600;color:var(--ink);font-style:italic}
+.skel{background:linear-gradient(90deg,#f0e7d4,#f7f0e0,#f0e7d4);background-size:200% 100%;animation:sh 1.2s infinite;border-radius:8px}
+@keyframes sh{to{background-position:-200% 0}}
+.empty{padding:30px;text-align:center;color:var(--mut)}
+.empty .em-ic{font-size:30px;opacity:.5}
+.foundcard{border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:#fff}
+.progress{height:8px;background:#eee4cf;border-radius:99px;overflow:hidden}.progress i{display:block;height:100%;background:var(--teal);transition:width .3s}
+.pill-tab{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 
 /* telehealth */
 #tele{position:fixed;inset:0;z-index:2000;background:#0c1116;display:none;flex-direction:column}
@@ -142,251 +211,404 @@ table.lab td{padding:9px 10px;border-top:1px solid var(--line);vertical-align:to
 .tele-top .dot{width:9px;height:9px;border-radius:50%;background:#e6c67e;box-shadow:0 0 0 4px rgba(230,198,126,.16)}
 .tele-top .tt{font-family:Fraunces,serif;font-weight:700;font-size:15px;color:#fff}
 .tele-top .ts{font-size:11.5px;color:#8ea1b2}
+.tele-top .conn{margin-left:auto;display:flex;align-items:center;gap:9px;color:#8ea1b2;font-size:11.5px}
+.bars{display:flex;align-items:flex-end;gap:2px;height:15px}
+.bars i{width:3px;background:#3a4a57;border-radius:1px}.bars i.on{background:#57d38a}
+.tele-body{flex:1;display:flex;min-height:0}
 .tele-stage{flex:1;position:relative;display:flex;align-items:center;justify-content:center;padding:18px;overflow:hidden}
-.provtile{width:min(760px,92%);aspect-ratio:16/9;border-radius:18px;background:radial-gradient(120% 120% at 50% 30%,#14303a,#0c1a22);border:1px solid #1d2630;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#cfe;position:relative}
-.provtile .pcoin{width:96px;height:96px;border-radius:50%;box-shadow:0 0 0 2px rgba(230,198,126,.5),0 10px 30px rgba(0,0,0,.4)}
+.provtile{width:min(760px,96%);aspect-ratio:16/9;border-radius:18px;background:radial-gradient(120% 120% at 50% 30%,#14303a,#0c1a22);border:1px solid #1d2630;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#cfe;position:relative}
+.provtile .pcoin{width:92px;height:92px;border-radius:50%;box-shadow:0 0 0 2px rgba(230,198,126,.5),0 10px 30px rgba(0,0,0,.4)}
 .provtile .pnm{font-family:Fraunces,serif;font-weight:700;font-size:20px;color:#fff;margin-top:14px}
 .provtile .pst{font-size:13px;color:#8ea1b2;margin-top:5px;display:flex;align-items:center;gap:8px}
 .provtile .spin{width:14px;height:14px;border:2px solid rgba(230,198,126,.35);border-top-color:#e6c67e;border-radius:50%;animation:sp 1s linear infinite}
-@keyframes sp{to{transform:rotate(360deg)}}
-.selftile{position:absolute;right:26px;bottom:26px;width:210px;aspect-ratio:4/3;border-radius:13px;overflow:hidden;background:#10171d;border:1px solid #26323d;display:flex;align-items:center;justify-content:center;color:#66788a;font-size:12px}
+.selftile{position:absolute;right:22px;bottom:22px;width:200px;aspect-ratio:4/3;border-radius:13px;overflow:hidden;background:#10171d;border:1px solid #26323d;display:flex;align-items:center;justify-content:center;color:#66788a;font-size:12px}
 .selftile video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
 .selftile .selflbl{position:absolute;left:8px;bottom:6px;font-size:10px;color:#cfe;background:rgba(0,0,0,.45);padding:2px 7px;border-radius:6px}
-@media(max-width:560px){.selftile{width:128px;right:14px;bottom:96px}}
-.tele-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:16px;border-top:1px solid #1d2630;background:#0a0f14}
-.tbtn2{width:52px;height:52px;border-radius:50%;border:1px solid #2a3742;background:#18222b;color:#dfe7ee;cursor:pointer;display:flex;align-items:center;justify-content:center}
+@media(max-width:560px){.selftile{width:120px;right:12px;bottom:12px}}
+.tele-chat{width:300px;border-left:1px solid #1d2630;background:#0a0f14;display:flex;flex-direction:column;color:#dfe7ee}
+.tele-chat.hide2{display:none}
+.tele-chat .tch-h{padding:12px 15px;border-bottom:1px solid #1d2630;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.1em;font-size:12px;color:#8ea1b2}
+.tele-chat .tch-b{flex:1;overflow:auto;padding:12px;display:flex;flex-direction:column;gap:9px}
+.tch-msg{font-size:12.5px;line-height:1.4}.tch-msg .who{color:#8ea1b2;font-size:10.5px}
+.tele-chat .tch-c{display:flex;gap:7px;padding:10px;border-top:1px solid #1d2630}
+.tele-chat .tch-c input{flex:1;background:#131c24;border:1px solid #26323d;border-radius:9px;color:#fff;padding:8px 10px;font:inherit;font-size:12.5px}
+.tele-note{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:11.5px;color:#8ea1b2;background:rgba(10,15,20,.7);border:1px solid #1d2630;border-radius:99px;padding:5px 13px;text-align:center;max-width:90%}
+.tele-bar{display:flex;align-items:center;justify-content:center;gap:12px;padding:15px;border-top:1px solid #1d2630;background:#0a0f14;flex-wrap:wrap}
+.tbtn2{width:50px;height:50px;border-radius:50%;border:1px solid #2a3742;background:#18222b;color:#dfe7ee;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative}
 .tbtn2:hover{background:#22303b}.tbtn2.off{background:#3a2326;border-color:#5a3138;color:#ffb4b0}
 .tbtn2.end{background:#b3261e;border-color:#b3261e;color:#fff;width:auto;padding:0 22px;border-radius:26px;font-weight:800;font-family:Inter;gap:8px}
 .tbtn2 svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.tele-note{position:absolute;left:50%;top:14px;transform:translateX(-50%);font-size:11.5px;color:#8ea1b2;background:rgba(10,15,20,.7);border:1px solid #1d2630;border-radius:99px;padding:5px 13px}
+.tbtn2 .cap{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:9.5px;color:#8ea1b2;white-space:nowrap}
+/* prejoin */
+.prejoin{position:absolute;inset:0;background:#0c1116;display:flex;align-items:center;justify-content:center;padding:20px;z-index:3}
+.prejoin .pj{width:min(720px,100%);display:grid;grid-template-columns:1.1fr .9fr;gap:20px;align-items:center}
+@media(max-width:640px){.prejoin .pj{grid-template-columns:1fr}}
+.pj-prev{aspect-ratio:4/3;border-radius:14px;overflow:hidden;background:#10171d;border:1px solid #26323d;display:flex;align-items:center;justify-content:center;color:#66788a;position:relative}
+.pj-prev video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.pj-side h3{color:#fff;font-size:19px}.pj-side p{color:#8ea1b2;font-size:12.5px;line-height:1.5}
+.pj-side label{display:block;color:#8ea1b2;font-size:11px;text-transform:uppercase;letter-spacing:.1em;font-family:Oswald,sans-serif;margin:11px 0 4px}
+.pj-side select{width:100%;background:#131c24;border:1px solid #26323d;border-radius:9px;color:#fff;padding:9px 10px;font:inherit;font-size:13px}
 
 /* modal */
 .scrim{position:fixed;inset:0;background:rgba(15,25,40,.55);z-index:1500;display:none;align-items:flex-start;justify-content:center;overflow:auto;padding:26px 12px}
 .scrim.on{display:flex}
 .sheet{background:var(--paper);width:100%;max-width:620px;border-radius:18px;box-shadow:var(--shadow2);padding:22px 24px 26px;margin:auto}
 .sheet h3{font-size:19px;margin-bottom:10px}
-.sheet .close{float:right;border:none;background:none;font-size:22px;color:var(--mut);cursor:pointer;line-height:1}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:3000}
+.sheet .close{float:right;border:none;background:none;font-size:22px;color:var(--mut);cursor:pointer;line-height:1;width:40px;height:40px;border-radius:9px}
+.sheet .close:hover{background:#f4ecdb}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--navy);color:#fff;padding:12px 18px;border-radius:12px;font-weight:600;opacity:0;transition:.25s;z-index:3000;max-width:90%}
 .toast.on{opacity:1;transform:translateX(-50%)}
+.toast.good{background:#255c34}.toast.bad{background:#7a241c}
 #scrim2{display:none;position:fixed;inset:0;background:rgba(15,25,40,.5);z-index:1150}#scrim2.on{display:block}
+
+@media print{
+  .side,.topbar,.demo,.demo-flag,.qa,.btn,#scrim2,.burger{display:none!important}
+  .main{padding-left:0}.content{max-width:100%;padding:0}
+  .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}
+  body{background:#fff}
+}
 </style>
 </head>
 <body>
+<div class="demo-flag" id="demoFlag">DEMO</div>
 
 <!-- ============ SIGN-IN ============ -->
 <div id="signin">
-  <div class="si-ribbon" id="siRibbon">Demonstration portal — sample patients only · no real health information</div>
+  <div class="si-ribbon" id="siRibbon"></div>
+  <div class="si-topbar"><div class="sp"></div><div class="langtog" role="group" aria-label="Language"><button id="lEn" onclick="setLang('en')">EN</button><button id="lVi" onclick="setLang('vi')">VI</button></div></div>
   <div class="si-wrap">
     <div class="si-head">
-      <img class="coin" id="siCoin" alt="BB">
-      <div><div class="bn">Barry Burris, <span style="color:var(--teal)">NMD</span></div><div class="bt" id="siTag">Patient Portal · Functional Medicine &amp; Longevity</div></div>
+      <img class="coin" id="siCoin" alt="Barry Burris, NMD">
+      <div><div class="bn">Barry Burris, <span style="color:var(--teal)">NMD</span></div><div class="bt" id="siTag"></div></div>
     </div>
     <div class="si-grid">
-      <div class="si-card">
-        <h2 id="siPickH">Preview a patient account</h2>
-        <div class="si-sub" id="siPickS">This demo has 15 patients who completed the questionnaire. Choose one to see their portal.</div>
-        <div class="pick" id="pickGrid"></div>
+      <div class="si-value">
+        <h2 id="siValueH"></h2>
+        <p id="siValueP"></p>
+        <div id="siFeats"></div>
       </div>
       <div class="si-card">
-        <h2 id="siLoginH">Patient sign in</h2>
-        <div class="si-sub" id="siLoginS">Your secure account.</div>
-        <form class="si-form" id="siForm" onsubmit="return demoLogin(event)">
-          <div class="fld"><label class="lbl" id="siEmailL">Email</label><input type="email" id="siEmail" placeholder="you@email.com" autocomplete="off"></div>
-          <div class="fld"><label class="lbl" id="siPassL">Password</label><input type="password" id="siPass" placeholder="••••••••" autocomplete="off"></div>
-          <button class="bigbtn" type="submit" id="siBtn">Sign in</button>
-          <div class="si-mini" id="siMini"></div>
+        <div class="tabs" role="tablist">
+          <button id="tabSignin" class="on" role="tab" onclick="authTab('signin')"></button>
+          <button id="tabCreate" role="tab" onclick="authTab('create')"></button>
+        </div>
+        <form id="authForm" onsubmit="return submitAuth(event)" novalidate>
+          <div class="fld" id="fName" style="display:none"><label id="lName" for="aName"></label><input id="aName" type="text" autocomplete="name" aria-describedby="eName"><div class="err" id="eName" role="alert"></div></div>
+          <div class="fld"><label id="lEmail" for="aEmail"></label><input id="aEmail" type="email" autocomplete="email" inputmode="email" aria-describedby="eEmail"><div class="err" id="eEmail" role="alert"></div></div>
+          <div class="fld"><label id="lPass" for="aPass"></label><div class="inp"><input id="aPass" type="password" autocomplete="current-password" aria-describedby="ePass passHint"><button type="button" class="peek" id="peekBtn" onclick="togglePeek()"></button></div>
+            <div class="strength" id="strWrap" style="display:none"><i id="strBar"></i></div>
+            <div class="hint" id="passHint" style="display:none"></div>
+            <div class="err" id="ePass" role="alert"></div></div>
+          <button class="bigbtn" type="submit" id="authSubmit"></button>
+          <div class="err" id="eForm" role="alert" style="text-align:center;margin-top:8px"></div>
         </form>
-        <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:14px">
-          <div class="lbl" style="margin-bottom:6px" id="siNewL">New here?</div>
-          <a href="patient-portal.html" id="siIntakeLink">Start the new-patient questionnaire →</a>
+        <div style="text-align:center;margin-top:12px"><button class="linkbtn" id="forgotBtn" onclick="forgot()"></button></div>
+        <div class="si-alt">
+          <div class="lbl" id="siExploreL" style="margin-bottom:8px"></div>
+          <button class="btn ghost" id="exploreBtn" onclick="togglePick()" style="width:100%"></button>
+          <div class="pickwrap" id="pickWrap" style="display:none"><div class="pick" id="pickGrid" aria-label="Sample patients"></div></div>
         </div>
       </div>
     </div>
   </div>
-  <div class="si-foot">Barry Burris, NMD · Functional Medicine &amp; Longevity — built by <b>Accelerated Experiences, LLC</b></div>
+  <div class="si-foot" id="siFoot"></div>
 </div>
 
 <!-- ============ APP ============ -->
 <div id="app" class="hide">
-  <aside class="side" id="side">
-    <div class="brand"><img id="navCoin" alt="BB"><div><div class="bn">Barry Burris</div><div class="bt">Patient Portal</div></div></div>
-    <div class="who"><div class="wn" id="whoName">—</div><div class="wr" id="whoRole">Patient</div></div>
+  <a href="#view" class="skip" onclick="setTimeout(function(){var v=document.getElementById('view');if(v)v.focus();},0)">Skip to content</a>
+  <aside class="side" id="side" aria-label="Patient navigation">
+    <div class="brand"><img id="navCoin" alt="Barry Burris, NMD"><div><div class="bn">Barry Burris</div><div class="bt">Patient Portal</div></div></div>
+    <div class="who"><div class="av" id="whoAv">–</div><div><div class="wn" id="whoName">—</div><div class="wr" id="whoRole">Patient</div></div></div>
     <nav id="navList"></nav>
-    <div class="foot" id="navFoot">Questions? <a href="#messages" onclick="go('messages')">Message the practice</a><br>Built by <b>Accelerated Experiences, LLC</b></div>
+    <div class="foot">
+      <div class="secure" id="secLine"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 018 0v3"/></svg><span id="secTxt"></span></div>
+      <span id="footBuilt"></span> <b>Accelerated Experiences, LLC</b>
+    </div>
   </aside>
   <div id="scrim2"></div>
 
   <div class="main">
     <div class="topbar">
       <button class="burger" id="burger" aria-label="Menu"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
-      <div class="tt" id="pageTitle">Home</div>
+      <h1 class="tt" id="pageTitle">Home</h1>
       <div class="sp"></div>
-      <div class="langtog"><button id="langEn" onclick="setLang('en')">EN</button><button id="langVi" onclick="setLang('vi')">VI</button></div>
-      <button class="tbtn" id="signoutBtn" onclick="signOut()">Sign out</button>
+      <div class="langtog" role="group" aria-label="Language"><button id="lEn2" onclick="setLang('en')">EN</button><button id="lVi2" onclick="setLang('vi')">VI</button></div>
+      <button class="acctbtn" id="acctBtn" onclick="toggleMenu()" aria-haspopup="true" aria-expanded="false"><span class="av" id="topAv" aria-hidden="true">–</span><span class="an" id="topName">—</span></button>
     </div>
-    <div class="content" id="view"></div>
+    <div id="acctMenu" class="menu hide"></div>
+    <div id="routeAnnounce" class="sr-only" aria-live="polite"></div>
+    <main class="content" id="view" role="main" tabindex="-1"></main>
   </div>
 </div>
 
 <!-- telehealth room -->
-<div id="tele">
-  <div class="tele-top"><span class="dot"></span><div><div class="tt" id="teleTitle">Telehealth visit</div><div class="ts" id="teleSub">Barry Burris, NMD</div></div></div>
-  <div class="tele-stage">
-    <div class="tele-note" id="teleNote">Demonstration room — live video runs on the secure backend</div>
-    <div class="provtile">
-      <img class="pcoin" id="teleCoin" alt="Dr. Burris">
-      <div class="pnm">Dr. Barry Burris, NMD</div>
-      <div class="pst" id="teleStatus"><span class="spin"></span> <span id="teleStatusTxt">Connecting…</span></div>
+<div id="tele" role="dialog" aria-modal="true" aria-label="Telehealth visit" aria-hidden="true">
+  <div class="tele-top"><span class="dot"></span><div><div class="tt" id="teleTitle">Telehealth visit</div><div class="ts">Barry Burris, NMD</div></div>
+    <div class="conn"><span id="connTxt"></span><span class="bars" id="connBars"></span></div></div>
+  <div class="tele-body">
+    <div class="tele-stage">
+      <div class="tele-note" id="teleNote"></div>
+      <div class="provtile">
+        <img class="pcoin" id="teleCoin" alt="Dr. Burris">
+        <div class="pnm">Dr. Barry Burris, NMD</div>
+        <div class="pst" id="teleStatus"><span class="spin"></span> <span id="teleStatusTxt"></span></div>
+      </div>
+      <div class="selftile" id="selfTile"><span id="selfPlaceholder">Camera off</span></div>
+      <!-- prejoin overlay -->
+      <div class="prejoin" id="prejoin">
+        <div class="pj">
+          <div class="pj-prev" id="pjPrev"><span id="pjPrevTxt">Camera preview</span></div>
+          <div class="pj-side">
+            <h3 id="pjTitle"></h3>
+            <p id="pjSub"></p>
+            <label id="pjCamL" for="pjCam"></label><select id="pjCam"></select>
+            <label id="pjMicL" for="pjMic"></label><select id="pjMic"></select>
+            <div style="display:flex;gap:9px;margin-top:16px;flex-wrap:wrap">
+              <button class="btn" id="pjTest" onclick="pjToggleCam()"></button>
+              <button class="btn solid" id="pjJoin" onclick="pjJoin()"></button>
+            </div>
+            <div style="color:#6a7c8b;font-size:11px;margin-top:12px" id="pjNote"></div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="selftile" id="selfTile"><span id="selfPlaceholder">Camera off</span><span class="selflbl" id="selfLbl" style="display:none">You</span></div>
+    <div class="tele-chat hide2" id="teleChat">
+      <div class="tch-h" id="tchH">In-visit chat</div>
+      <div class="tch-b" id="tchB"></div>
+      <div class="tch-c"><input id="tchIn" placeholder="Message…" aria-label="In-visit chat message" onkeydown="if(event.key==='Enter')tchSend()"><button class="btn solid sm" onclick="tchSend()" aria-label="Send">→</button></div>
+    </div>
   </div>
   <div class="tele-bar">
-    <button class="tbtn2" id="micBtn" title="Microphone" onclick="toggleMic()"><svg viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></button>
-    <button class="tbtn2" id="camBtn" title="Camera" onclick="toggleCam()"><svg viewBox="0 0 24 24"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg></button>
-    <button class="tbtn2 end" onclick="leaveTele()"><svg viewBox="0 0 24 24"><path d="M3 10c5-4 13-4 18 0l-2.5 3-3.2-1.2-.3-2.4c-2.9-.8-5.7-.8-8.6 0l-.3 2.4L3 13z"/></svg> <span id="teleLeave">Leave</span></button>
+    <button class="tbtn2" id="micBtn" onclick="toggleMic()" aria-label="Microphone" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg><span class="cap" id="capMic"></span></button>
+    <button class="tbtn2" id="camBtn2" onclick="toggleCam()" aria-label="Camera" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg><span class="cap" id="capCam"></span></button>
+    <button class="tbtn2" id="chatBtn" onclick="toggleTchat()" aria-label="Chat" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15a2 2 0 01-2 2H8l-4 4V5a2 2 0 012-2h13a2 2 0 012 2z"/></svg><span class="cap" id="capChat"></span></button>
+    <button class="tbtn2 end" onclick="leaveTele()"><svg viewBox="0 0 24 24"><path d="M3 10c5-4 13-4 18 0l-2.5 3-3.2-1.2-.3-2.4c-2.9-.8-5.7-.8-8.6 0l-.3 2.4L3 13z"/></svg> <span id="teleLeave"></span></button>
   </div>
 </div>
 
-<div class="scrim" id="scrim" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet"></div></div>
-<div class="toast" id="toast"></div>
+<div class="scrim" id="scrim" onclick="if(event.target===this)closeSheet()"><div class="sheet" id="sheet" role="dialog" aria-modal="true"></div></div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="bb-intakes.js"></script>
+<script src="bb-portal-auth.js"></script>
 <script>
-/* ---------- data ---------- */
+"use strict";
+/* ================= data + config ================= */
 var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 var PATIENTS=(window.BB_INTAKES||[]);
-var SKEY='bb_patient_sess';
-document.getElementById('siCoin').src=COIN;
-document.getElementById('navCoin').src=COIN;
-document.getElementById('teleCoin').src=COIN;
+var Auth=window.BBPortal;
+[ 'siCoin','navCoin','teleCoin' ].forEach(function(id){var e=document.getElementById(id);if(e)e.src=COIN;});
 
-/* ---------- i18n ---------- */
+/* ================= i18n ================= */
 var lang=(function(){try{return localStorage.getItem('bb_pt_lang')||'en'}catch(e){return 'en'}})();
-var T={
- en:{ribbon:'Demonstration portal — sample patients only · no real health information',ptag:'Patient Portal · Functional Medicine & Longevity',
-  pickH:'Preview a patient account',pickS:'This demo has 15 patients who completed the questionnaire. Choose one to see their portal.',
-  loginH:'Patient sign in',loginS:'Your secure account.',email:'Email',pass:'Password',signin:'Sign in',
-  mini:'Demo mode — real logins arrive with the secure (HIPAA) backend. Pick a name on the left to preview a portal.',
-  newL:'New here?',intake:'Start the new-patient questionnaire →',
-  nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',
-  gCare:'My Care',gRecords:'My Records',gAcct:'Account',
-  signout:'Sign out',msgPractice:'Message the practice',
-  hello:'Hello',welcome:'Welcome to your care portal. Here you can see your plan, join your telehealth visit, review your labs, message the practice, and manage your documents — all in one place.',
-  qaJoin:'Join telehealth',qaMsg:'Message practice',qaPlan:'View care plan',qaLabs:'View labs',
-  nextVisit:'Your next visit',noVisit:'No upcoming visit yet — your provider will schedule your consultation after reviewing your intake.',
-  planTitle:'My Care Plan',planSub:'Prepared with your provider',
-  planBanner:'Your plan is reviewed and signed by Dr. Burris. Nothing here is a prescription or a diagnosis until your provider confirms it with you at your visit.',
-  goals:'Your goals',focus:'What we’re focusing on',foundations:'Foundations we build together',
-  fNutri:'Nutrition',fNutriB:'Protein and vegetables at each meal; steady blood sugar through the day.',
-  fMove:'Movement',fMoveB:'20–30 minutes of walking most days, plus light strength work.',
-  fSleep:'Sleep',fSleepB:'A consistent sleep and wake time; wind-down without screens.',
-  fStress:'Stress',fStressB:'A daily down-shift — breathing, a walk, or time outdoors.',
-  provNotes:'Provider notes',provNotesEmpty:'Your provider will add personalized notes here after your visit.',
-  labsUnderReview:'Your labs are under review',
-  apptsTitle:'Appointments',apptsSub:'Your visits with Dr. Burris',upcoming:'Upcoming',past:'Past visits',noPast:'No past visits yet.',
-  join:'Join',reschedule:'Reschedule',details:'Details',telehealth:'Telehealth',inperson:'In-person',
-  labsTitle:'Labs & Results',labsSub:'Documents you shared and results your provider releases',
-  yourLabs:'Labs you uploaded',released:'Results released by your provider',sampleResult:'Sample result panel',
-  sampleResultNote:'Illustration of the results view. Your real results appear here once your provider reviews and releases them.',
-  analyte:'Marker',value:'Value',range:'Reference',status:'Status',
-  received:'Received',underReview:'Under review',
-  msgTitle:'Messages',msgSub:'Secure messages with the practice',send:'Send',msgPlaceholder:'Write a message…',
-  docsTitle:'Documents',docsSub:'Forms, consents, and files you exchange with the practice',
-  upload:'Upload a document',view:'View',sign:'Sign',download:'Download',actionNeeded:'Action needed',
-  profileTitle:'Profile',profileSub:'Your details',name:'Name',sexL:'Sex',dobL:'Date of birth',ageL:'Age',langPref:'Preferred language',
-  contact:'Contact',update:'Update',
-  demoNote:'Demonstration — sample data. Secure messaging, video visits and real accounts run on the HIPAA backend.',
-  intakeAnswers:'Your questionnaire',cc:'Main concern',meds:'Medications',allergies:'Allergies',selfScores:'How you rated yourself',
-  energy:'Energy',libido:'Libido',sleepS:'Sleep',mood:'Mood',
-  teleConnecting:'Connecting…',teleWaiting:'You’re in the waiting room — your provider will join shortly.',
-  camOn:'Turn on camera',camOff:'Camera off',leave:'Leave',
-  toastSent:'Message sent',toastUploaded:'Document added',toastSigned:'Signed — thank you',toastDemo:'Demo — not enabled in the preview'},
- vi:{ribbon:'Cổng minh họa — chỉ bệnh nhân mẫu · không có thông tin sức khỏe thật',ptag:'Cổng Bệnh Nhân · Y Học Chức Năng & Trường Thọ',
-  pickH:'Xem thử tài khoản bệnh nhân',pickS:'Bản demo có 15 bệnh nhân đã hoàn thành bảng câu hỏi. Chọn một người để xem cổng của họ.',
-  loginH:'Đăng nhập bệnh nhân',loginS:'Tài khoản bảo mật của bạn.',email:'Email',pass:'Mật khẩu',signin:'Đăng nhập',
-  mini:'Chế độ demo — đăng nhập thật sẽ có khi backend bảo mật (HIPAA) sẵn sàng. Chọn một tên bên trái để xem thử.',
-  newL:'Bạn mới đến?',intake:'Bắt đầu bảng câu hỏi bệnh nhân mới →',
-  nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',
-  gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
-  signout:'Đăng xuất',msgPractice:'Nhắn cho phòng khám',
-  hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Tại đây bạn có thể xem kế hoạch, tham gia buổi khám từ xa, xem xét nghiệm, nhắn tin cho phòng khám và quản lý tài liệu — tất cả một nơi.',
-  qaJoin:'Vào khám từ xa',qaMsg:'Nhắn phòng khám',qaPlan:'Xem kế hoạch',qaLabs:'Xem xét nghiệm',
-  nextVisit:'Buổi khám kế tiếp',noVisit:'Chưa có lịch hẹn — bác sĩ sẽ sắp lịch tư vấn sau khi xem hồ sơ của bạn.',
-  planTitle:'Kế hoạch chăm sóc',planSub:'Lập cùng bác sĩ của bạn',
-  planBanner:'Kế hoạch được bác sĩ Burris xem xét và ký. Không có nội dung nào là toa thuốc hay chẩn đoán cho đến khi bác sĩ xác nhận với bạn tại buổi khám.',
-  goals:'Mục tiêu của bạn',focus:'Chúng ta đang tập trung',foundations:'Nền tảng cùng xây dựng',
-  fNutri:'Dinh dưỡng',fNutriB:'Đạm và rau trong mỗi bữa; giữ đường huyết ổn định cả ngày.',
-  fMove:'Vận động',fMoveB:'Đi bộ 20–30 phút hầu hết các ngày, thêm bài tập sức mạnh nhẹ.',
-  fSleep:'Giấc ngủ',fSleepB:'Giờ ngủ và thức đều đặn; thư giãn không màn hình.',
-  fStress:'Căng thẳng',fStressB:'Thư giãn mỗi ngày — hít thở, đi bộ, hoặc ra ngoài trời.',
-  provNotes:'Ghi chú của bác sĩ',provNotesEmpty:'Bác sĩ sẽ thêm ghi chú riêng tại đây sau buổi khám.',
-  labsUnderReview:'Xét nghiệm đang được xem xét',
-  apptsTitle:'Lịch hẹn',apptsSub:'Các buổi khám với bác sĩ Burris',upcoming:'Sắp tới',past:'Buổi khám đã qua',noPast:'Chưa có buổi khám nào.',
-  join:'Vào',reschedule:'Đổi lịch',details:'Chi tiết',telehealth:'Khám từ xa',inperson:'Trực tiếp',
-  labsTitle:'Xét nghiệm & Kết quả',labsSub:'Tài liệu bạn chia sẻ và kết quả bác sĩ công bố',
-  yourLabs:'Xét nghiệm bạn đã tải lên',released:'Kết quả do bác sĩ công bố',sampleResult:'Bảng kết quả mẫu',
-  sampleResultNote:'Minh họa cách xem kết quả. Kết quả thật của bạn hiện tại đây khi bác sĩ xem xét và công bố.',
-  analyte:'Chỉ số',value:'Giá trị',range:'Tham chiếu',status:'Trạng thái',
-  received:'Đã nhận',underReview:'Đang xem xét',
-  msgTitle:'Tin nhắn',msgSub:'Tin nhắn bảo mật với phòng khám',send:'Gửi',msgPlaceholder:'Viết tin nhắn…',
-  docsTitle:'Tài liệu',docsSub:'Biểu mẫu, đồng thuận và tệp bạn trao đổi với phòng khám',
-  upload:'Tải tài liệu lên',view:'Xem',sign:'Ký',download:'Tải về',actionNeeded:'Cần xử lý',
-  profileTitle:'Hồ sơ',profileSub:'Thông tin của bạn',name:'Tên',sexL:'Giới tính',dobL:'Ngày sinh',ageL:'Tuổi',langPref:'Ngôn ngữ ưu tiên',
-  contact:'Liên hệ',update:'Cập nhật',
-  demoNote:'Minh họa — dữ liệu mẫu. Tin nhắn bảo mật, khám video và tài khoản thật chạy trên backend HIPAA.',
-  intakeAnswers:'Bảng câu hỏi của bạn',cc:'Vấn đề chính',meds:'Thuốc đang dùng',allergies:'Dị ứng',selfScores:'Bạn tự đánh giá',
-  energy:'Năng lượng',libido:'Ham muốn',sleepS:'Giấc ngủ',mood:'Tâm trạng',
-  teleConnecting:'Đang kết nối…',teleWaiting:'Bạn đang ở phòng chờ — bác sĩ sẽ vào ngay.',
-  camOn:'Bật camera',camOff:'Camera tắt',leave:'Rời khỏi',
-  toastSent:'Đã gửi tin nhắn',toastUploaded:'Đã thêm tài liệu',toastSigned:'Đã ký — cảm ơn bạn',toastDemo:'Demo — chưa bật trong bản xem thử'}
+var T={en:{},vi:{}};
+T.en={
+ ribbon:'<b>Demonstration portal</b> — sample patients, no real health information. Real accounts &amp; video run on the secure backend.',
+ tag:'Patient Portal · Functional Medicine &amp; Longevity',
+ valueH:'Your health, in one calm place.',
+ valueP:'Sign in to see your care plan, join a telehealth visit, review labs, message your care team, and manage documents — securely.',
+ f1t:'Telehealth visits',f1d:'Meet Dr. Burris by secure video from anywhere.',
+ f2t:'Your plan & labs',f2d:'See your care plan and lab results as they’re released.',
+ f3t:'Secure messaging',f3d:'Message the practice and share documents safely.',
+ tabSignin:'Sign in',tabCreate:'Create account',
+ name:'Full name',email:'Email',password:'Password',
+ signinBtn:'Sign in',createBtn:'Create my account',
+ forgot:'Forgot your password?',
+ exploreL:'Just exploring?',exploreBtn:'Preview a sample patient →',hidePick:'Hide sample patients',
+ passHintNew:'At least 8 characters, with a letter and a number.',
+ show:'Show',hide:'Hide',
+ foot:'Barry Burris, NMD · Functional Medicine &amp; Longevity — built by',
+ secTxt:'Encrypted session',built:'Built by',
+ nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',
+ gCare:'My Care',gRecords:'My Records',gAcct:'Account',
+ menuProfile:'Profile & settings',menuSecurity:'Security',menuSignout:'Sign out',menuSignoutAll:'Sign out everywhere',
+ hello:'Hello',welcome:'Welcome to your care portal. Everything about your care with Dr. Burris lives here.',
+ qaJoin:'Join telehealth',qaMsg:'Message care team',qaPlan:'View care plan',qaBook:'Book a visit',
+ actionNeeded:'Action needed',allDone:'You’re all set — nothing needs your attention right now.',
+ taskConsent:'Sign your telehealth consent',taskConsentD:'Required before your first video visit.',
+ taskPrevisit:'Complete your pre-visit checklist',taskPrevisitD:'A few quick items before you meet Dr. Burris.',
+ taskConfirm:'Confirm your upcoming appointment',taskConfirmD:'Let us know you’ll be there.',
+ doIt:'Do it',review:'Review',confirm:'Confirm',confirmed:'Confirmed',done:'Done',
+ nextVisit:'Your next visit',noVisit:'No upcoming visit yet.',bookNow:'Book a visit',
+ join:'Join',joinsAt:'Join opens 10 min before',addCal:'Add to calendar',reschedule:'Reschedule',cancel:'Cancel',
+ telehealth:'Telehealth',inperson:'In-person',focus:'What we’re focusing on',
+ recentLabs:'Recent labs',recentMsgs:'Recent messages',viewAll:'View all',
+ planTitle:'My Care Plan',planSub:'Prepared with your provider',
+ planBanner:'Your plan is reviewed and signed by Dr. Burris. Nothing here is a prescription or a diagnosis until your provider confirms it with you at your visit.',
+ signedBy:'Signed by',version:'Version',goals:'Your goals',
+ foundations:'Foundations we build together',
+ fNutri:'Nutrition',fNutriB:'Protein and vegetables at each meal; steady blood sugar through the day.',
+ fMove:'Movement',fMoveB:'20–30 minutes of walking most days, plus light strength work.',
+ fSleep:'Sleep',fSleepB:'A consistent sleep and wake time; wind-down without screens.',
+ fStress:'Stress',fStressB:'A daily down-shift — breathing, a walk, or time outdoors.',
+ prescribed:'Prescribed items',prescribedEmpty:'No prescriptions yet. Your provider adds any medications or protocols here after your visit — this portal never prescribes on its own.',
+ followLabs:'Follow-up labs',provNotes:'A note from Dr. Burris',provNotesEmpty:'Your provider will add a personal note here after your visit.',
+ print:'Print / Save PDF',download:'Download',
+ apptsTitle:'Appointments',apptsSub:'Your visits with Dr. Burris',upcoming:'Upcoming',pastV:'Past visits',noPast:'No past visits yet.',
+ previsit:'Pre-visit checklist',pvConsent:'Telehealth consent signed',pvMeds:'Medication list up to date',pvQuiet:'A quiet, private space ready',pvCam:'Camera & microphone tested',
+ booking:'Book a visit',bookType:'Visit type',bookInitial:'Initial consultation (45 min)',bookFollow:'Follow-up (25 min)',bookLab:'Lab review (25 min)',
+ pickDay:'Choose a day',pickTime:'Choose a time',noSlots:'No open times that day — try another.',taken:'taken',
+ confirmBook:'Confirm booking',booked:'Your visit is booked',tz:'Times shown in Vietnam time (GMT+7).',
+ labsTitle:'Labs & Results',labsSub:'Documents you shared and results your provider releases',
+ yourLabs:'Labs you uploaded',released:'Released results',underReview:'Under review',received:'Received',
+ resultNote:'Sample result set — for demonstration. Your real results appear here once your provider reviews and releases them.',
+ trend:'Vitamin D trend',analyte:'Marker',value:'Value',range:'Reference',statusH:'Status',provComment:'Dr. Burris’s comment',
+ provCommentTxt:'Your vitamin D is trending up but still a little low — we’ll keep supporting it and recheck in 3 months. Everything else looks reassuring. We’ll talk it through at your visit.',
+ low:'Low',high:'High',inRange:'In range',
+ msgTitle:'Messages',msgSub:'Secure messages with your care team',send:'Send',msgPlaceholder:'Write a message…',
+ catAll:'All',catGeneral:'General',catClinical:'Clinical',catBilling:'Billing',attach:'Attach',reply1:'The care team typically replies within 1 business day.',
+ ackMsg:'Your message reached the care team. Dr. Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',
+ seen:'Seen',delivered:'Delivered',
+ docsTitle:'Documents',docsSub:'Forms, consents, and files you exchange with the practice',
+ docConsents:'Consents',docIntake:'Intake',docLabs:'Labs',docVisit:'Visit summaries',docInsurance:'Insurance & ID',
+ upload:'Upload a document',view:'View',sign:'Sign',signed:'Signed',needsSign:'Needs signature',
+ consentTitle:'Telehealth Consent',
+ consentBody:'I consent to receive care from Barry Burris, NMD by telehealth (secure video and messaging). I understand the benefits and limits of telehealth, that it does not replace emergency care, and that I can stop at any time. I understand my information is kept private and shared only with my care team.',
+ typeToSign:'Type your full name to sign',agree:'I have read and agree to the above.',
+ intakeAnswers:'Your questionnaire',cc:'Main concern',meds:'Medications',allergies:'Allergies',selfScores:'How you rated yourself',
+ energy:'Energy',libido:'Libido',sleepS:'Sleep',mood:'Mood',
+ profileTitle:'Profile & settings',profileSub:'Your details and preferences',
+ personal:'Personal',prefName:'Preferred name',phone:'Phone',save:'Save changes',saved:'Saved',
+ emergency:'Emergency contact',ecName:'Contact name',ecPhone:'Contact phone',ecRel:'Relationship',
+ prefs:'Preferences',langPref:'Preferred language',notif:'Notifications',notifEmail:'Email reminders',notifSms:'SMS reminders',
+ security:'Security',changePass:'Change password',lastSignin:'Last sign-in',signoutAll:'Sign out of all devices',
+ insurance:'Insurance & ID',addLater:'Added with your account',
+ demoNote:'Demonstration — sample data. Secure messaging, video visits and real accounts run on the HIPAA backend.',
+ teleConnecting:'Connecting…',teleWaiting:'You’re in the waiting room — Dr. Burris will join shortly.',teleConnected:'Connected',
+ teleNoteTxt:'Demonstration room — live video runs on the secure backend (HIPAA video).',
+ camOn:'Turn on camera',camOff:'Camera off',mic:'Mic',camera:'Camera',chat:'Chat',leave:'Leave',
+ pjTitle:'Ready to join?',pjSub:'Check your camera and microphone before you enter the visit.',
+ pjCam:'Camera',pjMic:'Microphone',pjTest:'Turn on camera',pjJoin:'Join now',pjNote:'Live video will run through the practice’s secure (HIPAA) video service.',
+ idleWarn:'You’ll be signed out soon for your security.',staySignedIn:'Stay signed in',
+ signedOutIdle:'You were signed out for your security after a period of inactivity.',
+ welcomeBack:'Welcome — your account is ready.',
+ toastSent:'Message sent',toastUploaded:'Document added',toastSigned:'Signed — thank you',toastSaved:'Saved',toastBooked:'Visit booked',toastConfirmed:'Appointment confirmed',toastCanceled:'Appointment canceled',toastReset:'If an account exists for that email, a reset link is on its way.',toastCalendar:'Calendar file downloaded',toastDemo:'Demo — not enabled in the preview',
+ errName:'Please enter your name.',errEmailInvalid:'Please enter a valid email.',errPassRules:'Use at least 8 characters, including a letter and a number.',errExists:'We couldn’t create that account. If you already have one, try signing in.',errLogin:'Email or password is incorrect.',errGeneric:'Something went wrong. Please try again.',loadError:'Something went wrong loading this page.',backHome:'Back to Home',storageWarn:'Your browser is blocking storage, so your session won’t be saved. Try turning off private mode.'
 };
-function t(k){return (T[lang]&&T[lang][k])||T.en[k]||k;}
+/* Vietnamese — full coverage of primary flows; deep micro-labels fall back to EN via t(). */
+T.vi={
+ ribbon:'<b>Cổng minh họa</b> — bệnh nhân mẫu, không có thông tin sức khỏe thật. Tài khoản &amp; video thật chạy trên backend bảo mật.',
+ tag:'Cổng Bệnh Nhân · Y Học Chức Năng &amp; Trường Thọ',
+ valueH:'Sức khỏe của bạn, gọn trong một nơi.',
+ valueP:'Đăng nhập để xem kế hoạch chăm sóc, khám từ xa, xem xét nghiệm, nhắn cho đội chăm sóc và quản lý tài liệu — an toàn.',
+ f1t:'Khám từ xa',f1d:'Gặp bác sĩ Burris qua video bảo mật ở bất cứ đâu.',
+ f2t:'Kế hoạch & xét nghiệm',f2d:'Xem kế hoạch và kết quả xét nghiệm khi được công bố.',
+ f3t:'Nhắn tin bảo mật',f3d:'Nhắn cho phòng khám và chia sẻ tài liệu an toàn.',
+ tabSignin:'Đăng nhập',tabCreate:'Tạo tài khoản',
+ name:'Họ và tên',email:'Email',password:'Mật khẩu',
+ signinBtn:'Đăng nhập',createBtn:'Tạo tài khoản',
+ forgot:'Quên mật khẩu?',
+ exploreL:'Chỉ muốn xem thử?',exploreBtn:'Xem thử bệnh nhân mẫu →',hidePick:'Ẩn bệnh nhân mẫu',
+ passHintNew:'Ít nhất 8 ký tự, gồm chữ và số.',
+ show:'Hiện',hide:'Ẩn',
+ foot:'Barry Burris, NMD · Y Học Chức Năng — thực hiện bởi',
+ secTxt:'Phiên được mã hóa',built:'Thực hiện bởi',
+ nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',
+ gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
+ menuProfile:'Hồ sơ & cài đặt',menuSecurity:'Bảo mật',menuSignout:'Đăng xuất',menuSignoutAll:'Đăng xuất mọi thiết bị',
+ hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Mọi thứ về việc chăm sóc với bác sĩ Burris đều ở đây.',
+ qaJoin:'Vào khám từ xa',qaMsg:'Nhắn đội chăm sóc',qaPlan:'Xem kế hoạch',qaBook:'Đặt lịch khám',
+ actionNeeded:'Cần xử lý',allDone:'Mọi thứ đã ổn — hiện không có việc gì cần bạn.',
+ taskConsent:'Ký đồng thuận khám từ xa',taskConsentD:'Bắt buộc trước buổi khám video đầu tiên.',
+ taskPrevisit:'Hoàn thành danh sách trước khám',taskPrevisitD:'Vài mục nhanh trước khi gặp bác sĩ Burris.',
+ taskConfirm:'Xác nhận lịch hẹn sắp tới',taskConfirmD:'Cho chúng tôi biết bạn sẽ đến.',
+ doIt:'Làm ngay',review:'Xem',confirm:'Xác nhận',confirmed:'Đã xác nhận',done:'Xong',
+ nextVisit:'Buổi khám kế tiếp',noVisit:'Chưa có lịch hẹn.',bookNow:'Đặt lịch',
+ join:'Vào',joinsAt:'Mở vào 10 phút trước',addCal:'Thêm vào lịch',reschedule:'Đổi lịch',cancel:'Hủy',
+ telehealth:'Khám từ xa',inperson:'Trực tiếp',focus:'Chúng ta đang tập trung',
+ recentLabs:'Xét nghiệm gần đây',recentMsgs:'Tin nhắn gần đây',viewAll:'Xem tất cả',
+ planTitle:'Kế hoạch chăm sóc',planSub:'Lập cùng bác sĩ của bạn',
+ planBanner:'Kế hoạch được bác sĩ Burris xem xét và ký. Không nội dung nào là toa thuốc hay chẩn đoán cho đến khi bác sĩ xác nhận tại buổi khám.',
+ signedBy:'Ký bởi',version:'Phiên bản',goals:'Mục tiêu của bạn',
+ foundations:'Nền tảng cùng xây dựng',
+ fNutri:'Dinh dưỡng',fNutriB:'Đạm và rau mỗi bữa; giữ đường huyết ổn định cả ngày.',
+ fMove:'Vận động',fMoveB:'Đi bộ 20–30 phút hầu hết các ngày, thêm tập sức mạnh nhẹ.',
+ fSleep:'Giấc ngủ',fSleepB:'Giờ ngủ và thức đều đặn; thư giãn không màn hình.',
+ fStress:'Căng thẳng',fStressB:'Thư giãn mỗi ngày — hít thở, đi bộ, hoặc ra ngoài trời.',
+ prescribed:'Chỉ định',prescribedEmpty:'Chưa có chỉ định. Bác sĩ sẽ thêm thuốc hoặc phác đồ tại đây sau buổi khám — cổng này không bao giờ tự kê đơn.',
+ followLabs:'Xét nghiệm theo dõi',provNotes:'Lời nhắn từ bác sĩ Burris',provNotesEmpty:'Bác sĩ sẽ thêm lời nhắn riêng tại đây sau buổi khám.',
+ print:'In / Lưu PDF',download:'Tải về',
+ apptsTitle:'Lịch hẹn',apptsSub:'Các buổi khám với bác sĩ Burris',upcoming:'Sắp tới',pastV:'Đã qua',noPast:'Chưa có buổi khám nào.',
+ previsit:'Danh sách trước khám',pvConsent:'Đã ký đồng thuận khám từ xa',pvMeds:'Danh sách thuốc đã cập nhật',pvQuiet:'Không gian yên tĩnh, riêng tư',pvCam:'Đã thử camera & micro',
+ booking:'Đặt lịch khám',bookType:'Loại buổi khám',bookInitial:'Tư vấn ban đầu (45 phút)',bookFollow:'Tái khám (25 phút)',bookLab:'Xem xét nghiệm (25 phút)',
+ pickDay:'Chọn ngày',pickTime:'Chọn giờ',noSlots:'Ngày đó không còn giờ trống — thử ngày khác.',taken:'đã đặt',
+ confirmBook:'Xác nhận đặt lịch',booked:'Đã đặt lịch khám',tz:'Giờ theo giờ Việt Nam (GMT+7).',
+ labsTitle:'Xét nghiệm & Kết quả',labsSub:'Tài liệu bạn chia sẻ và kết quả bác sĩ công bố',
+ yourLabs:'Xét nghiệm bạn đã tải lên',released:'Kết quả đã công bố',underReview:'Đang xem xét',received:'Đã nhận',
+ resultNote:'Bộ kết quả mẫu — để minh họa. Kết quả thật hiện tại đây khi bác sĩ xem xét và công bố.',
+ trend:'Xu hướng Vitamin D',analyte:'Chỉ số',value:'Giá trị',range:'Tham chiếu',statusH:'Trạng thái',provComment:'Nhận xét của bác sĩ Burris',
+ provCommentTxt:'Vitamin D của bạn đang tăng nhưng vẫn hơi thấp — chúng ta sẽ tiếp tục hỗ trợ và kiểm tra lại sau 3 tháng. Các chỉ số khác đều ổn. Sẽ trao đổi kỹ tại buổi khám.',
+ low:'Thấp',high:'Cao',inRange:'Bình thường',
+ msgTitle:'Tin nhắn',msgSub:'Tin nhắn bảo mật với đội chăm sóc',send:'Gửi',msgPlaceholder:'Viết tin nhắn…',
+ catAll:'Tất cả',catGeneral:'Chung',catClinical:'Lâm sàng',catBilling:'Thanh toán',attach:'Đính kèm',reply1:'Đội chăm sóc thường trả lời trong 1 ngày làm việc.',
+ ackMsg:'Tin nhắn đã đến đội chăm sóc. Bác sĩ Burris sẽ xem và trả lời — thường trong 1 ngày làm việc. Nếu khẩn cấp, vui lòng gọi phòng khám hoặc số cấp cứu địa phương.',
+ seen:'Đã xem',delivered:'Đã gửi',
+ docsTitle:'Tài liệu',docsSub:'Biểu mẫu, đồng thuận và tệp bạn trao đổi với phòng khám',
+ docConsents:'Đồng thuận',docIntake:'Hồ sơ nhập',docLabs:'Xét nghiệm',docVisit:'Tóm tắt khám',docInsurance:'Bảo hiểm & CMND',
+ upload:'Tải tài liệu lên',view:'Xem',sign:'Ký',signed:'Đã ký',needsSign:'Cần chữ ký',
+ consentTitle:'Đồng thuận khám từ xa',
+ consentBody:'Tôi đồng ý nhận chăm sóc từ Barry Burris, NMD qua khám từ xa (video và tin nhắn bảo mật). Tôi hiểu lợi ích và giới hạn của khám từ xa, rằng nó không thay thế cấp cứu, và tôi có thể dừng bất cứ lúc nào. Tôi hiểu thông tin của tôi được giữ riêng tư và chỉ chia sẻ với đội chăm sóc.',
+ typeToSign:'Nhập họ tên đầy đủ để ký',agree:'Tôi đã đọc và đồng ý với nội dung trên.',
+ intakeAnswers:'Bảng câu hỏi của bạn',cc:'Vấn đề chính',meds:'Thuốc đang dùng',allergies:'Dị ứng',selfScores:'Bạn tự đánh giá',
+ energy:'Năng lượng',libido:'Ham muốn',sleepS:'Giấc ngủ',mood:'Tâm trạng',
+ profileTitle:'Hồ sơ & cài đặt',profileSub:'Thông tin và tùy chọn của bạn',
+ personal:'Cá nhân',prefName:'Tên thường gọi',phone:'Điện thoại',save:'Lưu thay đổi',saved:'Đã lưu',
+ emergency:'Liên hệ khẩn cấp',ecName:'Tên người liên hệ',ecPhone:'Điện thoại liên hệ',ecRel:'Mối quan hệ',
+ prefs:'Tùy chọn',langPref:'Ngôn ngữ ưu tiên',notif:'Thông báo',notifEmail:'Nhắc qua email',notifSms:'Nhắc qua SMS',
+ security:'Bảo mật',changePass:'Đổi mật khẩu',lastSignin:'Lần đăng nhập gần nhất',signoutAll:'Đăng xuất mọi thiết bị',
+ insurance:'Bảo hiểm & CMND',addLater:'Thêm cùng tài khoản của bạn',
+ demoNote:'Minh họa — dữ liệu mẫu. Tin nhắn bảo mật, khám video và tài khoản thật chạy trên backend HIPAA.',
+ teleConnecting:'Đang kết nối…',teleWaiting:'Bạn đang ở phòng chờ — bác sĩ Burris sẽ vào ngay.',teleConnected:'Đã kết nối',
+ teleNoteTxt:'Phòng minh họa — video trực tiếp chạy trên backend bảo mật (video HIPAA).',
+ camOn:'Bật camera',camOff:'Camera tắt',mic:'Micro',camera:'Camera',chat:'Trò chuyện',leave:'Rời khỏi',
+ pjTitle:'Sẵn sàng vào?',pjSub:'Kiểm tra camera và micro trước khi vào buổi khám.',
+ pjCam:'Camera',pjMic:'Micro',pjTest:'Bật camera',pjJoin:'Vào ngay',pjNote:'Video trực tiếp sẽ chạy qua dịch vụ video bảo mật (HIPAA) của phòng khám.',
+ idleWarn:'Bạn sắp được đăng xuất để bảo mật.',staySignedIn:'Giữ đăng nhập',
+ signedOutIdle:'Bạn đã được đăng xuất để bảo mật sau một thời gian không hoạt động.',
+ welcomeBack:'Chào mừng — tài khoản của bạn đã sẵn sàng.',
+ toastSent:'Đã gửi tin nhắn',toastUploaded:'Đã thêm tài liệu',toastSigned:'Đã ký — cảm ơn bạn',toastSaved:'Đã lưu',toastBooked:'Đã đặt lịch',toastConfirmed:'Đã xác nhận lịch hẹn',toastCanceled:'Đã hủy lịch hẹn',toastReset:'Nếu email có tài khoản, liên kết đặt lại đang được gửi.',toastCalendar:'Đã tải tệp lịch',toastDemo:'Demo — chưa bật trong bản xem thử',
+ errName:'Vui lòng nhập tên của bạn.',errEmailInvalid:'Vui lòng nhập email hợp lệ.',errPassRules:'Dùng ít nhất 8 ký tự, gồm chữ và số.',errExists:'Không thể tạo tài khoản đó. Nếu bạn đã có, hãy đăng nhập.',errLogin:'Email hoặc mật khẩu không đúng.',errGeneric:'Đã có lỗi. Vui lòng thử lại.',loadError:'Đã có lỗi khi tải trang này.',backHome:'Về Trang chính',storageWarn:'Trình duyệt đang chặn lưu trữ nên phiên sẽ không được lưu. Hãy tắt chế độ ẩn danh.'
+};
+function t(k){return (T[lang]&&T[lang][k]!=null)?T[lang][k]:(T.en[k]!=null?T.en[k]:k);}
 
-/* ---------- helpers ---------- */
-function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+/* ================= helpers ================= */
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function clean(n){return String(n||'').replace(/\s*\(SAMPLE\)\s*/i,'').trim();}
 function firstName(n){var c=clean(n).split(/\s+/);return c.length>2?c[c.length-1]:c[0];}
-function ageOf(dob){if(!dob)return '—';var d=new Date(dob),n=new Date();var a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return a;}
-function read(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function initials(n){var c=clean(n).split(/\s+/).filter(Boolean);if(!c.length)return '–';return (c[0][0]+(c.length>1?c[c.length-1][0]:'')).toUpperCase();}
+function ageOf(dob){if(!dob)return '—';var d=new Date(dob),n=new Date();if(isNaN(d.getTime()))return '—';var a=n.getFullYear()-d.getFullYear();if(n.getMonth()<d.getMonth()||(n.getMonth()===d.getMonth()&&n.getDate()<d.getDate()))a--;return (isNaN(a)?'—':a);}
+function read(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
 function write(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function fmtDate(d,withYr){var mo=(lang==='vi'?['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']);return mo[d.getMonth()]+' '+d.getDate()+(withYr?', '+d.getFullYear():'');}
-function toast(m){var e=document.getElementById('toast');e.textContent=m;e.classList.add('on');clearTimeout(e._t);e._t=setTimeout(function(){e.classList.remove('on')},1900);}
+function moArr(){return lang==='vi'?['Th1','Th2','Th3','Th4','Th5','Th6','Th7','Th8','Th9','Th10','Th11','Th12']:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];}
+function fmtDate(d,withYr){return moArr()[d.getMonth()]+' '+d.getDate()+(withYr?', '+d.getFullYear():'');}
+function fmtTime(d){try{return d.toLocaleTimeString(lang==='vi'?'vi-VN':'en-US',{hour:'numeric',minute:'2-digit'});}catch(e){var h=d.getHours(),m=('0'+d.getMinutes()).slice(-2),ap=h<12?'AM':'PM';return ((h%12)||12)+':'+m+' '+ap;}}
+function toast(m,kind){var e=document.getElementById('toast');e.textContent=m;e.className='toast on'+(kind?' '+kind:'');e.setAttribute('role',kind==='bad'?'alert':'status');e.setAttribute('aria-live',kind==='bad'?'assertive':'polite');clearTimeout(e._t);e._t=setTimeout(function(){e.className='toast';},2400);}
+function storageOK(){try{localStorage.setItem('__bbt','1');localStorage.removeItem('__bbt');return true;}catch(e){return false;}}
 
-/* ---------- session ---------- */
-function getSess(){return read(SKEY,null);}
-function setSess(idx){write(SKEY,{idx:idx,ts:Date.now()});}
-function signOut(){try{localStorage.removeItem(SKEY)}catch(e){}location.hash='';boot();}
-function current(){var s=getSess();if(!s)return null;return PATIENTS[s.idx]?Object.assign({__i:s.idx},PATIENTS[s.idx]):null;}
+/* per-patient persistence namespace */
+function pid(){var s=Auth.session();if(!s)return 'anon';return s.accountId||('demo'+s.patientIdx);}
+function pkey(suffix){return 'bb_pt_'+pid()+'_'+suffix;}
+function current(){var s=Auth.session();if(!s||s.patientIdx==null)return null;var p=PATIENTS[s.patientIdx];return p?Object.assign({__i:s.patientIdx},p):null;}
 
-/* ---------- appointments (deterministic from intake) ---------- */
-function apptsFor(p){
+/* ================= appointments store ================= */
+function apptStore(){return read(pkey('appts'),null);}
+function seedAppt(p){
   var sub=p.submitted?new Date(p.submitted+'T00:00:00'):new Date();
   var next=new Date(sub);next.setDate(next.getDate()+5);next.setHours(10,0,0,0);
-  // if that date is already in the past relative to "today", push to a near-future slot
   var today=new Date();today.setHours(0,0,0,0);
   if(next<today){next=new Date(today);next.setDate(next.getDate()+3);next.setHours(10,0,0,0);}
-  return {
-    upcoming:[{title:(lang==='vi'?'Tư vấn ban đầu':'Initial consultation'),
-      sub:(lang==='vi'?'Xem lại hồ sơ & xét nghiệm của bạn · 45 phút':'Review your intake & labs · 45 min'),
-      when:next,mode:'telehealth',status:'conf'}],
-    past:[]
-  };
+  return [{id:'ap_seed',title:(lang==='vi'?'Tư vấn ban đầu':'Initial consultation'),sub:(lang==='vi'?'Xem lại hồ sơ & xét nghiệm · 45 phút':'Review your intake & labs · 45 min'),when:next.toISOString(),mins:45,mode:'telehealth',status:'conf',confirmed:false}];
 }
+function getAppts(p){var a=apptStore();if(!a){a=seedAppt(p);write(pkey('appts'),a);}return a.map(function(x){return Object.assign({},x,{whenD:new Date(x.when)});}).sort(function(a,b){return a.whenD-b.whenD;});}
+function saveAppts(a){write(pkey('appts'),a.map(function(x){var y=Object.assign({},x);delete y.whenD;return y;}));}
 
-/* ---------- sample lab panel (illustrative) ---------- */
-function sampleLabs(p){
-  var male=(String(p.sex||'').toLowerCase().charAt(0)==='m');
-  var rows=[
-    {a:'Vitamin D, 25-OH',v:'24 ng/mL',r:'30–100',s:'low'},
-    {a:'HbA1c',v:'5.9 %',r:'< 5.7',s:'high'},
-    {a:'TSH',v:'2.1 mIU/L',r:'0.4–4.0',s:'norm'},
-    {a:'Ferritin',v:'58 ng/mL',r:'30–300',s:'norm'}
-  ];
-  if(male)rows.push({a:'Testosterone, total',v:'305 ng/dL',r:'300–900',s:'low'});
-  return rows;
-}
+/* ================= tasks ================= */
+function tasksState(){return read(pkey('tasks'),{});}
+function setTask(k,v){var s=tasksState();s[k]=v;write(pkey('tasks'),s);}
+function consentSigned(){return !!read(pkey('consent'),false);}
 
-/* ---------- NAV ---------- */
+/* ================= NAV ================= */
 var ICN={home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
  plan:'<rect x="5" y="4" width="14" height="17" rx="2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M8 11h8M8 15h6"/>',
  cal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
@@ -400,107 +622,154 @@ var NAV=[
  {g:'gAcct',items:[['profile','nProfile','gear']]}
 ];
 function renderNav(active){
-  var msgN=unreadCount();
+  var msgN=unreadCount();var consentTodo=!consentSigned();
   var h='';
   NAV.forEach(function(grp){
     h+='<div class="grp">'+esc(t(grp.g))+'</div>';
     grp.items.forEach(function(it){
       var key=it[0],lblK=it[1],ic=it[2];
-      var badge=(key==='messages'&&msgN)?'<span class="badge">'+msgN+'</span>':'';
-      h+='<a class="nl'+(key===active?' active':'')+'" href="#'+key+'" onclick="go(\''+key+'\')"><svg viewBox="0 0 24 24">'+ICN[ic]+'</svg><span>'+esc(t(lblK))+'</span>'+badge+'</a>';
+      var extra='';
+      if(key==='messages'&&msgN)extra='<span class="badge">'+msgN+'</span>';
+      if(key==='docs'&&consentTodo)extra='<span class="tdot" role="img" title="'+esc(t('actionNeeded'))+'" aria-label="'+esc(t('actionNeeded'))+'"></span>';
+      h+='<a class="nl'+(key===active?' active':'')+'" href="#'+key+'" onclick="go(\''+key+'\');return false;"'+(key===active?' aria-current="page"':'')+'><svg viewBox="0 0 24 24" aria-hidden="true">'+ICN[ic]+'</svg><span>'+esc(t(lblK))+'</span>'+extra+'</a>';
     });
   });
   document.getElementById('navList').innerHTML=h;
 }
-function unreadCount(){return 0;} // messages open on click; keep simple
+function unreadCount(){var m=read(pkey('msgs'),null);if(!m)return 1;return m.filter(function(x){return x.from==='them'&&!x.read;}).length;}
 
-/* ---------- ROUTER ---------- */
+/* ================= ROUTER ================= */
 var VIEWS={home:renderHome,plan:renderPlan,appts:renderAppts,labs:renderLabs,messages:renderMessages,docs:renderDocs,profile:renderProfile};
 var TITLES={home:'nHome',plan:'nPlan',appts:'nAppts',labs:'nLabs',messages:'nMsg',docs:'nDocs',profile:'nProfile'};
 function go(key){
   if(!VIEWS[key])key='home';
-  if(location.hash!=='#'+key)location.hash='#'+key;
+  if(location.hash!=='#'+key){history.replaceState(null,'','#'+key);}
   renderNav(key);
   document.getElementById('pageTitle').textContent=t(TITLES[key]);
-  var v=document.getElementById('view');v.innerHTML='';VIEWS[key]();v.scrollTop=0;try{window.scrollTo(0,0);}catch(e){}
+  var ra=document.getElementById('routeAnnounce');if(ra)ra.textContent=t(TITLES[key]);
+  closeMenu();
+  var v=document.getElementById('view');v.innerHTML='';
+  try{VIEWS[key]();}catch(e){v.innerHTML='<div class="empty"><div class="em-ic">⚠️</div><p>'+esc(t('loadError'))+'</p><button class="btn" onclick="go(\'home\')">'+esc(t('backHome'))+'</button></div>';if(window.console)console.error(e);}
+  try{window.scrollTo(0,0);}catch(e){}
   closeSideMobile();
 }
 
-/* ---------- VIEWS ---------- */
-function demoBanner(){return '<div class="demo">🔒 <div>'+esc(t('demoNote'))+'</div></div>';}
+/* ================= VIEWS ================= */
+function demoBanner(){return '<div class="demo">🔒 <div>'+t('demoNote')+'</div></div>';}
+function emptyState(icon,msg){return '<div class="empty"><div class="em-ic">'+icon+'</div><p>'+esc(msg)+'</p></div>';}
 
 function renderHome(){
-  var p=current();var f=firstName(p.name);var ap=apptsFor(p);
+  var p=current();var f=firstName(p.name);var ap=getAppts(p);var next=ap.filter(function(a){return a.whenD>=new Date(Date.now()-3600000);})[0];
   var v=document.getElementById('view');
   var h=demoBanner();
   h+='<div class="card hero"><h2>'+esc(t('hello'))+', '+esc(f)+' 👋</h2><p>'+esc(t('welcome'))+'</p>'+
     '<div class="qa">'+
-    '<button class="gold" onclick="openTele()"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/></svg> '+esc(t('qaJoin'))+'</button>'+
+    '<button class="gold" onclick="openTele()">📹 '+esc(t('qaJoin'))+'</button>'+
     '<button onclick="go(\'messages\')">✉️ '+esc(t('qaMsg'))+'</button>'+
     '<button onclick="go(\'plan\')">📋 '+esc(t('qaPlan'))+'</button>'+
-    '<button onclick="go(\'labs\')">🧪 '+esc(t('qaLabs'))+'</button>'+
+    '<button onclick="go(\'appts\')">📅 '+esc(t('qaBook'))+'</button>'+
     '</div></div>';
+  // action tasks
+  h+=renderTasks(p,next);
   h+='<div class="grid2">';
   // next visit
   h+='<div class="card"><div class="lbl">'+esc(t('nextVisit'))+'</div>';
-  if(ap.upcoming.length){var a=ap.upcoming[0];h+=apptRow(a,true);}
-  else h+='<p class="small" style="margin-top:8px">'+esc(t('noVisit'))+'</p>';
+  if(next)h+=apptCard(next,true);
+  else h+='<p class="small" style="margin:10px 0">'+esc(t('noVisit'))+'</p><button class="btn solid" onclick="go(\'appts\')">'+esc(t('bookNow'))+'</button>';
   h+='</div>';
-  // plan snapshot
+  // focus
   h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+
     (p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div>'+
-    '<div style="margin-top:14px"><a href="#plan" onclick="go(\'plan\')">'+esc(t('qaPlan'))+' →</a></div></div>';
+    '<div style="margin-top:14px"><a href="#plan" onclick="go(\'plan\');return false;">'+esc(t('qaPlan'))+' →</a></div></div>';
   h+='</div>';
-  // labs snapshot
-  h+='<div class="card"><div class="lbl">'+esc(t('yourLabs'))+'</div><div style="margin-top:10px">';
-  if((p.labs||[]).length){p.labs.forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+t('underReview'),'<span class="status rev">'+esc(t('underReview'))+'</span>');});}
-  else h+='<p class="small">'+esc(lang==='vi'?'Chưa có xét nghiệm nào được tải lên.':'No labs uploaded yet.')+'</p>';
-  h+='<div style="margin-top:10px"><a href="#labs" onclick="go(\'labs\')">'+esc(t('nLabs'))+' →</a></div></div>';
+  // recent labs + messages
+  h+='<div class="grid2">';
+  h+='<div class="card"><div class="lbl">'+esc(t('recentLabs'))+'</div><div style="margin-top:10px">';
+  if((p.labs||[]).length)p.labs.slice(0,2).forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+(p.submitted||''),'<span class="status rev">'+esc(t('underReview'))+'</span>');});
+  else h+='<p class="small">—</p>';
+  h+='<div style="margin-top:8px"><a href="#labs" onclick="go(\'labs\');return false;">'+esc(t('viewAll'))+' →</a></div></div>';
+  var msgs=getMsgs(p);var lastThem=msgs.filter(function(m){return m.from==='them';}).slice(-1)[0];
+  h+='<div class="card"><div class="lbl">'+esc(t('recentMsgs'))+'</div><div style="margin-top:10px">';
+  if(lastThem)h+='<p class="small" style="line-height:1.5">“'+esc(lastThem.text.slice(0,110))+(lastThem.text.length>110?'…':'')+'”</p>';
+  h+='<div style="margin-top:8px"><a href="#messages" onclick="go(\'messages\');return false;">'+esc(t('viewAll'))+' →</a></div></div>';
+  h+='</div>';
   v.innerHTML=h;
 }
-
-function apptRow(a,withJoin){
-  var d=a.when;
-  var timeStr=d.toLocaleTimeString(lang==='vi'?'vi-VN':'en-US',{hour:'numeric',minute:'2-digit'});
-  var mode=a.mode==='telehealth'?t('telehealth'):t('inperson');
-  var join=withJoin&&a.mode==='telehealth'?'<button class="tbtn" style="background:var(--teal);color:#fff;border:none;font-weight:700" onclick="openTele()">'+esc(t('join'))+'</button>':'';
-  return '<div class="appt"><div class="date"><div class="mo">'+fmtDate(d,false).split(' ')[0]+'</div><div class="dy">'+d.getDate()+'</div></div>'+
-    '<div class="info"><div class="ti">'+esc(a.title)+'</div><div class="me">'+esc(a.sub||'')+'</div>'+
-    '<div style="margin-top:6px"><span class="status conf">'+esc(mode)+'</span> <span class="small mono">· '+timeStr+'</span></div></div>'+
-    '<div>'+join+'</div></div>';
+function renderTasks(p,next){
+  var st=tasksState();
+  var items=[];
+  items.push({k:'consent',done:consentSigned(),t:t('taskConsent'),d:t('taskConsentD'),act:'<button class="btn solid sm" onclick="go(\'docs\')">'+esc(t('doIt'))+'</button>'});
+  items.push({k:'previsit',done:!!st.previsit,t:t('taskPrevisit'),d:t('taskPrevisitD'),act:'<button class="btn sm" onclick="go(\'appts\')">'+esc(t('review'))+'</button>'});
+  if(next)items.push({k:'confirm',done:!!next.confirmed,t:t('taskConfirm'),d:t('taskConfirmD'),act: next.confirmed?'<span class="status ok">'+esc(t('confirmed'))+'</span>':'<button class="btn sm" onclick="confirmAppt(\''+next.id+'\')">'+esc(t('confirm'))+'</button>'});
+  var open=items.filter(function(i){return !i.done;});
+  var h='<div class="card"><div class="lbl">'+esc(t('actionNeeded'))+'</div>';
+  if(!open.length){h+='<div class="task done" style="border:none"><div class="tk-ic">✓</div><div><div class="tk-t">'+esc(t('allDone'))+'</div></div></div>';}
+  else{items.forEach(function(i){h+='<div class="task'+(i.done?' done':'')+'"><div class="tk-ic">'+(i.done?'✓':'!')+'</div><div><div class="tk-t">'+esc(i.t)+'</div><div class="tk-d">'+esc(i.d)+'</div></div><div class="tk-a">'+(i.done?'<span class="status ok">'+esc(t('done'))+'</span>':i.act)+'</div></div>';});}
+  h+='</div>';return h;
 }
+function apptCard(a,withActions){
+  var d=a.whenD;var mode=a.mode==='telehealth'?t('telehealth'):t('inperson');
+  var canJoin=joinable(a);
+  var acts='';
+  if(withActions){
+    acts='<div class="acts">';
+    if(a.mode==='telehealth')acts+= canJoin?'<button class="btn solid sm" onclick="openTele()">'+esc(t('join'))+'</button>':'<button class="btn sm" disabled title="'+esc(t('joinsAt'))+'">'+esc(t('join'))+'</button>';
+    acts+='<button class="btn sm" onclick="addToCalendar(\''+a.id+'\')">'+esc(t('addCal'))+'</button>';
+    acts+='<button class="btn sm ghost" onclick="rescheduleAppt(\''+a.id+'\')">'+esc(t('reschedule'))+'</button>';
+    acts+='</div>';
+  }
+  return '<div class="appt"><div class="date"><div class="mo">'+moArr()[d.getMonth()]+'</div><div class="dy">'+d.getDate()+'</div></div>'+
+    '<div class="info"><div class="ti">'+esc(a.title)+'</div><div class="me">'+esc(a.sub||'')+'</div>'+
+    '<div style="margin-top:6px"><span class="status conf">'+esc(mode)+'</span> <span class="small mono">· '+fmtTime(d)+'</span>'+(a.confirmed?' <span class="status ok">'+esc(t('confirmed'))+'</span>':'')+'</div></div>'+acts+'</div>';
+}
+function joinable(a){var now=Date.now();var start=a.whenD.getTime();var end=start+((a.mins||45)*60000);return now>=start-600000&&now<=end;}
 
 function renderPlan(){
   var p=current();var v=document.getElementById('view');
+  var signDate=p.submitted?new Date(p.submitted+'T00:00:00'):new Date();
   var h=demoBanner();
-  h+='<div class="card"><h3>'+esc(t('planTitle'))+'</h3><div class="csub">'+esc(t('planSub'))+' · Barry Burris, NMD</div>'+
-    '<div class="demo" style="margin:0 0 4px">✍️ <div>'+esc(t('planBanner'))+'</div></div></div>';
+  h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap"><div><h3>'+esc(t('planTitle'))+'</h3><div class="csub">'+esc(t('planSub'))+' · Barry Burris, NMD</div></div>'+
+    '<div style="display:flex;gap:8px"><button class="btn sm" onclick="window.print()">🖨 '+esc(t('print'))+'</button></div></div>'+
+    '<div class="sig" style="margin-top:8px"><div class="tk-ic" style="background:var(--teal-soft);color:var(--teal);width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center">✓</div><div><div class="small">'+esc(t('signedBy'))+'</div><div class="sg">Barry Burris, NMD</div></div><div style="margin-left:auto;text-align:right"><div class="small">'+esc(t('version'))+' 1.0</div><div class="small mono">'+fmtDate(signDate,true)+'</div></div></div>'+
+    '<div class="demo" style="margin:12px 0 0">✍️ <div>'+esc(t('planBanner'))+'</div></div></div>';
   h+='<div class="grid2">';
   h+='<div class="card"><div class="lbl">'+esc(t('goals'))+'</div><p style="margin:8px 0 0;font-size:14px;line-height:1.55">'+esc(p.cc||'')+'</p></div>';
-  h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+
-    (p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('focus'))+'</div><div class="chips" style="margin-top:8px">'+(p.flags||[]).map(function(x){return '<span class="chip">'+esc(x)+'</span>';}).join('')+'</div></div>';
   h+='</div>';
   h+='<div class="card"><div class="lbl">'+esc(t('foundations'))+'</div><div class="grid2" style="margin-top:12px">'+
     foundCard('🥗',t('fNutri'),t('fNutriB'))+foundCard('🚶',t('fMove'),t('fMoveB'))+
     foundCard('😴',t('fSleep'),t('fSleepB'))+foundCard('🧘',t('fStress'),t('fStressB'))+'</div></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('prescribed'))+'</div><div class="note-inline" style="margin-top:10px">'+esc(t('prescribedEmpty'))+'</div></div>';
+  h+='<div class="grid2">';
+  h+='<div class="card"><div class="lbl">'+esc(t('followLabs'))+'</div><div style="margin-top:10px">'+((p.labs||[]).length?p.labs.map(function(fn){return '<div class="small" style="padding:4px 0">• '+esc(fn.replace(/_/g,' ').replace(/\.pdf$/i,''))+'</div>';}).join(''):'<p class="small">—</p>')+'</div></div>';
   h+='<div class="card"><div class="lbl">'+esc(t('provNotes'))+'</div><div class="note-inline" style="margin-top:10px">'+esc(t('provNotesEmpty'))+'</div></div>';
+  h+='</div>';
   v.innerHTML=h;
 }
-function foundCard(ic,ti,body){return '<div style="border:1px solid var(--line);border-radius:12px;padding:13px 15px;background:#fff"><div style="font-size:20px">'+ic+'</div><div style="font-weight:700;margin-top:5px;font-size:14px">'+esc(ti)+'</div><div class="small" style="margin-top:4px;line-height:1.5">'+esc(body)+'</div></div>';}
+function foundCard(ic,ti,body){return '<div class="foundcard"><div style="font-size:20px">'+ic+'</div><div style="font-weight:700;margin-top:5px;font-size:14px">'+esc(ti)+'</div><div class="small" style="margin-top:4px;line-height:1.5">'+esc(body)+'</div></div>';}
 
 function renderAppts(){
-  var p=current();var ap=apptsFor(p);var v=document.getElementById('view');
+  var p=current();var ap=getAppts(p);var v=document.getElementById('view');
+  var up=ap.filter(function(a){return a.whenD>=new Date(Date.now()-3600000);});
+  var past=ap.filter(function(a){return a.whenD<new Date(Date.now()-3600000);});
   var h=demoBanner();
-  h+='<div class="card"><h3>'+esc(t('apptsTitle'))+'</h3><div class="csub">'+esc(t('apptsSub'))+'</div>'+
-    '<div class="lbl" style="margin-top:6px">'+esc(t('upcoming'))+'</div><div style="margin-top:10px">';
-  if(ap.upcoming.length)ap.upcoming.forEach(function(a){h+=apptRow(a,true);});
-  else h+='<p class="small">'+esc(t('noVisit'))+'</p>';
-  h+='</div><div class="lbl" style="margin-top:16px">'+esc(t('past'))+'</div><div style="margin-top:10px">';
-  if(ap.past.length)ap.past.forEach(function(a){h+=apptRow(a,false);});
-  else h+='<p class="small">'+esc(t('noPast'))+'</p>';
-  h+='</div></div>';
+  h+='<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div><h3>'+esc(t('apptsTitle'))+'</h3><div class="csub">'+esc(t('apptsSub'))+'</div></div><button class="btn gold" onclick="openBooking()">＋ '+esc(t('bookNow'))+'</button></div>'+
+    '<div class="lbl" style="margin-top:8px">'+esc(t('upcoming'))+'</div><div style="margin-top:10px">';
+  if(up.length)up.forEach(function(a){h+=apptCard(a,true);});
+  else h+=emptyState('📅',t('noVisit'));
+  h+='</div>';
+  if(up.length){h+='<div class="lbl" style="margin-top:14px">'+esc(t('previsit'))+'</div><div style="margin-top:6px">'+previsitList()+'</div>';}
+  h+='<div class="small" style="margin-top:12px">🕐 '+esc(t('tz'))+'</div></div>';
+  if(past.length){h+='<div class="card"><div class="lbl">'+esc(t('pastV'))+'</div><div style="margin-top:10px">';past.forEach(function(a){h+=apptCard(a,false);});h+='</div></div>';}
   v.innerHTML=h;
 }
+function previsitList(){
+  var st=read(pkey('previsit'),{});
+  var items=[['consent',t('pvConsent'),consentSigned()],['meds',t('pvMeds'),!!st.meds],['quiet',t('pvQuiet'),!!st.quiet],['cam',t('pvCam'),!!st.cam]];
+  return items.map(function(it){var checked=(it[0]==='consent')?consentSigned():!!st[it[0]];return '<label class="check"><input type="checkbox" '+(checked?'checked':'')+(it[0]==='consent'?' disabled':'')+' onchange="togglePrevisit(\''+it[0]+'\',this.checked)"> '+esc(it[1])+(it[0]==='consent'&&!checked?' <a href="#docs" onclick="go(\'docs\');return false;" style="margin-left:6px">'+esc(t('sign'))+' →</a>':'')+'</label>';}).join('');
+}
+function togglePrevisit(k,val){var st=read(pkey('previsit'),{});st[k]=val;write(pkey('previsit'),st);
+  var all=['meds','quiet','cam'].every(function(x){return st[x];})&&consentSigned();setTask('previsit',all);renderNav('appts');}
 
 function renderLabs(){
   var p=current();var v=document.getElementById('view');
@@ -508,218 +777,466 @@ function renderLabs(){
   h+='<div class="card"><h3>'+esc(t('labsTitle'))+'</h3><div class="csub">'+esc(t('labsSub'))+'</div>'+
     '<div class="lbl" style="margin-top:6px">'+esc(t('yourLabs'))+'</div><div style="margin-top:10px">';
   if((p.labs||[]).length)p.labs.forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+(p.submitted||''),'<span class="status rev">'+esc(t('underReview'))+'</span>');});
-  else h+='<p class="small">'+esc(lang==='vi'?'Chưa có xét nghiệm nào.':'No labs uploaded yet.')+'</p>';
+  else h+=emptyState('🧪',lang==='vi'?'Chưa có xét nghiệm nào.':'No labs uploaded yet.');
   h+='</div></div>';
-  // sample results panel
-  h+='<div class="card"><div style="display:flex;align-items:center;gap:9px"><h3 style="font-size:16px">'+esc(t('sampleResult'))+'</h3><span class="chip g">SAMPLE</span></div>'+
-    '<div class="csub" style="margin-top:6px">'+esc(t('sampleResultNote'))+'</div>'+
-    '<div style="overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px"><table class="lab"><thead><tr><th>'+esc(t('analyte'))+'</th><th>'+esc(t('value'))+'</th><th>'+esc(t('range'))+'</th><th>'+esc(t('status'))+'</th></tr></thead><tbody>';
+  // released results (sample)
+  h+='<div class="card"><div style="display:flex;align-items:center;gap:9px"><h3 style="font-size:16px">'+esc(t('released'))+'</h3><span class="chip g">SAMPLE</span></div>'+
+    '<div class="csub" style="margin-top:6px">'+esc(t('resultNote'))+'</div>';
+  h+='<div class="lbl" style="margin-top:6px">'+esc(t('trend'))+'</div><div style="height:200px;margin:8px 0 4px"><canvas id="labChart" role="img" aria-label="'+esc(t('trend'))+'"></canvas></div>';
+  h+='<div style="overflow:auto;border:1px solid var(--line);border-radius:12px;margin-top:6px"><table class="lab"><thead><tr><th>'+esc(t('analyte'))+'</th><th>'+esc(t('value'))+'</th><th style="min-width:130px">'+esc(t('range'))+'</th><th>'+esc(t('statusH'))+'</th></tr></thead><tbody>';
   sampleLabs(p).forEach(function(r){
-    var pill=r.s==='low'?'<span class="flagpill low">'+(lang==='vi'?'Thấp':'Low')+'</span>':r.s==='high'?'<span class="flagpill high">'+(lang==='vi'?'Cao':'High')+'</span>':'<span class="flagpill norm">'+(lang==='vi'?'Bình thường':'In range')+'</span>';
-    h+='<tr><td style="font-weight:600">'+esc(r.a)+'</td><td class="mono">'+esc(r.v)+'</td><td class="mono small">'+esc(r.r)+'</td><td>'+pill+'</td></tr>';
+    var pill=r.s==='low'?'<span class="flagpill low">'+esc(t('low'))+'</span>':r.s==='high'?'<span class="flagpill high">'+esc(t('high'))+'</span>':'<span class="flagpill norm">'+esc(t('inRange'))+'</span>';
+    h+='<tr><td style="font-weight:600">'+esc(r.a)+'</td><td class="mono">'+esc(r.v)+'</td><td><div class="rng"><i style="left:'+r.pct+'%"></i></div><div class="small mono" style="margin-top:3px">'+esc(r.r)+'</div></td><td>'+pill+'</td></tr>';
   });
-  h+='</tbody></table></div><div class="note-inline" style="margin-top:12px">'+esc(t('released'))+'.</div></div>';
+  h+='</tbody></table></div>';
+  h+='<div class="lbl" style="margin-top:14px">'+esc(t('provComment'))+'</div><div class="sig" style="margin-top:6px"><div class="tk-ic" style="width:34px;height:34px;border-radius:9px;background:var(--teal-soft);color:var(--teal);display:flex;align-items:center;justify-content:center">🩺</div><div class="small" style="line-height:1.5">'+esc(t('provCommentTxt'))+'</div></div>';
+  h+='<div style="margin-top:12px"><button class="btn sm" onclick="toast(t(\'toastDemo\'))">⬇︎ '+esc(t('download'))+'</button></div></div>';
   v.innerHTML=h;
+  drawLabChart();
+}
+function sampleLabs(p){
+  var male=(String(p.sex||'').toLowerCase().charAt(0)==='m');
+  var rows=[{a:'Vitamin D, 25-OH',v:'24 ng/mL',r:'30–100',s:'low',pct:12},
+    {a:'HbA1c',v:'5.9 %',r:'< 5.7',s:'high',pct:82},
+    {a:'TSH',v:'2.1 mIU/L',r:'0.4–4.0',s:'norm',pct:46},
+    {a:'Ferritin',v:'58 ng/mL',r:'30–300',s:'norm',pct:40}];
+  if(male)rows.push({a:'Testosterone, total',v:'305 ng/dL',r:'300–900',s:'low',pct:14});
+  return rows;
+}
+function drawLabChart(){
+  if(typeof Chart==='undefined'){var c=document.getElementById('labChart');if(c)c.parentNode.innerHTML='<div class="small" style="padding:20px;text-align:center">'+esc(lang==='vi'?'Biểu đồ xu hướng':'Trend chart')+'</div>';return;}
+  var ctx=document.getElementById('labChart');if(!ctx)return;
+  try{
+   new Chart(ctx,{type:'line',data:{labels:['Dec 2025','Mar 2026','Jun 2026'],datasets:[{label:'Vitamin D (ng/mL)',data:[18,21,24],borderColor:'#0e7c84',backgroundColor:'rgba(14,124,132,.12)',fill:true,tension:.3,pointRadius:4,pointBackgroundColor:'#0e7c84'},{label:'Target ≥ 30',data:[30,30,30],borderColor:'#c9992f',borderDash:[6,5],pointRadius:0,fill:false}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{family:'Inter'},boxWidth:12}}},scales:{y:{beginAtZero:true,suggestedMax:60,ticks:{font:{family:'Inter'}}},x:{ticks:{font:{family:'Inter'}}}}}});
+  }catch(e){}
 }
 
 function docRow(ic,name,meta,right){
   var icons={flask:ICN.flask,doc:ICN.doc,plan:ICN.plan};
   return '<div class="doc"><div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(icons[ic]||ICN.doc)+'</svg></div>'+
-    '<div style="min-width:0"><div class="dn">'+esc(name)+'</div><div class="dm">'+esc(meta)+'</div></div>'+
-    '<div class="da">'+(right||'')+'</div></div>';
+    '<div style="min-width:0"><div class="dn">'+esc(name)+'</div><div class="dm">'+esc(meta)+'</div></div><div class="da">'+(right||'')+'</div></div>';
 }
 
 /* ---------- messages ---------- */
-function msgKey(){return 'bb_pt_msgs_'+(getSess()||{}).idx;}
-function seedMsgs(p){
-  var f=firstName(p.name);
-  return [{from:'them',text:(lang==='vi'?('Xin chào '+f+'! Chúng tôi đã nhận được bảng câu hỏi và xét nghiệm của bạn. Bác sĩ Burris sẽ xem trước buổi khám. Có câu hỏi gì, cứ nhắn tại đây nhé.'):('Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.')),ts:Date.now()-86400000,seed:true}];
-}
-function getMsgs(p){var m=read(msgKey(),null);if(!m){m=seedMsgs(p);write(msgKey(),m);}return m;}
+function seedMsgs(p){var f=firstName(p.name);
+  return [{from:'them',cat:'general',text:(lang==='vi'?('Xin chào '+f+'! Chúng tôi đã nhận được bảng câu hỏi và xét nghiệm của bạn. Bác sĩ Burris sẽ xem trước buổi khám. Có câu hỏi gì, cứ nhắn tại đây nhé.'):('Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Dr. Burris will review everything before your visit. If you have any questions, just reply here.')),ts:Date.now()-86400000,read:false}];}
+function getMsgs(p){var m=read(pkey('msgs'),null);if(!m){m=seedMsgs(p);write(pkey('msgs'),m);}return m;}
+var msgCat='all';
 function renderMessages(){
   var p=current();var v=document.getElementById('view');var msgs=getMsgs(p);
+  msgs.forEach(function(m){if(m.from==='them')m.read=true;});write(pkey('msgs'),msgs);
   var h=demoBanner();
   h+='<div class="card"><h3>'+esc(t('msgTitle'))+'</h3><div class="csub">'+esc(t('msgSub'))+'</div>';
+  h+='<div class="seg" role="group" aria-label="'+esc(t('msgTitle'))+'">'+['all','general','clinical','billing'].map(function(c){return '<button aria-pressed="'+(msgCat===c)+'" class="'+(msgCat===c?'on':'')+'" onclick="setMsgCat(\''+c+'\')">'+esc(t('cat'+c.charAt(0).toUpperCase()+c.slice(1)))+'</button>';}).join('')+'</div>';
   h+='<div class="msgs" id="msgList">';
-  msgs.forEach(function(m){h+=bubble(m);});
+  msgs.filter(function(m){return msgCat==='all'||m.cat===msgCat||m.from==='sys';}).forEach(function(m){h+=bubble(m);});
   h+='</div>';
-  h+='<div class="composer"><input id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()"><button onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
-  h+='</div>';
+  h+='<div class="composer"><button class="btn sm" onclick="attachDemo()" title="'+esc(t('attach'))+'" aria-label="'+esc(t('attach'))+'">📎</button><input type="text" id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()" aria-label="'+esc(t('msgPlaceholder'))+'"><button class="btn solid" onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
+  h+='<div class="small" style="margin-top:8px">🔒 '+esc(t('reply1'))+'</div></div>';
   v.innerHTML=h;
-  var l=document.getElementById('msgList');l.scrollTop=l.scrollHeight;
+  var l=document.getElementById('msgList');if(l)l.scrollTop=l.scrollHeight;
+  renderNav('messages');
 }
+function setMsgCat(c){msgCat=c;renderMessages();}
 function bubble(m){
-  var d=new Date(m.ts);var when=fmtDate(d,false)+' · '+d.toLocaleTimeString(lang==='vi'?'vi-VN':'en-US',{hour:'numeric',minute:'2-digit'});
-  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+esc(m.text)+'<div class="mm">'+(m.from==='me'?(lang==='vi'?'Bạn':'You'):'Barry Burris, NMD')+' · '+when+'</div></div>';
+  if(m.from==='sys')return '<div class="bub sys">'+esc(m.text)+'</div>';
+  var d=new Date(m.ts);var when=fmtDate(d,false)+' · '+fmtTime(d);
+  var att=m.att?'<div class="att">📎 '+esc(m.att)+'</div>':'';
+  var who=(m.from==='me'?(lang==='vi'?'Bạn':'You'):'Barry Burris, NMD');
+  var seen=(m.from==='me'?' · '+t('seen'):'');
+  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+esc(m.text)+att+'<div class="mm">'+who+' · '+when+seen+'</div></div>';
 }
-function sendMsg(){
-  var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
-  var msgs=read(msgKey(),[]);msgs.push({from:'me',text:txt,ts:Date.now()});write(msgKey(),msgs);
-  inp.value='';renderMessages();toast(t('toastSent'));
+function pushMsg(m){var arr=read(pkey('msgs'),[]);arr.push(m);write(pkey('msgs'),arr);}
+function sendMsg(){var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
+  pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:txt,ts:Date.now(),read:true});
+  inp.value='';
+  setTimeout(function(){pushMsg({from:'sys',text:t('ackMsg'),ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
+  renderMessages();toast(t('toastSent'),'good');
 }
+function attachDemo(){var inp=document.getElementById('msgIn');pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:(inp&&inp.value.trim())||(lang==='vi'?'Đã đính kèm tài liệu.':'Attached a document.'),att:'my-document.pdf',ts:Date.now(),read:true});if(inp)inp.value='';renderMessages();toast(t('toastUploaded'),'good');}
 
 /* ---------- documents ---------- */
-function docKey(){return 'bb_pt_docs_'+(getSess()||{}).idx;}
+var docCat='all';
 function renderDocs(){
-  var p=current();var v=document.getElementById('view');
-  var extra=read(docKey(),[]);
+  var p=current();var v=document.getElementById('view');var extra=read(pkey('docs'),[]);
   var h=demoBanner();
-  h+='<div class="card"><h3>'+esc(t('docsTitle'))+'</h3><div class="csub">'+esc(t('docsSub'))+'</div><div style="margin-top:10px">';
-  // intake questionnaire
-  h+=docRow('plan',t('intakeAnswers'),(t('received'))+' · '+(p.submitted||''),'<button class="tbtn" onclick="showIntake()">'+esc(t('view'))+'</button>');
-  // consent (action needed)
-  h+=docRow('doc',(lang==='vi'?'Đồng thuận khám từ xa':'Telehealth consent'),t('actionNeeded'),'<span class="status act" style="margin-right:6px">'+esc(t('actionNeeded'))+'</span><button class="tbtn" onclick="signConsent()">'+esc(t('sign'))+'</button>');
+  h+='<div class="card"><h3>'+esc(t('docsTitle'))+'</h3><div class="csub">'+esc(t('docsSub'))+'</div>';
+  h+='<div style="margin-top:6px">';
+  // consent
+  var signed=consentSigned();
+  h+=docRow('doc',t('consentTitle'),signed?(t('signed')+' · '+fmtDate(new Date(read(pkey('consentTs'),Date.now())),true)):t('needsSign'),
+    signed?'<span class="status ok">'+esc(t('signed'))+'</span>':'<span class="status act">'+esc(t('needsSign'))+'</span> <button class="btn solid sm" onclick="openConsent()">'+esc(t('sign'))+'</button>');
+  // intake
+  h+=docRow('plan',t('intakeAnswers'),t('received')+' · '+(p.submitted||''),'<button class="btn sm" onclick="showIntake()">'+esc(t('view'))+'</button>');
   // labs
-  (p.labs||[]).forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+t('underReview'),'<button class="tbtn" onclick="toast(t(\'toastDemo\'))">'+esc(t('view'))+'</button>');});
+  (p.labs||[]).forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+t('underReview'),'<button class="btn sm" onclick="toast(t(\'toastDemo\'))">'+esc(t('view'))+'</button>');});
   // uploaded extras
   extra.forEach(function(d){h+=docRow('doc',d.name,(lang==='vi'?'Bạn đã tải lên':'You uploaded')+' · '+fmtDate(new Date(d.ts),true),'<span class="status ok">'+esc(lang==='vi'?'Đã gửi':'Sent')+'</span>');});
   h+='</div>';
-  h+='<div style="margin-top:14px"><button class="bigbtn" style="max-width:260px" onclick="uploadDoc()">⬆︎ '+esc(t('upload'))+'</button></div>';
+  h+='<div style="margin-top:14px"><button class="btn gold" onclick="uploadDoc()">⬆︎ '+esc(t('upload'))+'</button></div>';
   h+='<div class="note-inline" style="margin-top:12px">'+esc(t('demoNote'))+'</div></div>';
   v.innerHTML=h;
 }
 function uploadDoc(){
   var name=prompt(lang==='vi'?'Tên tài liệu để tải lên (demo):':'Name of the document to upload (demo):');
-  if(!name)return;var d=read(docKey(),[]);d.push({name:name,ts:Date.now()});write(docKey(),d);renderDocs();toast(t('toastUploaded'));
+  if(!name)return;var d=read(pkey('docs'),[]);d.push({name:name,ts:Date.now()});write(pkey('docs'),d);renderDocs();toast(t('toastUploaded'),'good');
 }
-function signConsent(){toast(t('toastSigned'));}
-function showIntake(){
+function openConsent(){
   var p=current();
-  var sc=p.scores||{};
-  var h='<button class="close" onclick="closeSheet()">×</button><h3>'+esc(t('intakeAnswers'))+'</h3>';
-  h+='<div class="kv"><span class="k">'+esc(t('name'))+'</span><span class="v">'+esc(clean(p.name))+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('cc'))+'</span><span class="v" style="max-width:60%">'+esc(p.cc||'')+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('meds'))+'</span><span class="v" style="max-width:60%;white-space:pre-line">'+esc(p.meds||'—')+'</span></div>';
+  var h='<button class="close" onclick="closeSheet()" aria-label="Close">×</button><h3>'+esc(t('consentTitle'))+'</h3>';
+  h+='<p style="font-size:13.5px;line-height:1.6;color:var(--ink)">'+esc(t('consentBody'))+'</p>';
+  h+='<div class="fld" style="margin-top:14px"><label for="sigName">'+esc(t('typeToSign'))+'</label><input id="sigName" type="text" value="'+esc(clean(p.name))+'"></div>';
+  h+='<label class="check"><input type="checkbox" id="sigAgree"> '+esc(t('agree'))+'</label>';
+  h+='<div style="margin-top:14px;display:flex;gap:9px"><button class="btn solid" onclick="signConsent()">'+esc(t('sign'))+'</button><button class="btn ghost" onclick="closeSheet()">'+esc(t('cancel'))+'</button></div>';
+  openSheet(h);
+}
+function signConsent(){
+  var name=(document.getElementById('sigName')||{}).value||'';var agree=(document.getElementById('sigAgree')||{}).checked;
+  if(!name.trim()){toast(lang==='vi'?'Vui lòng nhập tên để ký':'Please type your name to sign','bad');return;}
+  if(!agree){toast(lang==='vi'?'Vui lòng đánh dấu đồng ý':'Please check the agreement box','bad');return;}
+  write(pkey('consent'),true);write(pkey('consentTs'),Date.now());setTask('consent',true);
+  closeSheet();renderDocs();renderNav((location.hash||'#home').slice(1));toast(t('toastSigned'),'good');
+}
+function showIntake(){
+  var p=current();var sc=p.scores||{};
+  var h='<button class="close" onclick="closeSheet()" aria-label="Close">×</button><h3>'+esc(t('intakeAnswers'))+'</h3>';
+  h+='<div class="kv"><span class="k">'+esc(t('cc'))+'</span><span class="v" style="max-width:62%">'+esc(p.cc||'')+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('meds'))+'</span><span class="v" style="max-width:62%;white-space:pre-line">'+esc(p.meds||'—')+'</span></div>';
   h+='<div class="kv"><span class="k">'+esc(t('allergies'))+'</span><span class="v">'+esc(p.allergies||'—')+'</span></div>';
   h+='<div class="lbl" style="margin:14px 0 6px">'+esc(t('selfScores'))+'</div>';
   h+='<div class="grid2">'+scoreCard(t('energy'),sc.energy)+scoreCard(t('libido'),sc.libido)+scoreCard(t('sleepS'),sc.sleep)+scoreCard(t('mood'),sc.mood)+'</div>';
-  h+='<div class="note-inline" style="margin-top:14px">'+esc(t('demoNote'))+'</div>';
   openSheet(h);
 }
 function scoreCard(lbl,val){val=val==null?'—':val;var pct=(typeof val==='number')?(val*10):0;
-  return '<div style="border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:#fff"><div class="small">'+esc(lbl)+'</div>'+
-   '<div style="font-family:Fraunces,serif;font-weight:700;font-size:20px">'+esc(String(val))+'<span class="small" style="font-weight:400"> / 10</span></div>'+
-   '<div style="height:6px;background:#eee4cf;border-radius:99px;margin-top:6px;overflow:hidden"><div style="height:100%;width:'+pct+'%;background:var(--teal)"></div></div></div>';}
+  return '<div class="foundcard"><div class="small">'+esc(lbl)+'</div><div style="font-family:Fraunces,serif;font-weight:700;font-size:20px">'+esc(String(val))+'<span class="small" style="font-weight:400"> / 10</span></div><div class="progress" style="margin-top:6px"><i style="width:'+pct+'%"></i></div></div>';}
 
 /* ---------- profile ---------- */
+function profileData(){return read(pkey('profile'),null);}
 function renderProfile(){
-  var p=current();var v=document.getElementById('view');
+  var p=current();var v=document.getElementById('view');var pr=profileData()||{};var s=Auth.session();
   var h=demoBanner();
-  h+='<div class="card"><h3>'+esc(t('profileTitle'))+'</h3><div class="csub">'+esc(t('profileSub'))+'</div><div style="margin-top:8px">';
-  h+='<div class="kv"><span class="k">'+esc(t('name'))+'</span><span class="v">'+esc(clean(p.name))+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('sexL'))+'</span><span class="v">'+esc(p.sex||'—')+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('dobL'))+'</span><span class="v mono">'+esc(p.dob||'—')+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('ageL'))+'</span><span class="v">'+esc(String(ageOf(p.dob)))+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('langPref'))+'</span><span class="v">'+(lang==='vi'?'Tiếng Việt':'English')+'</span></div>';
-  h+='<div class="kv"><span class="k">'+esc(t('contact'))+'</span><span class="v small">'+esc(lang==='vi'?'Thêm khi có tài khoản thật':'Added with your real account')+'</span></div>';
-  h+='</div><div style="margin-top:14px"><button class="tbtn" onclick="toast(t(\'toastDemo\'))">'+esc(t('update'))+'</button></div>';
-  h+='<div class="note-inline" style="margin-top:12px">'+esc(t('demoNote'))+'</div></div>';
+  h+='<div class="card"><h3>'+esc(t('profileTitle'))+'</h3><div class="csub">'+esc(t('profileSub'))+'</div>';
+  h+='<div class="lbl" style="margin-top:6px">'+esc(t('personal'))+'</div>';
+  h+='<div class="grid2" style="margin-top:8px">'+
+     fld('pf_name',t('name'),pr.name!=null?pr.name:clean(p.name))+
+     fld('pf_pref',t('prefName'),pr.pref!=null?pr.pref:firstName(p.name))+
+     fld('pf_phone',t('phone'),pr.phone||'', 'tel')+
+     fld('pf_email',t('email'),(s&&s.email)||pr.email||'', 'email')+'</div>';
+  h+='<div class="kv"><span class="k">'+esc(lang==='vi'?'Giới tính · Tuổi':'Sex · Age')+'</span><span class="v">'+esc(p.sex||'—')+' · '+esc(String(ageOf(p.dob)))+'</span></div>';
+  h+='<div style="margin-top:12px"><button class="btn solid" onclick="saveProfile()">'+esc(t('save'))+'</button></div></div>';
+  // emergency contact
+  h+='<div class="card"><div class="lbl">'+esc(t('emergency'))+'</div><div class="grid2" style="margin-top:8px">'+
+     fld('ec_name',t('ecName'),pr.ecName||'')+fld('ec_phone',t('ecPhone'),pr.ecPhone||'','tel')+fld('ec_rel',t('ecRel'),pr.ecRel||'')+'</div></div>';
+  // preferences
+  h+='<div class="card"><div class="lbl">'+esc(t('prefs'))+'</div>';
+  h+='<div class="kv"><span class="k">'+esc(t('langPref'))+'</span><span class="v"><button class="btn sm'+(lang==='en'?' solid':'')+'" onclick="setLang(\'en\')">English</button> <button class="btn sm'+(lang==='vi'?' solid':'')+'" onclick="setLang(\'vi\')">Tiếng Việt</button></span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('notifEmail'))+'</span><span class="v">'+sw('nt_email',pr.ntEmail!==false)+'</span></div>';
+  h+='<div class="kv"><span class="k">'+esc(t('notifSms'))+'</span><span class="v">'+sw('nt_sms',!!pr.ntSms)+'</span></div></div>';
+  // security
+  h+='<div class="card"><div class="lbl">'+esc(t('security'))+'</div>';
+  h+='<div class="kv"><span class="k">'+esc(t('lastSignin'))+'</span><span class="v mono">'+(s?fmtDate(new Date(s.ts),true)+' · '+fmtTime(new Date(s.ts)):'—')+'</span></div>';
+  h+='<div style="margin-top:12px;display:flex;gap:9px;flex-wrap:wrap"><button class="btn" onclick="changePass()">'+esc(t('changePass'))+'</button><button class="btn ghost" onclick="signOutAll()">'+esc(t('signoutAll'))+'</button></div></div>';
+  h+='<div class="card"><div class="lbl">'+esc(t('insurance'))+'</div><p class="small" style="margin-top:8px">'+esc(t('addLater'))+'</p></div>';
   v.innerHTML=h;
 }
+function fld(id,label,val,type){return '<div class="fld"><label for="'+id+'">'+esc(label)+'</label><input id="'+id+'" type="'+(type||'text')+'" value="'+esc(val)+'"></div>';}
+function sw(id,on){return '<label class="switch"><input type="checkbox" id="'+id+'" '+(on?'checked':'')+'><span class="sl"></span></label>';}
+function saveProfile(){
+  var g=function(id){return (document.getElementById(id)||{}).value||'';};
+  var gc=function(id){return !!(document.getElementById(id)||{}).checked;};
+  var email=g('pf_email');
+  if(email&&!Auth.validEmail(email)){toast(lang==='vi'?'Email không hợp lệ':'Please enter a valid email','bad');return;}
+  write(pkey('profile'),{name:g('pf_name'),pref:g('pf_pref'),phone:g('pf_phone'),email:email,ecName:g('ec_name'),ecPhone:g('ec_phone'),ecRel:g('ec_rel'),ntEmail:gc('nt_email'),ntSms:gc('nt_sms')});
+  var pr=profileData();if(pr&&pr.name){document.getElementById('whoName').textContent=pr.name;document.getElementById('topName').textContent=pr.name;document.getElementById('whoAv').textContent=initials(pr.name);document.getElementById('topAv').textContent=initials(pr.name);}
+  toast(t('toastSaved'),'good');
+}
+function changePass(){toast(Auth.getMode()==='live'?t('toastDemo'):(lang==='vi'?'Trong bản thật, đổi mật khẩu xử lý trên backend bảo mật.':'In the live version, password changes are handled on the secure backend.'));}
+function signOutAll(){Auth.signOut();boot();}
 
-/* ---------- telehealth ---------- */
-var teleStream=null,micOn=true,camOn=false;
+/* ================= booking ================= */
+var bookSel={type:'initial',day:null,time:null};
+function openBooking(){bookSel={type:'initial',day:null,time:null};renderBooking();}
+function renderBooking(){
+  var h='<button class="close" onclick="closeSheet()" aria-label="Close">×</button><h3>'+esc(t('booking'))+'</h3>';
+  h+='<div class="lbl" style="margin-top:6px">'+esc(t('bookType'))+'</div><div class="seg" style="margin-top:6px">'+
+    [['initial',t('bookInitial')],['follow',t('bookFollow')],['lab',t('bookLab')]].map(function(x){return '<button aria-pressed="'+(bookSel.type===x[0])+'" class="'+(bookSel.type===x[0]?'on':'')+'" onclick="bookSet(\'type\',\''+x[0]+'\')">'+esc(x[1])+'</button>';}).join('')+'</div>';
+  h+='<div class="lbl">'+esc(t('pickDay'))+'</div><div class="seg" style="margin-top:6px;max-height:96px;overflow:auto">'+bookDays()+'</div>';
+  h+='<div class="lbl">'+esc(t('pickTime'))+'</div><div id="bookTimes" style="margin-top:6px">'+bookTimes()+'</div>';
+  h+='<div style="margin-top:16px;display:flex;gap:9px;align-items:center"><button class="btn solid" id="bookConfirm" onclick="confirmBooking()" '+(bookSel.day&&bookSel.time?'':'disabled')+'>'+esc(t('confirmBook'))+'</button><span class="small">🕐 '+esc(t('tz'))+'</span></div>';
+  openSheet(h);
+}
+function bookSet(k,v){bookSel[k]=v;if(k==='day')bookSel.time=null;renderBooking();}
+function bookDays(){
+  var out='';var d=new Date();d.setHours(0,0,0,0);var count=0;
+  while(count<10){d.setDate(d.getDate()+1);var wd=d.getDay();if(wd===0||wd===6)continue;count++;
+    var key=d.toISOString().slice(0,10);
+    out+='<button aria-pressed="'+(bookSel.day===key)+'" class="'+(bookSel.day===key?'on':'')+'" onclick="bookSet(\'day\',\''+key+'\')">'+moArr()[d.getMonth()]+' '+d.getDate()+'</button>';}
+  return out;
+}
+function bookTimes(){
+  if(!bookSel.day)return '<p class="small">'+esc(lang==='vi'?'Chọn ngày trước.':'Choose a day first.')+'</p>';
+  var slots=['09:00','10:30','13:00','14:30','16:00'];
+  var seed=0;for(var i=0;i<bookSel.day.length;i++)seed+=bookSel.day.charCodeAt(i);
+  var out='<div class="seg">';var any=false;
+  slots.forEach(function(sl,ix){var taken=((seed+ix*7)%10)<4;if(taken){out+='<button disabled style="opacity:.45">'+sl+' · '+esc(t('taken'))+'</button>';}else{any=true;out+='<button aria-pressed="'+(bookSel.time===sl)+'" class="'+(bookSel.time===sl?'on':'')+'" onclick="bookSet(\'time\',\''+sl+'\')">'+sl+'</button>';}});
+  out+='</div>';if(!any)out+='<p class="small">'+esc(t('noSlots'))+'</p>';return out;
+}
+function confirmBooking(){
+  if(!bookSel.day||!bookSel.time)return;
+  var p=current();var when=new Date(bookSel.day+'T'+bookSel.time+':00');
+  var titles={initial:t('bookInitial'),follow:t('bookFollow'),lab:t('bookLab')};
+  var mins={initial:45,follow:25,lab:25};
+  var a=apptStore()||seedAppt(p);
+  a.push({id:'ap_'+Date.now(),title:(titles[bookSel.type]||t('bookInitial')).replace(/\s*\([^)]*\)\s*$/,''),sub:(lang==='vi'?'Khám từ xa':'Telehealth')+' · '+bookSel.time,when:when.toISOString(),mins:mins[bookSel.type]||45,mode:'telehealth',status:'conf',confirmed:true});
+  write(pkey('appts'),a);
+  closeSheet();go('appts');toast(t('toastBooked'),'good');
+}
+function confirmAppt(id){var a=apptStore()||[];a=a.map(function(x){return x.id===id?Object.assign(x,{confirmed:true}):x;});write(pkey('appts'),a);setTask('confirm',true);go((location.hash||'#home').slice(1));toast(t('toastConfirmed'),'good');}
+function rescheduleAppt(id){openBooking();}
+function addToCalendar(id){
+  var a=(apptStore()||[]).filter(function(x){return x.id===id;})[0];if(!a)return;
+  var d=new Date(a.when);var end=new Date(d.getTime()+((a.mins||45)*60000));
+  function z(x){return ('0'+x).slice(-2);}function ics(dt){return dt.getUTCFullYear()+z(dt.getUTCMonth()+1)+z(dt.getUTCDate())+'T'+z(dt.getUTCHours())+z(dt.getUTCMinutes())+'00Z';}
+  var body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Barry Burris NMD//Portal//EN','BEGIN:VEVENT','UID:'+id+'@barryburris','DTSTAMP:'+ics(new Date()),'DTSTART:'+ics(d),'DTEND:'+ics(end),'SUMMARY:'+(a.title||'Telehealth visit')+' — Barry Burris, NMD','DESCRIPTION:'+(a.sub||''),'END:VEVENT','END:VCALENDAR'].join('\r\n');
+  try{var blob=new Blob([body],{type:'text/calendar'});var url=URL.createObjectURL(blob);var link=document.createElement('a');link.href=url;link.download='visit.ics';document.body.appendChild(link);link.click();document.body.removeChild(link);setTimeout(function(){URL.revokeObjectURL(url);},1000);toast(t('toastCalendar'),'good');}catch(e){toast(t('toastDemo'));}
+}
+
+/* ================= telehealth ================= */
+var teleStream=null,micOn=true,camOn=false,teleTimer=null,connState='connecting',_teleReturn=null;
 function openTele(){
-  var p=current();
   document.getElementById('teleTitle').textContent=(lang==='vi'?'Khám từ xa':'Telehealth visit');
-  document.getElementById('teleSub').textContent='Barry Burris, NMD';
-  document.getElementById('teleNote').textContent=(lang==='vi'?'Phòng minh họa — video trực tiếp chạy trên backend bảo mật':'Demonstration room — live video runs on the secure backend');
-  document.getElementById('teleStatusTxt').textContent=t('teleConnecting');
+  document.getElementById('teleNote').textContent=t('teleNoteTxt');
   document.getElementById('teleLeave').textContent=t('leave');
   document.getElementById('selfPlaceholder').textContent=t('camOff');
+  document.getElementById('capMic').textContent=t('mic');
+  document.getElementById('capCam').textContent=t('camera');
+  document.getElementById('capChat').textContent=t('chat');
+  document.getElementById('pjTitle').textContent=t('pjTitle');
+  document.getElementById('pjSub').textContent=t('pjSub');
+  document.getElementById('pjCamL').textContent=t('pjCam');
+  document.getElementById('pjMicL').textContent=t('pjMic');
+  document.getElementById('pjTest').textContent=t('pjTest');
+  document.getElementById('pjJoin').textContent=t('pjJoin');
+  document.getElementById('pjNote').textContent=t('pjNote');
+  document.getElementById('pjPrevTxt').textContent=t('pjCam');
+  document.getElementById('tchH').textContent=(lang==='vi'?'Trò chuyện trong buổi khám':'In-visit chat');
+  document.getElementById('prejoin').style.display='flex';
+  document.getElementById('teleChat').classList.add('hide2');
+  _teleReturn=document.activeElement;
   document.getElementById('tele').classList.add('on');
-  // simulate the provider joining a "waiting room"
-  clearTimeout(window._teleT);
-  window._teleT=setTimeout(function(){
-    var st=document.getElementById('teleStatus');
-    st.innerHTML='<span style="width:9px;height:9px;border-radius:50%;background:#57d38a;display:inline-block"></span> <span>'+esc(t('teleWaiting'))+'</span>';
+  document.getElementById('tele').setAttribute('aria-hidden','false');
+  document.getElementById('app').setAttribute('aria-hidden','true');
+  setTimeout(function(){var j=document.getElementById('pjJoin');if(j)j.focus();},30);
+  enumerateDevices();
+}
+function enumerateDevices(){
+  if(!navigator.mediaDevices||!navigator.mediaDevices.enumerateDevices)return;
+  navigator.mediaDevices.enumerateDevices().then(function(list){
+    var cams=list.filter(function(d){return d.kind==='videoinput';});var mics=list.filter(function(d){return d.kind==='audioinput';});
+    var cs=document.getElementById('pjCam'),ms=document.getElementById('pjMic');
+    cs.innerHTML=cams.length?cams.map(function(d,i){return '<option value="'+esc(d.deviceId)+'">'+esc(d.label||('Camera '+(i+1)))+'</option>';}).join(''):'<option>'+esc(lang==='vi'?'Camera mặc định':'Default camera')+'</option>';
+    ms.innerHTML=mics.length?mics.map(function(d,i){return '<option value="'+esc(d.deviceId)+'">'+esc(d.label||('Microphone '+(i+1)))+'</option>';}).join(''):'<option>'+esc(lang==='vi'?'Micro mặc định':'Default microphone')+'</option>';
+  }).catch(function(){});
+}
+function pjToggleCam(){
+  var prev=document.getElementById('pjPrev');
+  if(teleStream){stopStream();prev.innerHTML='<span id="pjPrevTxt">'+esc(t('pjCam'))+'</span>';document.getElementById('pjTest').textContent=t('pjTest');return;}
+  startStream(function(s){var vid=document.createElement('video');vid.autoplay=true;vid.playsInline=true;vid.muted=true;vid.srcObject=s;prev.innerHTML='';prev.appendChild(vid);document.getElementById('pjTest').textContent=t('camOff');enumerateDevices();});
+}
+function pjJoin(){
+  document.getElementById('prejoin').style.display='none';
+  // carry the preview stream into the room self-tile
+  if(teleStream){attachSelf(teleStream);camOn=true;document.getElementById('camBtn2').classList.remove('off');}
+  connState='connecting';document.getElementById('teleStatusTxt').textContent=t('teleConnecting');
+  setConn(1);
+  clearTimeout(window._t1);window._t1=setTimeout(function(){setConn(2);},900);
+  clearTimeout(window._t2);window._t2=setTimeout(function(){
+    connState='waiting';var st=document.getElementById('teleStatus');st.innerHTML='<span style="width:9px;height:9px;border-radius:50%;background:#57d38a;display:inline-block"></span> <span>'+esc(t('teleWaiting'))+'</span>';setConn(3);
+    startTeleTimer();
   },2600);
 }
-function leaveTele(){
-  document.getElementById('tele').classList.remove('on');
-  stopCam();
-}
-function toggleMic(){micOn=!micOn;document.getElementById('micBtn').classList.toggle('off',!micOn);}
-function toggleCam(){camOn?stopCam():startCam();}
-function startCam(){
-  var tile=document.getElementById('selfTile');
+function setConn(level){var b=document.getElementById('connBars');if(!b)return;var h='';for(var i=1;i<=3;i++)h+='<i class="'+(i<=level?'on':'')+'" style="height:'+(5+i*3)+'px"></i>';b.innerHTML=h;document.getElementById('connTxt').textContent=level>=3?t('teleConnected'):'';}
+function startTeleTimer(){var start=Date.now();clearInterval(teleTimer);teleTimer=setInterval(function(){var s=Math.floor((Date.now()-start)/1000);var mm=Math.floor(s/60),ss=('0'+(s%60)).slice(-2);var el=document.getElementById('connTxt');if(el)el.textContent=t('teleConnected')+' · '+mm+':'+ss;},1000);}
+function startStream(cb){
   if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){toast(t('toastDemo'));return;}
-  navigator.mediaDevices.getUserMedia({video:true,audio:false}).then(function(s){
-    teleStream=s;camOn=true;document.getElementById('camBtn').classList.remove('off');
-    var vid=document.createElement('video');vid.autoplay=true;vid.playsInline=true;vid.muted=true;vid.srcObject=s;
-    tile.innerHTML='';tile.appendChild(vid);var lb=document.createElement('span');lb.className='selflbl';lb.textContent=(lang==='vi'?'Bạn':'You');tile.appendChild(lb);
-  }).catch(function(){toast(lang==='vi'?'Không truy cập được camera':'Camera not available');});
+  navigator.mediaDevices.getUserMedia({video:true,audio:false}).then(function(s){teleStream=s;if(cb)cb(s);}).catch(function(){toast(lang==='vi'?'Không truy cập được camera':'Camera not available','bad');});
 }
-function stopCam(){
-  camOn=false;document.getElementById('camBtn').classList.add('off');
-  if(teleStream){teleStream.getTracks().forEach(function(tk){tk.stop();});teleStream=null;}
-  var tile=document.getElementById('selfTile');tile.innerHTML='<span id="selfPlaceholder">'+esc(t('camOff'))+'</span>';
+function attachSelf(s){var tile=document.getElementById('selfTile');var vid=document.createElement('video');vid.autoplay=true;vid.playsInline=true;vid.muted=true;vid.srcObject=s;tile.innerHTML='';tile.appendChild(vid);var lb=document.createElement('span');lb.className='selflbl';lb.textContent=(lang==='vi'?'Bạn':'You');tile.appendChild(lb);}
+function stopStream(){if(teleStream){teleStream.getTracks().forEach(function(tk){tk.stop();});teleStream=null;}}
+function toggleMic(){micOn=!micOn;document.getElementById('micBtn').classList.toggle('off',!micOn);document.getElementById('micBtn').setAttribute('aria-pressed',(!micOn).toString());}
+function toggleCam(){if(camOn){stopStream();camOn=false;document.getElementById('camBtn2').classList.add('off');document.getElementById('camBtn2').setAttribute('aria-pressed','false');document.getElementById('selfTile').innerHTML='<span>'+esc(t('camOff'))+'</span>';}else{startStream(function(s){camOn=true;document.getElementById('camBtn2').classList.remove('off');document.getElementById('camBtn2').setAttribute('aria-pressed','true');attachSelf(s);});}}
+function toggleTchat(){var open=document.getElementById('teleChat').classList.toggle('hide2');document.getElementById('chatBtn').classList.toggle('off');document.getElementById('chatBtn').setAttribute('aria-pressed',(!open).toString());}
+function tchSend(){var inp=document.getElementById('tchIn');var txt=(inp.value||'').trim();if(!txt)return;var b=document.getElementById('tchB');var d=document.createElement('div');d.className='tch-msg';d.innerHTML='<span class="who">'+(lang==='vi'?'Bạn':'You')+'</span><br>'+esc(txt);b.appendChild(d);inp.value='';b.scrollTop=b.scrollHeight;}
+function leaveTele(){document.getElementById('tele').classList.remove('on');document.getElementById('tele').setAttribute('aria-hidden','true');document.getElementById('app').removeAttribute('aria-hidden');clearInterval(teleTimer);clearTimeout(window._t1);clearTimeout(window._t2);stopStream();camOn=false;document.getElementById('camBtn2').classList.add('off');document.getElementById('camBtn2').setAttribute('aria-pressed','false');document.getElementById('selfTile').innerHTML='<span id="selfPlaceholder">'+esc(t('camOff'))+'</span>';if(_teleReturn&&_teleReturn.focus){try{_teleReturn.focus();}catch(e){}}}
+
+/* ================= sheet / menu ================= */
+var _lastFocus=null;
+function focusables(c){return Array.prototype.filter.call(c.querySelectorAll('a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])'),function(el){return el.offsetParent!==null||el===document.activeElement;});}
+function trapTab(e,c){if(e.key!=='Tab')return;var f=focusables(c);if(!f.length)return;var first=f[0],last=f[f.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}}
+function openSheet(html){_lastFocus=document.activeElement;var sh=document.getElementById('sheet');sh.innerHTML=html;var hh=sh.querySelector('h3');if(hh){if(!hh.id)hh.id='sheetTitle';sh.setAttribute('aria-labelledby',hh.id);}document.getElementById('scrim').classList.add('on');document.getElementById('app').setAttribute('aria-hidden','true');setTimeout(function(){var f=focusables(sh)[0];(f||sh).focus();},10);}
+function closeSheet(){document.getElementById('scrim').classList.remove('on');document.getElementById('app').removeAttribute('aria-hidden');if(_lastFocus&&_lastFocus.focus){try{_lastFocus.focus();}catch(e){}}}
+function toggleMenu(){var m=document.getElementById('acctMenu');var willOpen=m.classList.contains('hide');m.classList.toggle('hide');document.getElementById('acctBtn').setAttribute('aria-expanded',willOpen.toString());}
+function closeMenu(){var m=document.getElementById('acctMenu');if(m)m.classList.add('hide');var b=document.getElementById('acctBtn');if(b)b.setAttribute('aria-expanded','false');}
+function buildMenu(){
+  var h='<a href="#profile" onclick="go(\'profile\');return false;">⚙︎ '+esc(t('menuProfile'))+'</a>'+
+    '<button onclick="go(\'profile\');closeMenu()">🔒 '+esc(t('menuSecurity'))+'</button><div class="sep"></div>'+
+    '<button onclick="signOut()">↪ '+esc(t('menuSignout'))+'</button>';
+  document.getElementById('acctMenu').innerHTML=h;
 }
+document.addEventListener('click',function(e){var m=document.getElementById('acctMenu'),b=document.getElementById('acctBtn');if(m&&!m.classList.contains('hide')&&!m.contains(e.target)&&b&&!b.contains(e.target))closeMenu();});
 
-/* ---------- sheet ---------- */
-function openSheet(html){document.getElementById('sheet').innerHTML=html;document.getElementById('scrim').classList.add('on');}
-function closeSheet(){document.getElementById('scrim').classList.remove('on');}
-
-/* ---------- sign-in ---------- */
+/* ================= sign-in flow ================= */
+var authMode='signin',peek=false,pickOpen=false;
+function paintSignin(){
+  document.getElementById('siRibbon').innerHTML=t('ribbon');
+  document.getElementById('siTag').innerHTML=t('tag');
+  document.getElementById('siValueH').textContent=t('valueH');
+  document.getElementById('siValueP').textContent=t('valueP');
+  document.getElementById('siFeats').innerHTML=[['📹','f1t','f1d'],['📋','f2t','f2d'],['✉️','f3t','f3d']].map(function(f){return '<div class="si-feat"><div class="fi">'+f[0]+'</div><div><div class="ft">'+esc(t(f[1]))+'</div><div class="fd">'+esc(t(f[2]))+'</div></div></div>';}).join('');
+  document.getElementById('tabSignin').textContent=t('tabSignin');
+  document.getElementById('tabCreate').textContent=t('tabCreate');
+  document.getElementById('lName').textContent=t('name');
+  document.getElementById('lEmail').textContent=t('email');
+  document.getElementById('lPass').textContent=t('password');
+  document.getElementById('peekBtn').textContent=peek?t('hide'):t('show');
+  document.getElementById('forgotBtn').textContent=t('forgot');
+  document.getElementById('siExploreL').textContent=t('exploreL');
+  document.getElementById('exploreBtn').textContent=pickOpen?t('hidePick'):t('exploreBtn');
+  document.getElementById('passHint').textContent=t('passHintNew');
+  document.getElementById('siFoot').innerHTML=t('foot')+' <b>Accelerated Experiences, LLC</b>';
+  document.getElementById('authSubmit').textContent=authMode==='signin'?t('signinBtn'):t('createBtn');
+  document.getElementById('fName').style.display=authMode==='create'?'block':'none';
+  document.getElementById('strWrap').style.display=authMode==='create'?'block':'none';
+  document.getElementById('passHint').style.display=authMode==='create'?'block':'none';
+  document.getElementById('aPass').setAttribute('autocomplete',authMode==='create'?'new-password':'current-password');
+  document.getElementById('tabSignin').classList.toggle('on',authMode==='signin');document.getElementById('tabSignin').setAttribute('aria-selected',(authMode==='signin').toString());
+  document.getElementById('tabCreate').classList.toggle('on',authMode==='create');document.getElementById('tabCreate').setAttribute('aria-selected',(authMode==='create').toString());
+}
+function authTab(m){authMode=m;['eName','eEmail','ePass','eForm'].forEach(function(id){document.getElementById(id).textContent='';});paintSignin();}
+function togglePeek(){peek=!peek;document.getElementById('aPass').type=peek?'text':'password';document.getElementById('peekBtn').textContent=peek?t('hide'):t('show');}
+function togglePick(){pickOpen=!pickOpen;document.getElementById('pickWrap').style.display=pickOpen?'block':'none';document.getElementById('exploreBtn').textContent=pickOpen?t('hidePick'):t('exploreBtn');if(pickOpen)renderPick();}
+document.getElementById('aPass').addEventListener('input',function(){
+  if(authMode!=='create')return;var issues=Auth.passIssues(this.value);var score=3-issues.length;var bar=document.getElementById('strBar');
+  var w=[8,38,70,100][Math.max(0,score)];var col=['#c0503f','#c0503f','#c9992f','#3f6b2b'][Math.max(0,score)];bar.style.width=w+'%';bar.style.background=col;
+});
+function authErrMsg(code){var m={name:t('errName'),email_invalid:t('errEmailInvalid'),pass_rules:t('errPassRules'),exists:t('errExists'),login:t('errLogin')};return m[code];}
+function submitAuth(e){
+  e.preventDefault();
+  ['eName','eEmail','ePass','eForm'].forEach(function(id){document.getElementById(id).textContent='';});
+  ['aName','aEmail','aPass'].forEach(function(id){var el=document.getElementById(id);el.classList.remove('bad');el.setAttribute('aria-invalid','false');});
+  var name=document.getElementById('aName').value,email=document.getElementById('aEmail').value,pass=document.getElementById('aPass').value;
+  var btn=document.getElementById('authSubmit');btn.disabled=true;var oldTxt=btn.textContent;btn.innerHTML='<span class="spinner"></span>';
+  var promise=authMode==='create'?Auth.register({name:name,email:email,password:pass}):Auth.login({email:email,password:pass});
+  promise.then(function(r){
+    btn.disabled=false;btn.textContent=oldTxt;
+    if(!r.ok){
+      var map={name:'eName',email:'eEmail',password:'ePass',form:'eForm'};
+      var eid=map[r.field]||'eForm';
+      document.getElementById(eid).textContent=authErrMsg(r.code)||r.error||t('errGeneric');
+      var inp={name:'aName',email:'aEmail',password:'aPass'}[r.field];
+      if(inp){var el=document.getElementById(inp);el.classList.add('bad');el.setAttribute('aria-invalid','true');el.focus();}
+      else{document.getElementById('aPass').focus();}
+      return;
+    }
+    // signed in; if no patient linked yet (fresh account) link to a sample so the demo has data
+    var s=Auth.session();if(s&&s.patientIdx==null&&PATIENTS.length){Auth.linkPatient(0);}
+    if(!current()){document.getElementById('eForm').textContent=t('errGeneric');return;}
+    toast(authMode==='create'?t('welcomeBack'):(t('hello')+'!'),'good');
+    location.hash='#home';boot();
+  }).catch(function(){btn.disabled=false;btn.textContent=oldTxt;document.getElementById('eForm').textContent=t('errGeneric');});
+  return false;
+}
+function forgot(){
+  var email=document.getElementById('aEmail').value;
+  Auth.requestReset(email).then(function(){toast(t('toastReset'));});
+}
 function renderPick(){
-  var g=document.getElementById('pickGrid');
-  g.innerHTML=PATIENTS.map(function(p,i){
-    return '<button class="pcard" onclick="enter('+i+')"><div class="pn">'+esc(clean(p.name))+'</div>'+
-      '<div class="pm">'+esc(ageOf(p.dob))+' · '+esc(p.sex||'')+' · '+esc(lang==='vi'?'Nộp':'Submitted')+' '+esc(p.submitted||'')+'</div>'+
-      '<span class="ptag">'+esc(p.tag||'')+'</span></button>';
+  document.getElementById('pickGrid').innerHTML=PATIENTS.map(function(p,i){
+    return '<button class="pcard" onclick="enterDemo('+i+')"><div class="pn">'+esc(clean(p.name))+'</div>'+
+      '<div class="pm">'+esc(ageOf(p.dob))+' · '+esc(p.sex||'')+'</div><span class="ptag">'+esc(p.tag||'')+'</span></button>';
   }).join('');
 }
-function enter(i){setSess(i);location.hash='#home';boot();}
-function demoLogin(e){e.preventDefault();toast(t('mini'));return false;}
+function enterDemo(i){Auth.demoEnter(i,clean(PATIENTS[i].name));location.hash='#home';boot();}
+function signOut(){Auth.signOut();location.hash='';boot();}
 
-/* ---------- language ---------- */
+/* ================= language ================= */
 function setLang(l){lang=l;try{localStorage.setItem('bb_pt_lang',l)}catch(e){}
-  document.getElementById('langEn').classList.toggle('on',l==='en');
-  document.getElementById('langVi').classList.toggle('on',l==='vi');
   document.documentElement.lang=(l==='vi'?'vi':'en');
-  paintStatic();
-  if(!document.getElementById('app').classList.contains('hide')&&current()){var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
-  else renderPick();
-}
-function paintStatic(){
-  // sign-in static strings
-  document.getElementById('siRibbon').textContent=t('ribbon');
-  document.getElementById('siTag').innerHTML=esc(t('ptag'));
-  document.getElementById('siPickH').textContent=t('pickH');
-  document.getElementById('siPickS').textContent=t('pickS');
-  document.getElementById('siLoginH').textContent=t('loginH');
-  document.getElementById('siLoginS').textContent=t('loginS');
-  document.getElementById('siEmailL').textContent=t('email');
-  document.getElementById('siPassL').textContent=t('pass');
-  document.getElementById('siBtn').textContent=t('signin');
-  document.getElementById('siMini').textContent=t('mini');
-  document.getElementById('siNewL').textContent=t('newL');
-  document.getElementById('siIntakeLink').textContent=t('intake');
-  document.getElementById('signoutBtn').textContent=t('signout');
-  // whoRole
-  document.getElementById('whoRole').textContent=(lang==='vi'?'Bệnh nhân':'Patient');
+  ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='en');e.setAttribute('aria-pressed',(l==='en').toString());}});
+  ['lVi','lVi2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',l==='vi');e.setAttribute('aria-pressed',(l==='vi').toString());}});
+  var appVisible=!document.getElementById('app').classList.contains('hide');
+  if(appVisible&&current()){buildMenu();document.getElementById('secTxt').textContent=t('secTxt');document.getElementById('footBuilt').textContent=t('built');var cur=(location.hash||'#home').slice(1);go(VIEWS[cur]?cur:'home');}
+  else{paintSignin();if(pickOpen)renderPick();}
 }
 
-/* ---------- mobile side ---------- */
+/* ================= idle security ================= */
+var idleTimer=null,idleWarned=false;
+function armIdle(){
+  clearInterval(idleTimer);idleWarned=false;
+  idleTimer=setInterval(function(){
+    if(!Auth.session()){clearInterval(idleTimer);return;}
+    var left=Auth.msLeft();
+    if(left<=0){clearInterval(idleTimer);Auth.signOut();location.hash='';boot();showSignedOut();return;}
+    if(left<=120000&&!idleWarned){idleWarned=true;showIdleBar();}
+  },5000);
+}
+function showIdleBar(){
+  var v=document.getElementById('view');if(document.getElementById('idleBar'))return;
+  var bar=document.createElement('div');bar.className='idlebar';bar.id='idleBar';
+  bar.innerHTML='⏳ '+esc(t('idleWarn'))+'<button onclick="stayIn()">'+esc(t('staySignedIn'))+'</button>';
+  v.insertBefore(bar,v.firstChild);
+}
+function stayIn(){Auth.touch();idleWarned=false;var b=document.getElementById('idleBar');if(b)b.remove();}
+function showSignedOut(){var r=document.getElementById('siRibbon');r.innerHTML='🔒 '+esc(t('signedOutIdle'));r.style.background='var(--info-soft)';r.style.color='var(--info)';}
+['click','keydown','mousemove','touchstart'].forEach(function(ev){document.addEventListener(ev,function(){if(Auth.session())Auth.touch();},{passive:true});});
+
+/* ================= mobile side ================= */
 function closeSideMobile(){document.getElementById('side').classList.remove('open');document.getElementById('scrim2').classList.remove('on');}
 document.getElementById('burger').addEventListener('click',function(){var s=document.getElementById('side');s.classList.toggle('open');document.getElementById('scrim2').classList.toggle('on',s.classList.contains('open'));});
 document.getElementById('scrim2').addEventListener('click',closeSideMobile);
+document.addEventListener('keydown',function(e){
+  var teleOpen=document.getElementById('tele').classList.contains('on');
+  var sheetOpen=document.getElementById('scrim').classList.contains('on');
+  if(e.key==='Escape'){if(teleOpen){leaveTele();return;}if(sheetOpen){closeSheet();return;}closeMenu();closeSideMobile();}
+  else if(e.key==='Tab'){if(sheetOpen)trapTab(e,document.getElementById('sheet'));else if(teleOpen)trapTab(e,document.getElementById('tele'));}
+});
 
-/* ---------- boot ---------- */
+/* ================= boot ================= */
 function boot(){
-  setLang(lang); // paints toggle + static
-  var p=current();
-  if(!p){document.getElementById('signin').classList.remove('hide');document.getElementById('app').classList.add('hide');renderPick();return;}
-  document.getElementById('signin').classList.add('hide');document.getElementById('app').classList.remove('hide');
-  document.getElementById('whoName').textContent=clean(p.name);
+  // paint language toggles
+  ['lEn','lEn2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',lang==='en');e.setAttribute('aria-pressed',(lang==='en').toString());}});
+  ['lVi','lVi2'].forEach(function(id){var e=document.getElementById(id);if(e){e.classList.toggle('on',lang==='vi');e.setAttribute('aria-pressed',(lang==='vi').toString());}});
+  document.documentElement.lang=(lang==='vi'?'vi':'en');
+  if(!window.__stChk){window.__stChk=true;if(!storageOK())setTimeout(function(){toast(t('storageWarn'),'bad');},600);}
+  var s=Auth.session();var p=current();
+  if(!s||!p){
+    document.getElementById('signin').classList.remove('hide');
+    document.getElementById('app').classList.add('hide');
+    document.getElementById('demoFlag').style.display=Auth.getMode()==='demo'?'block':'none';
+    paintSignin();if(pickOpen)renderPick();
+    return;
+  }
+  document.getElementById('signin').classList.add('hide');
+  document.getElementById('app').classList.remove('hide');
+  document.getElementById('demoFlag').style.display=Auth.getMode()==='demo'?'block':'none';
+  var pr=profileData()||{};var disp=pr.name||clean(p.name);
+  document.getElementById('whoName').textContent=disp;
+  document.getElementById('topName').textContent=pr.pref||firstName(disp);
+  document.getElementById('whoAv').textContent=initials(disp);
+  document.getElementById('topAv').textContent=initials(disp);
+  document.getElementById('whoRole').textContent=(lang==='vi'?'Bệnh nhân':'Patient');
+  document.getElementById('secTxt').textContent=t('secTxt');
+  document.getElementById('footBuilt').textContent=t('built');
+  buildMenu();armIdle();
   var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';go(key);
 }
 window.addEventListener('hashchange',function(){
   if(document.getElementById('app').classList.contains('hide'))return;
-  var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';go(key);
+  var key=(location.hash||'#home').slice(1);if(!VIEWS[key])key='home';
+  document.getElementById('pageTitle').textContent=t(TITLES[key]||'nHome');renderNav(key);
+  var v=document.getElementById('view');v.innerHTML='';try{VIEWS[key]();}catch(e){}
 });
-// URL ?p=INDEX quick-enter
-(function(){var m=location.search.match(/[?&]p=(\d+)/);if(m){var i=+m[1];if(PATIENTS[i]){setSess(i);if(!location.hash)location.hash='#home';}}})();
 boot();
 </script>
 </body>
