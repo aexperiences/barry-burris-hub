@@ -55,6 +55,9 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);bo
 .muted{color:var(--muted)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--navy);color:#fff;padding:12px 18px;border-radius:11px;opacity:0;pointer-events:none;transition:.2s;z-index:60}.toast.show{opacity:1}
 .foot{text-align:center;color:var(--muted);font-size:12px;margin-top:20px}
+.sample-ribbon{position:fixed;top:0;left:0;right:0;z-index:1500;background:linear-gradient(90deg,#c9992f,#b07a2e);color:#fff;text-align:center;font:600 12.5px/1.5 Inter,system-ui,-apple-system,sans-serif;padding:7px 14px;letter-spacing:.02em;box-shadow:0 2px 10px rgba(60,40,20,.18)}
+.sample-ribbon b{font-family:Oswald,sans-serif;letter-spacing:.14em;margin-right:3px}
+.sample-on .shell{padding-top:46px}
 
 @media(max-width:600px){
  .shell{padding:16px 13px 60px}
@@ -93,6 +96,7 @@ input:focus,textarea:focus,select:focus{outline:none;border-color:var(--teal);bo
     <input id="pgEmail" class="pgin" placeholder="Email (optional / không bắt buộc)" onkeydown="if(event.key==='Enter')pgateBegin()">
     <button class="pgbtn" onclick="pgateBegin()">Begin / Bắt đầu →</button>
     <div class="pgnote">Open preview — no password needed yet. Your answers stay on this device.</div>
+    <div style="margin-top:12px"><a href="?sample=1" style="color:#0b636a;font-weight:700;font-size:12.5px;text-decoration:none">👀 See a sample submission →</a></div>
   </div>
 </div>
 <div class="shell">
@@ -114,6 +118,7 @@ function tr(s){if(!s)return s;if(LANG==='both')return s;const m=s.match(/^(.*?)\
 function setLang(l){LANG=l;document.querySelectorAll('.langbar button').forEach(b=>b.classList.toggle('on',b.dataset.l===l));render();}
 function toast(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2200);}
 const todayISO=new Date().toISOString().slice(0,10);
+const SAMPLE=(new URLSearchParams(location.search).get('sample')==='1');
 
 const STATE={date:todayISO,name:'',dob:'',sex:'',phone:'',email:'',address:'',emergency:'',occupation:'',height:'',weight:'',
  concern:'',goals:[],symptoms:[],diagnoses:[],meds:'',surgical:'',allergies:'',
@@ -123,8 +128,8 @@ const STATE={date:todayISO,name:'',dob:'',sex:'',phone:'',email:'',address:'',em
  menarche:'',regular:'',menDays:'',cycleDay:'',contraception:'',pregnancies:'',children:'',famCancer:'',gynResult:'',
  mLibido:'',erection:'',morning:'',muscle:'',belly:'',recovery:'',motivation:'',urinary:'',
  labFiles:[],additional:'',referral:'',consent:false};
-try{const s=localStorage.getItem('bb_intake2');if(s)Object.assign(STATE,JSON.parse(s));STATE.consent=false;}catch(e){}
-function save(){try{localStorage.setItem('bb_intake2',JSON.stringify(STATE))}catch(e){}}
+if(!SAMPLE){try{const s=localStorage.getItem('bb_intake2');if(s)Object.assign(STATE,JSON.parse(s));STATE.consent=false;}catch(e){}}
+function save(){if(SAMPLE)return;try{localStorage.setItem('bb_intake2',JSON.stringify(STATE))}catch(e){}}
 function setV(k,v){STATE[k]=v;save();}
 function isF(){return (STATE.sex||'').indexOf('Nữ')===0}
 function isM(){return (STATE.sex||'').indexOf('Nam')===0}
@@ -278,7 +283,53 @@ function pgateBegin(){var n=(document.getElementById('pgName').value||'').trim()
 function pgateHide(st){document.getElementById('pgate').classList.add('hide');var w=document.getElementById('pwho');if(w){w.classList.remove('hide');w.innerHTML='Signed in as <b>'+pEsc(st.name)+'</b> \u00b7 <a href="#" onclick="pgateOut();return false;">Sign out</a>';}}
 function pgateOut(){try{localStorage.removeItem('bb_patient');}catch(e){}location.reload();}
 
-render();pgateInit();
+/* ---- sample submission mode (additive; only when ?sample=1) ---- */
+function showSampleRibbon(){
+ if(document.getElementById('sampleRibbon'))return;
+ document.body.classList.add('sample-on');
+ var r=document.createElement('div');r.id='sampleRibbon';r.className='sample-ribbon';
+ r.innerHTML='<b>SAMPLE</b> demo submission · Marcus Delgado · nothing is saved to this device';
+ document.body.appendChild(r);
+}
+function fillSample(){
+ var OPT=function(k,i){for(var a=0;a<STEPS.length;a++){var st=STEPS[a];if(!st.fields)continue;for(var b=0;b<st.fields.length;b++){if(st.fields[b].k===k)return st.fields[b].opts[i];}}return '';};
+ Object.assign(STATE,{
+  date:todayISO,
+  name:'Marcus Delgado',dob:'1973-08-14',sex:OPT('sex',1),
+  phone:'(208) 555-0147',email:'marcus.delgado@example.com',
+  address:'1420 Sherman Ave, Coeur d\'Alene, ID 83814',
+  emergency:'Elena Delgado · (208) 555-0162',
+  occupation:'Operations manager',height:'180',weight:'93',
+  concern:'Fatigue and low energy for ~12 months, with low libido, brain fog, ~15 lb mid-section weight gain and unrefreshing sleep.',
+  goals:[OPT('goals',1),OPT('goals',2),OPT('goals',4)],
+  symptoms:[OPT('symptoms',0),OPT('symptoms',1),OPT('symptoms',3),OPT('symptoms',5)],
+  diagnoses:[],
+  meds:'Atorvastatin 10 mg once daily (since 2024)\nVitamin D3 2000 IU once daily\nIbuprofen 200 mg as needed (occasional)',
+  surgical:'None',allergies:'NKDA (No known drug allergies)',
+  sleepQ:OPT('sleepQ',1),alert:OPT('alert',1),sleepDur:OPT('sleepDur',1),
+  diet:[OPT('diet',0)],smoke:OPT('smoke',0),alcohol:OPT('alcohol',1),alcoholQty:'3–4',
+  exercise:OPT('exercise',1),
+  energy:3,sleep:4,mood:4,libido:2,
+  family:[],familyNote:'',
+  mLibido:OPT('mLibido',2),erection:OPT('erection',1),morning:OPT('morning',1),
+  muscle:OPT('muscle',1),belly:OPT('belly',1),recovery:OPT('recovery',2),
+  motivation:OPT('motivation',1),urinary:OPT('urinary',0),
+  labFiles:['LabCorp_Hormone_Panel_2026-06-28.pdf','Quest_CMP_HbA1c_2026-06-28.pdf','Lipid_and_hsCRP_2026-06-28.pdf'],
+  additional:'Mild dyslipidemia — on atorvastatin since 2024. No diabetes. Alcohol ~3–4 drinks/week; currently exercising 1–2x/week and want to build a real routine. Uploaded 3 recent lab PDFs (hormone panel; CMP + HbA1c; lipids + hs-CRP).',
+  referral:OPT('referral',0),
+  consent:true
+ });
+}
+if(SAMPLE){
+ fillSample();
+ var _pg=document.getElementById('pgate');if(_pg)_pg.classList.add('hide');
+ var _pc=document.getElementById('pgcoin');if(_pc)_pc.src=COIN;
+ showSampleRibbon();
+ step=STEPS.length-1;
+ summary();
+}else{
+ render();pgateInit();
+}
 </script>
 <script src="bb-nav.js"></script>
 </body></html>

@@ -292,7 +292,10 @@ function renderCharting(){
     <div style="font-family:Fraunces,Georgia,serif;font-weight:700;font-size:16.5px;color:var(--teal3)">New patient intake received <span style="display:inline-block;vertical-align:middle;background:var(--gold-soft);color:#7a5f22;border:1px solid var(--goldsoft);font-family:Oswald,sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.06em;padding:2px 8px;border-radius:20px;margin-left:5px">SAMPLE</span></div>
     <div class="muted" style="margin-top:2px"><b style="color:var(--ink)">Marcus Delgado</b> · submitted the questionnaire · today</div>
    </div>
-   <a class="btn p" href="${INTAKE_URL}" target="_blank">Open the auto-drafted SOAP note →</a>
+   <div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px">
+    <a class="btn p" href="${INTAKE_URL}" target="_blank">Open the auto-drafted SOAP note →</a>
+    <a href="${PORTAL}?sample=1" target="_blank" style="font-size:12.5px;font-weight:700;color:var(--teal3);text-decoration:none">View the submitted questionnaire →</a>
+   </div>
   </div>
   <div style="margin-top:13px;padding-top:13px;border-top:1px solid var(--line);font-size:13.5px;line-height:1.5;color:var(--ink2)">
    <b style="color:var(--ink)">52 y/o male.</b> Fatigue &amp; low energy for ~12 months — low libido, brain fog, ~15 lb weight gain, unrefreshing sleep. Self-scores (0–10): <b>Energy 3 · Libido 2 · Sleep 4 · Mood 4</b>. Meds: atorvastatin 10 mg, vitamin D3. Allergies: NKDA. 3 lab PDFs attached (hormone panel · metabolic + HbA1c · lipids + hs-CRP). Goal: optimize energy, body composition &amp; longevity.
