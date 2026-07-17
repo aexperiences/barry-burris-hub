@@ -429,7 +429,7 @@ T.en={
  show:'Show',hide:'Hide',
  foot:'Barry Burris, NMD · Functional Medicine &amp; Longevity — built by',
  secTxt:'Encrypted session',built:'Built by',
- nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',nCheckins:'Check-Ins',
+ nHome:'Home',nPlan:'My Care Plan',nAppts:'Appointments',nLabs:'Labs & Results',nMsg:'Messages',nDocs:'Documents',nProfile:'Profile',nCheckins:'Check-Ins',nDispensary:'Dispensary',
  gCare:'My Care',gRecords:'My Records',gAcct:'Account',
  menuProfile:'Profile & settings',menuSecurity:'Security',menuSignout:'Sign out',menuSignoutAll:'Sign out everywhere',
  hello:'Hello',welcome:'Welcome to your care portal. Everything about your care with Barry Burris lives here.',
@@ -513,7 +513,7 @@ T.vi={
  show:'Hiện',hide:'Ẩn',
  foot:'Barry Burris, NMD · Y Học Chức Năng — thực hiện bởi',
  secTxt:'Phiên được mã hóa',built:'Thực hiện bởi',
- nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',nCheckins:'Video theo dõi',
+ nHome:'Trang chính',nPlan:'Kế hoạch chăm sóc',nAppts:'Lịch hẹn',nLabs:'Xét nghiệm',nMsg:'Tin nhắn',nDocs:'Tài liệu',nProfile:'Hồ sơ',nCheckins:'Video theo dõi',nDispensary:'Thực phẩm bổ sung',
  gCare:'Chăm sóc',gRecords:'Hồ sơ của tôi',gAcct:'Tài khoản',
  menuProfile:'Hồ sơ & cài đặt',menuSecurity:'Bảo mật',menuSignout:'Đăng xuất',menuSignoutAll:'Đăng xuất mọi thiết bị',
  hello:'Xin chào',welcome:'Chào mừng đến cổng chăm sóc của bạn. Mọi thứ về việc chăm sóc với Barry Burris, NMD đều ở đây.',
@@ -624,9 +624,9 @@ var ICN={home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
  flask:'<path d="M9 3h6M10 3v6l-5.2 9.2A2 2 0 006.6 21h10.8a2 2 0 001.8-2.8L14 9V3"/><path d="M7 15h10"/>',
  msg:'<path d="M21 15a2 2 0 01-2 2H8l-4 4V5a2 2 0 012-2h13a2 2 0 012 2z"/>',
  doc:'<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h4"/>',
- gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.1 5.1l2.1 2.1M16.8 16.8l2.1 2.1M18.9 5.1l-2.1 2.1M7.2 16.8l-2.1 2.1"/>',checkins:'<path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/>'};
+ gear:'<circle cx="12" cy="12" r="3.2"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.1 5.1l2.1 2.1M16.8 16.8l2.1 2.1M18.9 5.1l-2.1 2.1M7.2 16.8l-2.1 2.1"/>',checkins:'<path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/>',dispensary:'<rect x="4" y="8" width="16" height="8" rx="4"/><path d="M12 8v8"/>'};
 var NAV=[
- {g:'gCare',items:[['home','nHome','home'],['plan','nPlan','plan'],['appts','nAppts','cal'],['checkins','nCheckins','checkins']]},
+ {g:'gCare',items:[['home','nHome','home'],['plan','nPlan','plan'],['appts','nAppts','cal'],['checkins','nCheckins','checkins'],['dispensary','nDispensary','dispensary']]},
  {g:'gRecords',items:[['labs','nLabs','flask'],['messages','nMsg','msg'],['docs','nDocs','doc']]},
  {g:'gAcct',items:[['profile','nProfile','gear']]}
 ];
@@ -648,8 +648,8 @@ function renderNav(active){
 function unreadCount(){var m=read(pkey('msgs'),null);if(!m)return 1;return m.filter(function(x){return x.from==='them'&&!x.read;}).length;}
 
 /* ================= ROUTER ================= */
-var VIEWS={home:renderHome,plan:renderPlan,appts:renderAppts,labs:renderLabs,messages:renderMessages,docs:renderDocs,checkins:renderCheckins,profile:renderProfile};
-var TITLES={home:'nHome',plan:'nPlan',appts:'nAppts',labs:'nLabs',messages:'nMsg',docs:'nDocs',checkins:'nCheckins',profile:'nProfile'};
+var VIEWS={home:renderHome,plan:renderPlan,appts:renderAppts,labs:renderLabs,messages:renderMessages,docs:renderDocs,checkins:renderCheckins,dispensary:renderDispensary,profile:renderProfile};
+var TITLES={home:'nHome',plan:'nPlan',appts:'nAppts',labs:'nLabs',messages:'nMsg',docs:'nDocs',checkins:'nCheckins',dispensary:'nDispensary',profile:'nProfile'};
 function go(key){
   if(!VIEWS[key])key='home';
   if(location.hash!=='#'+key){history.replaceState(null,'','#'+key);}
@@ -683,6 +683,12 @@ function renderCheckins(){
   var p=current();var v=document.getElementById('view');
   v.innerHTML='<div id="bb-checkins"></div>';
   try{ if(window.BBCheckins) BBCheckins.mount('#bb-checkins',{role:'patient',patientKey:BBRegion.keyOf({name:p.name}),patientName:p.name,region:BBRegion.regionOf(p),lang:lang}); }
+  catch(e){ if(window.console)console.error(e); v.innerHTML=emptyState('⚠️',t('loadError')); }
+}
+function renderDispensary(){
+  var p=current();var v=document.getElementById('view');
+  v.innerHTML='<div id="bb-dispensary"></div>';
+  try{ if(window.BBDispensary) BBDispensary.mount('#bb-dispensary',{role:'patient',patientKey:BBRegion.keyOf({name:p.name}),patientName:p.name,lang:lang}); }
   catch(e){ if(window.console)console.error(e); v.innerHTML=emptyState('⚠️',t('loadError')); }
 }
 
@@ -1321,6 +1327,8 @@ try{ var _s=(window.BBPortal&&BBPortal.session&&BBPortal.session())||null;
 }catch(e){}
 </script>
 <script src="bb-app.js"></script>
+<script src="bb-pay.js"></script>
+<script src="bb-dispensary.js"></script>
 <script src="bb-checkins.js"></script>
 <script src="bb-messages.js"></script>
 </body>
