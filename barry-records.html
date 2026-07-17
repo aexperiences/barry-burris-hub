@@ -163,6 +163,7 @@ td{padding:9px 12px;vertical-align:middle;white-space:nowrap}
     <div class="rowbtns">
       <button class="save" id="dSave" onclick="saveDoc()">File it</button>
       <a class="tbtn openbtn hide" id="dOpen" target="_blank" rel="noopener">Open &#8599;</a>
+      <a class="tbtn gold hide" id="dSoap" target="_blank" rel="noopener">&#129504; Open in SOAP &#8599;</a>
       <button class="del hide" id="dDel" onclick="delDoc()">Delete</button>
       <button class="cancel" onclick="closeDoc()">Cancel</button>
     </div>
@@ -173,7 +174,11 @@ td{padding:9px 12px;vertical-align:middle;white-space:nowrap}
 <div class="toast" id="toast"></div>
 
 <script src="bb-auth.js"></script>
+<script src="bb-intake-schema.js"></script>
+<script src="bb-intake-machine.js"></script>
 <script>
+var SOAP='soap-note-generator-prototype.html';
+var IX_LS='bb_uploaded_intakes'; /* the spine: Barry's uploaded questionnaires, same shape as portal intakes */
 var LS='bb_records';
 var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 
@@ -310,7 +315,7 @@ function render(){
       '<td class="tcell-ic"><span class="ftile">'+icon(fileKind(r))+'</span></td>'+
       '<td class="nm">'+esc(r.name)+(r.sample?'<span class="samp">SAMPLE</span>':'')+'</td>'+
       '<td class="muted">'+esc(r.patient)+'</td>'+
-      '<td>'+catBadge(r.category)+'</td>'+
+      '<td>'+catBadge(r.category)+' '+intakeChip(r)+'</td>'+
       '<td class="muted">'+esc(dstr(r.date))+'</td></tr>';
   }).join('');
 }
@@ -322,6 +327,16 @@ function previewHTML(r){
   if(url&&k==='pdf')return '<div class="pv"><iframe class="pv-frame" src="'+esc(url)+'" title="'+esc(r.name)+'"></iframe></div>';
   if(url)return '<div class="pv pv-link"><div class="pv-ic">🔗</div><div class="pv-url">'+esc(url)+'</div><a class="tbtn dark" href="'+esc(url)+'" target="_blank" rel="noopener">Open ↗</a><div class="pv-note">External links (Google Drive, Dropbox…) open in a new tab.</div></div>';
   return '<div class="pv pv-ph"><div class="pv-ic">'+icon(k)+'</div><div class="pv-fn">'+esc(r.fileName||r.name)+'</div><div class="pv-note">Filed on this device for the demo — the file itself isn’t uploaded. Secure viewing turns on with the HIPAA hosting step.</div></div>';
+}
+function intakeChip(r){
+  if(!r||!r.intakeB64)return '';
+  var how=r.intakeMethod==='ai-vision'?'read from scan':r.intakeMethod==='pdf-text'||r.intakeMethod==='text'?'auto-read':r.intakeMethod==='unreadable'?'needs Barry’s review':'auto-read';
+  return '<span class="catb" style="color:#3f6b4e;background:#e6f0e914;border-color:#3f6b4e55" title="Sent to the SOAP tool">🧠 SOAP-ready ('+how+')</span>';
+}
+function refreshSoapBtn(r){
+  var b=el('dSoap');
+  if(r&&r.intakeB64){b.href=SOAP+'?intake='+encodeURIComponent(r.intakeB64);b.classList.remove('hide');}
+  else{b.classList.add('hide');}
 }
 
 /* ---- modal: add / view / edit ---- */
@@ -339,14 +354,44 @@ function onFilePick(){
   var isImg=(f.type||'').indexOf('image/')===0;
   if(isImg&&f.size<1600000){
     var rd=new FileReader();
-    rd.onload=function(){PENDING={kind:'image',url:String(rd.result),fileName:f.name,mime:f.type,stored:'local'};el('pvWrap').innerHTML=previewHTML({kind:'image',url:PENDING.url,name:f.name});};
+    rd.onload=function(){PENDING={kind:'image',url:String(rd.result),fileName:f.name,mime:f.type,stored:'local',file:f};el('pvWrap').innerHTML=previewHTML({kind:'image',url:PENDING.url,name:f.name});};
     rd.readAsDataURL(f);
   }else{
     var k=extKind(f.name)||(f.type==='application/pdf'?'pdf':'doc');
-    PENDING={kind:k,url:'',fileName:f.name,mime:f.type,stored:'ref'};
+    PENDING={kind:k,url:'',fileName:f.name,mime:f.type,stored:'ref',file:f};
     el('pvWrap').innerHTML=previewHTML({kind:k,url:'',fileName:f.name,name:f.name});
   }
 }
+
+/* ---- the Intake Machine hookup: only fires when filing to "Intake forms" ----
+ * Runs on the actual File object while it's still in memory (Records doesn't
+ * keep PDF bytes long-term — this is the one moment they're available), turns
+ * it into the same payload shape patient-portal.html produces, and files it
+ * onto the shared intake spine so it shows up next to patient-submitted ones
+ * on the hub's intake worklist AND opens straight into the SOAP tool. */
+function pushUploadedIntake(payload){
+  var arr=[];try{arr=JSON.parse(localStorage.getItem(IX_LS))||[];}catch(e){arr=[];}
+  /* carry the FULL payload fields (not just b64) so the hub's intake worklist
+   * can render cc/scores/meds/flags for an uploaded questionnaire exactly
+   * like it does for a portal one — same spine, same row shape. */
+  var entry=Object.assign({},payload,{tag:'Uploaded',b64:BBIntakeSchema.toB64(payload),name:payload.name||payload.sourceFile||'Uploaded questionnaire'});
+  arr.unshift(entry);
+  try{localStorage.setItem(IX_LS,JSON.stringify(arr.slice(0,200)));}catch(e){}
+  return entry;
+}
+function runIntakeMachine(rec,file,patientName){
+  if(!(global_BBIntakeMachineReady()))return;
+  BBIntakeMachine.run(file,{sourceFile:file.name,sourceLabel:'Uploaded by Barry — '+file.name,submitted:rec.date||todayISO()}).then(function(payload){
+    if(patientName&&!payload.name)payload.name=patientName;
+    var entry=pushUploadedIntake(payload);
+    rec.intakeB64=entry.b64;rec.intakeMethod=payload.method;
+    persist();render();
+    if(el('docScrim').classList.contains('on')&&edId===rec.id){el('pvWrap').innerHTML=previewHTML(rec);refreshSoapBtn(rec);}
+    var how=payload.method==='ai-vision'?'read from the scan':payload.method==='unreadable'?'filed (could not auto-read — Barry reviews the original)':'read automatically';
+    toast('🧠 Intake machine: '+how+' — sent to SOAP.');
+  }).catch(function(){toast('Filed — the intake machine could not process this file.');});
+}
+function global_BBIntakeMachineReady(){return typeof BBIntakeMachine!=='undefined'&&typeof BBIntakeSchema!=='undefined';}
 function dmsg(t,c){var m=el('dMsg');m.textContent=t||'';m.className='dmsg'+(c?' '+c:'');}
 function openDoc(id,preset){
   edId=id||null;PENDING=null;dmsg('');
@@ -360,8 +405,9 @@ function openDoc(id,preset){
     el('pvWrap').innerHTML=previewHTML(r);
     el('dName').value=r.name||'';el('dDate').value=r.date||'';el('dPatient').value=r.patient||'';el('dCat').value=r.category||CATS[0];
     if(r.url){var o=el('dOpen');o.href=r.url;o.classList.remove('hide');}else{el('dOpen').classList.add('hide');}
+    refreshSoapBtn(r);
   }else{
-    el('pvWrap').innerHTML='';el('dOpen').classList.add('hide');
+    el('pvWrap').innerHTML='';el('dOpen').classList.add('hide');el('dSoap').classList.add('hide');
     el('dFile').value='';el('dUrl').value='';el('dName').value='';el('dPatient').value='';
     el('dDate').value=todayISO();el('dCat').value=CATS[0];
     setSrc(preset||'file');
@@ -379,16 +425,20 @@ function saveDoc(){
     closeDoc();buildFilters();render();toast('Saved');return;
   }
   var rec={id:'r'+Date.now().toString(36)+Math.floor(Math.random()*900+100),name:name,patient:patient,category:category,date:date||todayISO(),sample:false,createdAt:new Date().toISOString()};
+  var machineFile=null;
   if(SRC==='file'){
     if(!PENDING){dmsg('Choose a file, or switch to Attach a link.','err');return;}
     rec.src='file';rec.kind=PENDING.kind;rec.url=PENDING.url||'';rec.fileName=PENDING.fileName;rec.mime=PENDING.mime;rec.stored=PENDING.stored;
+    if(category==='Intake forms'&&PENDING.file)machineFile=PENDING.file;
   }else{
     var url=el('dUrl').value.trim();
     if(!url){dmsg('Paste a link, or switch to Upload a file.','err');return;}
     rec.src='link';rec.url=url;rec.fileName='';rec.stored='link';rec.kind=extKind(url)||'link';
   }
   ALL.unshift(rec);persist();
-  PENDING=null;closeDoc();buildFilters();render();toast('Filed');
+  PENDING=null;closeDoc();buildFilters();render();
+  if(machineFile){toast('Filed — running it through the intake machine…');runIntakeMachine(rec,machineFile,patient);}
+  else{toast('Filed');}
 }
 function delDoc(){
   if(!edId||!confirm('Remove this document from the cabinet? (demo — nothing is deleted from any real system)'))return;

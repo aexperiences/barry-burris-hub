@@ -467,8 +467,15 @@ function bbIxClean(name){return String(name==null?'':name).replace(/\s*\(SAMPLE\
 function bbIxInitials(name){var p=bbIxClean(name).split(/\s+/).filter(Boolean);if(!p.length)return '?';var f=p[0].charAt(0)||'';var l=p.length>1?p[p.length-1].charAt(0):'';return (f+l).toUpperCase();}
 function bbIxShortFlag(f){var m=String(f).match(/\(([^)]+)\)/);return m?m[1]:f;}
 function bbIxUrl(p){return SOAP+'?intake='+encodeURIComponent(p.b64);}
+/* The spine: merge patient-submitted (portal) intakes with whatever Barry has
+ * run through the intake machine on the Records page (localStorage bb_uploaded_intakes,
+ * same payload shape — see bb-intake-schema.js / bb-intake-machine.js). One worklist,
+ * two doors in. */
+function bbUploadedIntakes(){try{return JSON.parse(localStorage.getItem('bb_uploaded_intakes'))||[];}catch(e){return [];}}
 function renderIntakes(){
- var full=((window.BB_INTAKES||[]).slice()).sort(function(a,b){return (b.submitted||'').localeCompare(a.submitted||'');});
+ var full=((window.BB_INTAKES||[]).slice().map(function(p){return Object.assign({source:'portal'},p);}))
+   .concat(bbUploadedIntakes().map(function(p){return Object.assign({source:'upload'},p);}))
+   .sort(function(a,b){return (b.submitted||'').localeCompare(a.submitted||'');});
  var flt=window.BB_IX_FILTER||'all';
  var reg=function(p){return BBRegion.regionOf(p);};
  var counts={all:full.length,intl:full.filter(function(p){return reg(p)==='intl';}).length,us:full.filter(function(p){return reg(p)==='us';}).length};
@@ -476,7 +483,7 @@ function renderIntakes(){
  window.BB_IX_VIEW=list;
  var n=list.length, usLive=BBRegion.usLive();
  var head='<div class="ph">Patient intakes <span class="ixcount">'+counts.all+' new</span><span class="ixsampletag">SAMPLE</span></div>'
-  +'<div class="psub">Questionnaires patients submitted through the portal — each opens an AI-drafted SOAP note for you to review &amp; sign. The AI drafts history &amp; narrative only, never medications, doses or a diagnosis.</div>';
+  +'<div class="psub">Every questionnaire feeds the same AI-drafted SOAP note for you to review &amp; sign — whether a patient filled it out on the portal, or you filed one they sent another way in <a href="barry-records.html" style="color:inherit;text-decoration:underline">Records</a> (category “Intake forms”). The AI drafts history &amp; narrative only, never medications, doses or a diagnosis.</div>';
  var seg=function(k,label){return '<button class="'+(flt===k?'on':'')+'" onclick="bbSetIxFilter(\''+k+'\')">'+label+'</button>';};
  var controls='<div class="card" style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:14px">'
    +'<div class="ixseg">'+seg('all','All ('+counts.all+')')+seg('intl','🌏 International ('+counts.intl+')')+seg('us','🇺🇸 U.S. ('+counts.us+')')+'</div>'
@@ -493,7 +500,7 @@ function renderIntakes(){
    return '<div class="ixrow">'
      +'<div class="ixav">'+escT(bbIxInitials(p.name))+'</div>'
      +'<div class="ixmain">'
-       +'<div class="ixname">'+escT(bbIxClean(p.name))+' <span class="ixmeta">· '+age+' '+sx+' · '+bbIxSub(p.submitted)+'</span>'+(p.tag?' <span class="pill mut ixtag">'+escT(p.tag)+'</span>':'')+'</div>'
+       +'<div class="ixname">'+escT(bbIxClean(p.name))+' <span class="ixmeta">· '+age+' '+sx+' · '+bbIxSub(p.submitted)+'</span>'+(p.tag?' <span class="pill mut ixtag">'+escT(p.tag)+'</span>':'')+(p.source==='upload'?' <span class="pill mut ixtag" title="Barry filed this in Records; the intake machine read it — method: '+escT(p.method||'')+'">📤 Uploaded by Barry</span>':' <span class="pill mut ixtag" style="opacity:.6">📋 Patient-submitted</span>')+'</div>'
        +'<div class="ixcc">'+escT(p.cc)+'</div>'
        +(chips?'<div class="ixchips">'+chips+'</div>':'')
      +'</div>'
