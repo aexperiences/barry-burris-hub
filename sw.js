@@ -1,13 +1,14 @@
 /* sw.js — Barry Burris, NMD practice app shell.
    Makes the hub installable + fast, WITHOUT ever interfering with the live
-   APIs (draft/translate), Jitsi video, or fonts. Network-first for pages so
-   deploys always show fresh; cache-first for static assets; offline fallback.
+   APIs (draft/translate/assistant), video, or fonts. Network-first for pages so
+   deploys always show fresh; stale-while-revalidate for static assets so a new
+   deploy self-heals on the next load (no more frozen JS between deploys).
    Built by Accelerated Experiences, LLC. */
-var CACHE = 'bb-app-v1';
+var CACHE = 'bb-app-v2';
 var SHELL = [
   '/barry-burris-hub.html', '/manifest.webmanifest',
   '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/bee-coin.svg',
-  '/bb-nav.js', '/bb-app.js'
+  '/bb-nav.js', '/bb-app.js', '/bb-assistant.js'
 ];
 
 self.addEventListener('install', function (e) {
@@ -46,13 +47,18 @@ self.addEventListener('fetch', function (e) {
     );
     return;
   }
-  // cache-first for static assets (icons, js, svg, css)
+  // stale-while-revalidate for static assets (icons, js, svg, css):
+  // serve the cached copy instantly when present, but ALWAYS refetch in the
+  // background and update the cache, so the very next load picks up new JS.
   e.respondWith(
     caches.match(req).then(function (m) {
-      return m || fetch(req).then(function (r) {
-        var cp = r.clone(); caches.open(CACHE).then(function (c) { c.put(req, cp); });
+      var fetching = fetch(req).then(function (r) {
+        if (r && r.status === 200 && r.type === 'basic') {
+          var cp = r.clone(); caches.open(CACHE).then(function (c) { c.put(req, cp); });
+        }
         return r;
-      });
+      }).catch(function () { return m; });
+      return m || fetching;
     })
   );
 });
