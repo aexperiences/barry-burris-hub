@@ -191,6 +191,11 @@
     if (!document.querySelector('script[src="bb-app.js"]')) {
       var ap = document.createElement('script'); ap.src = 'bb-app.js'; document.body.appendChild(ap);
     }
+    // Staff pages get the ✨ hub assistant so it follows Dr. Burris everywhere he works.
+    // (Patient-facing pages are left alone — their own portal handles patient tools.)
+    if (!PATIENT && !document.querySelector('script[src="bb-assistant.js"]')) {
+      var ai = document.createElement('script'); ai.src = 'bb-assistant.js'; document.body.appendChild(ai);
+    }
   }
 
   if (document.readyState === 'loading') {
