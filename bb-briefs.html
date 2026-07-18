@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Briefs from AE · Barry Burris, NMD</title>
+<link rel="icon" type="image/svg+xml" href="bee-coin.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#3f6b4e">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf4e8; --paper:#fffdf7; --ink:#40352a; --ink2:#5c4d3a; --mut:#8a7c68; --line:#e8dcc4; --line2:#f1e9d7;
+    --gold:#c9992f; --gold2:#e6c67e; --goldsoft:#f8efd6;
+    --g1:#5f8f6c; --g2:#3f6b4e; --g3:#345c43; --gsoft:#e6f0e9;
+    --red:#95463f; --red2:#763530; --redsoft:#f4e3df;
+    --r:18px; --shadow:0 16px 40px rgba(60,40,20,.10);
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font:16px/1.62 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  h1,h2,h3,.fr{font-family:Fraunces,Georgia,serif}
+  .lbl{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.18em;font-weight:600}
+  a{color:var(--g2)}
+  .wrap{max-width:980px;margin:0 auto;padding:0 22px}
+
+  .hero{position:relative;overflow:hidden;background:linear-gradient(125deg,#c8e0d1 0%,#a9d0b8 55%,#93c3a4 100%);color:#284a38}
+  .hero .in{max-width:980px;margin:0 auto;padding:58px 22px 46px;position:relative;z-index:2}
+  .hero .seal{position:absolute;right:-30px;top:-24px;width:230px;height:230px;opacity:.14}
+  .hero .kick{display:inline-flex;align-items:center;gap:9px;background:rgba(255,255,255,.55);border:1px solid rgba(63,107,78,.25);color:#2e4a38;padding:6px 14px;border-radius:99px;font-size:12.5px;font-weight:700;margin-bottom:18px}
+  .hero h1{margin:0;font-size:clamp(30px,4.6vw,48px);font-weight:700;letter-spacing:-.5px;line-height:1.05;color:#22402f}
+  .hero .lede{font-size:clamp(15px,1.8vw,18px);max-width:620px;margin:14px 0 0;color:#33543f;line-height:1.5}
+
+  section{padding:44px 0}
+  .eyebrow{font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.22em;font-size:12px;font-weight:600;color:var(--g1)}
+  .h2{font-size:clamp(23px,3vw,32px);font-weight:700;letter-spacing:-.3px;margin:8px 0 6px;color:var(--g2)}
+  .sub{color:var(--ink2);font-size:16px;max-width:660px;margin:0 0 4px}
+
+  /* brief index card */
+  .brief-card{background:var(--paper);border:1px solid var(--line);border-left:5px solid var(--gold);border-radius:var(--r);
+    box-shadow:var(--shadow);padding:26px 28px;margin-top:22px;display:flex;flex-wrap:wrap;gap:22px;align-items:center}
+  .brief-card .bc-body{flex:1;min-width:260px}
+  .brief-card .bc-tag{display:inline-block;font-family:Oswald,sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:var(--gsoft);color:var(--g2);padding:3px 9px;border-radius:6px;margin-right:6px;margin-bottom:8px}
+  .brief-card h3{margin:2px 0 6px;font-size:22px;color:var(--ink)}
+  .brief-card p{margin:0;color:var(--ink2);font-size:14.5px}
+  .brief-card .bc-meta{font-size:12px;color:var(--mut);margin-top:8px}
+  .brief-card .bc-actions{display:flex;flex-direction:column;gap:8px;flex:none}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border-radius:11px;padding:11px 18px;font-weight:700;font-size:13.5px;text-decoration:none;cursor:pointer;border:1px solid transparent;white-space:nowrap;transition:filter .12s,transform .12s}
+  .btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+  .btn.solid{background:linear-gradient(180deg,var(--g1),var(--g2));color:#fff}
+  .btn.gold{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#3a2b08}
+  .btn.ghost{background:rgba(0,0,0,.03);border-color:var(--line);color:var(--g2)}
+
+  .stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:26px}
+  .stat{background:var(--paper);border:1px solid var(--line);border-radius:13px;padding:16px;text-align:center}
+  .stat .v{font-family:Fraunces,serif;font-weight:700;font-size:26px;color:var(--g2)}
+  .stat .l{font-size:11.5px;color:var(--mut);margin-top:2px;line-height:1.3}
+  @media(max-width:700px){.stat-row{grid-template-columns:repeat(2,1fr)}}
+
+  /* article */
+  .article{background:var(--paper);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:38px 40px;margin-top:14px}
+  .article h2.art-h1{color:var(--g2);font-size:26px;margin:0 0 14px;border-bottom:2px solid var(--gold2);padding-bottom:10px}
+  .article h3.art-h2{color:var(--g3);font-size:19px;margin:30px 0 10px}
+  .article h4.art-h3{color:#7a5f22;font-size:15px;margin:20px 0 8px;font-family:Oswald,sans-serif;text-transform:uppercase;letter-spacing:.06em;font-weight:600}
+  .article p{color:var(--ink2);font-size:14.8px;line-height:1.68;margin:0 0 13px}
+  .article ul{color:var(--ink2);font-size:14.8px;line-height:1.68;margin:0 0 13px;padding-left:22px}
+  .article table{width:100%;border-collapse:collapse;margin:14px 0 20px;font-size:13px}
+  .article table th{background:var(--g2);color:#fff;text-align:left;padding:8px 10px;font-weight:600}
+  .article table td{padding:7px 10px;border-bottom:1px solid var(--line2)}
+  .article table tr:nth-child(even) td{background:#f8f4e8}
+  .article figure{margin:22px 0;text-align:center}
+  .article figure img{max-width:100%;border-radius:12px;border:1px solid var(--line);box-shadow:0 8px 20px rgba(60,40,20,.08)}
+  .article figcaption{font-size:12px;color:var(--mut);font-style:italic;margin-top:8px}
+  .article .callout{background:var(--gsoft);border:1px solid #cfe0d2;border-left:4px solid var(--g1);border-radius:11px;padding:14px 17px;margin:16px 0;font-size:14px;color:var(--g3)}
+  .article .divider{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:30px 0}
+
+  .foot{background:#2b241a;color:#e9dcc4;padding:34px 0;text-align:center;margin-top:20px}
+  .foot .fine{font-size:12px;color:#9a8a6a}
+  .backtop{position:fixed;bottom:22px;right:22px;background:var(--g2);color:#fff;border-radius:50%;width:46px;height:46px;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 20px rgba(0,0,0,.2);text-decoration:none;font-size:18px;opacity:.9;z-index:30}
+  .backtop:hover{opacity:1}
+</style>
+</head>
+<body>
+<script>window.BB_NAV_ACTIVE='briefs'</script>
+
+<!-- HERO -->
+<header class="hero">
+  <img class="seal" src="bee-coin.svg" alt="">
+  <div class="in">
+    <div class="kick"><img src="ae-mark.png" alt="" style="width:20px;height:20px;border-radius:50%">Briefs from Accelerated Experiences</div>
+    <h1>Briefs from AE</h1>
+    <p class="lede">Market intelligence, competitive research, and patient-segment breakdowns — built for your practice, kept in one place, and updated as your market moves. Read a brief right here, or download the PDF for your records.</p>
+  </div>
+</header>
+
+<!-- INDEX -->
+<section>
+  <div class="wrap">
+    <div class="eyebrow">Latest brief</div>
+    <div class="h2">Your intelligence library</div>
+    <p class="sub">One brief so far — more will land here as your practice and your market keep moving.</p>
+
+    <div class="brief-card">
+      <div class="bc-body">
+        <span class="bc-tag">Competitive Landscape</span>
+        <span class="bc-tag">Referral ICP</span>
+        <span class="bc-tag">Patient Segmentation</span>
+        <h3>Tri-County Market Intelligence</h3>
+        <p>Kootenai, Bonner &amp; Spokane counties, broken out individually and combined — 56 competing practices mapped, your 868-contact referral network re-audited and tagged, a target-partner profile, and four probable-patient segments in plain English.</p>
+        <div class="bc-meta">Published July 2026 &middot; Accelerated Experiences, LLC &middot; 12-page PDF + full read below</div>
+      </div>
+      <div class="bc-actions">
+        <a class="btn solid" href="#brief-tricounty">Read the brief ↓</a>
+        <a class="btn gold" href="briefs-tricounty-market-intelligence.pdf" target="_blank" rel="noopener">⬇ Download PDF</a>
+      </div>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat"><div class="v">868</div><div class="l">Referral contacts, 12 states</div></div>
+      <div class="stat"><div class="v">71</div><div class="l">Local trade-area contacts</div></div>
+      <div class="stat"><div class="v">17</div><div class="l">Local NMD competitors</div></div>
+      <div class="stat"><div class="v">56</div><div class="l">Tri-county competitors, all types</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FULL BRIEF -->
+<section id="brief-tricounty" style="padding-top:8px">
+  <div class="wrap">
+    <div class="article">
+      <h2 class="art-h1">Tri-County Market Intelligence — Kootenai · Bonner · Spokane</h2>
+      <p style="color:var(--mut);font-size:12.5px;margin-top:-8px">Prepared by Accelerated Experiences, LLC — July 2026</p>
+
+      <h3 class="art-h2">Executive Summary</h3>
+      <p>Barry's referral network (868 contacts, spanning 12 states) has been re-audited and re-tagged. The relevant finding for day-to-day strategy isn't the size of the list — it's that only a small slice of it sits inside Barry's actual trade area. Of 92 naturopathic-credentialed contacts on the full list, <b>17 are true local competitors</b> (same license, same drive-time, same patient pool) and <b>75 are extended-network peers</b> — professional colleagues in other states who will never compete for a Coeur d'Alene patient, but are exactly the kind of people worth a phone call, a conference introduction, or a referral relationship if Barry ever expands, teaches, or refers a relocating patient. 106 entries are flagged &ldquo;thin&rdquo; — real businesses with too little public documentation to act on confidently, not fabricated or removed, just marked for a manual check before outreach.</p>
+      <p>Beyond the referral list, fresh research mapped the <b>actual competitive battlefield</b>: 56 practices across Kootenai, Bonner, and Spokane counties compete with Barry for the same patient, once you count not just other NMDs but the hormone clinics, med-spas, peptide-therapy shops, and concierge primary-care practices chasing the same "feel better, live longer" customer — roughly triple the naturopath-only count most people would assume.</p>
+      <p>The three counties are not one market. Kootenai is the home turf — dense, competitive, growing fast. Bonner is smaller, older, more seasonal — real room for a longevity-forward brand. Spokane is the big one next door — six times Kootenai's population, more institutional competition, and at least one direct competitor (Clinic 5C) that has already expanded into Coeur d'Alene itself.</p>
+
+      <div class="divider"></div>
+      <h3 class="art-h2">Part 1 — Referral Network Re-Audit</h3>
+      <p>Every one of the 868 rows on Barry's referral list now carries three new tags in the live Directory: <b>Zone</b> (local vs. extended), <b>Competitor</b> (true only for local-zone NMDs), and <b>Thin</b> (flagged for manual verification before outreach).</p>
+      <table>
+        <tr><th>Metric</th><th>Count</th></tr>
+        <tr><td>Total referral network</td><td>868</td></tr>
+        <tr><td>Local trade area (Kootenai + Bonner + Spokane)</td><td>71</td></tr>
+        <tr><td>Extended network (other states/regions)</td><td>797</td></tr>
+        <tr><td>Naturopathic Doctors, total</td><td>92</td></tr>
+        <tr><td>— Local competitors</td><td>17</td></tr>
+        <tr><td>— Extended-network peers</td><td>75</td></tr>
+        <tr><td>Flagged "thin" (needs manual verification)</td><td>106</td></tr>
+      </table>
+      <p>This directly answers the "obscure businesses in weird states" problem: those entries aren't wrong, they're correctly filed as extended network — visible and filterable in the <a href="barry-directory.html">Directory</a> via the Zone filter and the "⚔️ Local competitors" quick-filter chip.</p>
+
+      <div class="divider"></div>
+      <h3 class="art-h2">Part 2 — Competitive Landscape, County by County</h3>
+      <figure>
+        <img src="briefs-map1-tradearea.png" alt="Tri-county trade area schematic map">
+        <figcaption>Figure 1. Barry's tri-county trade area (schematic — marker size = competitors identified per city).</figcaption>
+      </figure>
+
+      <h4 class="art-h3">2.1 Kootenai County — Home Market</h4>
+      <p>Kootenai is Barry's home turf, and it's crowded. <b>21 practices</b> were identified competing for the same patient — more than in Bonner or Spokane individually, despite Kootenai having a fraction of Spokane's population. Six are naturopathic/functional-medicine practices (including Vital Health, 40+ years established — the longest local tenure found anywhere in the tri-county area); nine are hormone/peptide/concierge-medicine operations; six are med-spa/IV/weight-loss clinics (North Idaho Med Spa has the strongest visible review presence locally; NorthLife, opened 2022, is the fastest-growing entrant).</p>
+      <p>Population ~193,000 (2025), growing ~1.8%/year, up 28% over the last decade. Median age 41.0, 20.6% of the population 65+. Median household income $81,861. Kootenai's growth is substantially retiree in-migration — the 65+ population more than doubled between 2001 and 2019, over half from people moving in from California and Washington. Housing costs run 14–19% above the national average, filtering for real purchasing power, and the county has a well-documented pattern of self-pay-oriented, institution-skeptical in-migration — directly aligned with Barry's positioning.</p>
+
+      <h4 class="art-h3">2.2 Bonner County — Sandpoint, Secondary Market</h4>
+      <p>Bonner is smaller (54,400 people) but structurally different: it's the <b>oldest</b> of the three counties (median age 48.1, ~42% of the population 55+) with a huge second-home/seasonal-resident base — 86% of vacant housing units are for seasonal or recreational use, and average home values ($657K) run well above Kootenai's.</p>
+      <p><b>17 competing practices</b> were identified, clustered almost entirely in downtown Sandpoint. Three are true naturopathic peers; the rest split between concierge/DPC-style practices and a dense med-spa/aesthetics cluster (Signature Aesthetics — 108+ reviews, the strongest-reviewed practice in the county). Census migration-flow data already showed a net gain of 270 movers from LA County alone; local real-estate brokers describe continued relocation from California and western Washington as an ongoing pattern, not a one-time COVID spike. A 2022 community health survey named mental health as the single most-cited community concern (58% of respondents) — ahead of obesity or access to care.</p>
+
+      <h4 class="art-h3">2.3 Spokane County — Adjacent Major Metro</h4>
+      <p>Spokane is the market Kootenai and Bonner both feed into and compete against — six times Kootenai's population (558,000) at a younger median age (38.7). <b>18 competing practices</b> were identified, more institutionally competitive than either Idaho county (Providence and MultiCare together employ over 10,000 locally). Four are confirmed local NMD peers; nine are MD/DO/NP-led hormone/peptide/longevity practices (The Metabolic Institute, est. 2005, is the longest-tenured functional-medicine practice found anywhere in this research); five are med-spa/IV/aesthetics operators.</p>
+      <div class="callout"><b>Watch this one directly:</b> Clinic 5C — a Spokane-based cosmetic-plus-functional-medicine practice with a strong review record (RealSelf 4.8★/393 reviews) — has apparently opened or expanded a Coeur d'Alene location as of mid-2026. That converts Clinic 5C from an adjacent-market competitor into a direct, in-market one. Worth confirming with a call or site visit, since this surfaced from search results rather than a verified announcement.</div>
+
+      <h4 class="art-h3">2.4 Combined Tri-County View</h4>
+      <figure>
+        <img src="briefs-chart1-density.png" alt="Competitor density by category and county">
+        <figcaption>Figure 2. Competitor density by category and county.</figcaption>
+      </figure>
+      <figure>
+        <img src="briefs-chart2-share.png" alt="Share of tri-county competitors by county" style="max-width:420px">
+        <figcaption>Figure 3. Share of the 56 tri-county competitors, by county.</figcaption>
+      </figure>
+      <p>Across all three counties, <b>56 practices compete with Barry</b> for some slice of the same patient. Kootenai accounts for the largest single share (21, 38%), followed by Spokane (18, 32%) and Bonner (17, 30%) — meaning Bonner, despite being far smaller by population, punches roughly at parity on competitor count, a market-maturity signal driven by its older, more affluent, seasonal-resident base. The tri-county area totals roughly <b>806,000 people</b>, with the 65+ population alone exceeding <b>150,000</b> — larger than many mid-size metro areas, within an hour's drive of Barry's practice.</p>
+      <figure>
+        <img src="briefs-chart3-demographics.png" alt="Tri-county demographic snapshot">
+        <figcaption>Figure 4. Tri-county demographic snapshot.</figcaption>
+      </figure>
+      <figure>
+        <img src="briefs-chart4-health.png" alt="Chronic-condition prevalence signals">
+        <figcaption>Figure 5. Chronic-condition prevalence signals (Kootenai omitted where no clean county estimate exists — flagged, not fabricated).</figcaption>
+      </figure>
+
+      <div class="divider"></div>
+      <h3 class="art-h2">Part 3 — Target Partner Profile (Referral ICP)</h3>
+      <p>Not every complementary practitioner on Barry's list is worth the same outreach effort. The ideal referral partner: (1) practices a non-competing modality — chiropractic, acupuncture, physical therapy, mental-health/counseling; (2) is independently owned, not health-system-affiliated; (3) runs a cash-pay or hybrid billing model; (4) has been established 3+ years with an active digital presence; (5) already serves an older or wellness-oriented patient base; (6) sits geographically inside the local trade area.</p>
+      <p><b>Highest priority, in order:</b> mobility-focused chiropractors/physical therapists → acupuncturists positioned around chronic pain or fertility → mental-health counselors serving professional/executive clients → concierge/DPC practices that need a hormone/nutrition specialist to refer to → purely aesthetic med-spas with no hormone/IV overlap. <b>Deprioritize:</b> anything on the "thin" list until verified, hospital-employed practices, and every entry flagged <i>competitor: true</i>.</p>
+
+      <div class="divider"></div>
+      <h3 class="art-h2">Part 4 — Probable Patient Market: Four Segments</h3>
+      <table>
+        <tr><th>Segment</th><th>Geography</th><th>Who they are</th></tr>
+        <tr><td><b>A. Relocated Retiree Optimizer</b></td><td>Kootenai lakefront/golf, Bonner second-home areas</td><td>60–75, retired, relocated from CA/WA, wants autonomy from institutional medicine, motivated by staying active — the largest, most self-pay-ready segment (150,000+ people 65+ tri-county).</td></tr>
+        <tr><td><b>B. Midlife Executive/Entrepreneur</b></td><td>CDA, Hayden, Spokane Valley, Liberty Lake</td><td>40–55, professional/business owner, hormone/energy concerns framed as performance, wants concierge-level access, research-driven.</td></tr>
+        <tr><td><b>C. Chronic Complexity Patient</b></td><td>Distributed — travels for the right provider</td><td>Any age, already been through conventional care without resolution, will pay out of pocket for root-cause answers — the highest-intent segment, often referral-driven.</td></tr>
+        <tr><td><b>D. Second-Home/Seasonal Visitor</b></td><td>Bonner County — Sandpoint, Schweitzer, Lake Pend Oreille</td><td>45–70, owns a second home, wants low-friction telehealth/flexible scheduling, currently unclaimed by any Bonner County competitor identified.</td></tr>
+      </table>
+
+      <div class="divider"></div>
+      <h3 class="art-h2">Part 5 — What This Means, Practically</h3>
+      <ul>
+        <li><b>Start referral outreach with the 71 local-zone contacts</b>, prioritized by the Part 3 profile — the extended-network 797 are a real asset for later, not this quarter's priority.</li>
+        <li><b>The 17 local NMD competitors aren't outreach targets</b> — they're the honest baseline for how crowded the ND credential is locally. Differentiation has to come from more than the credential itself.</li>
+        <li><b>Bonner County is underrated</b> — smallest by population, but the oldest, most affluent, most seasonally-flexible patient base, with Segment D currently unclaimed.</li>
+        <li><b>Confirm the Clinic 5C Coeur d'Alene expansion directly</b> — if real, it's Barry's most credible in-market competitor.</li>
+        <li><b>This page is the place to keep this intelligence live</b> going forward, instead of a one-time PDF that goes stale.</li>
+      </ul>
+
+      <div class="divider"></div>
+      <p style="font-size:12px;color:var(--mut);font-style:italic">Sources: U.S. Census Bureau (QuickFacts, ACS, Decennial Census), Idaho Department of Labor, Washington State Office of Financial Management, County Health Rankings &amp; Roadmaps, CDC PLACES, Kootenai Health Community Health Needs Assessment (Dec. 2025), Bonner General Health Community Health Needs Assessment (2022), Zillow, Redfin, individual practice websites and public review platforms. Figures without a clean sourced point estimate are noted as such rather than approximated.</p>
+
+      <div style="text-align:center;margin-top:28px">
+        <a class="btn gold" href="briefs-tricounty-market-intelligence.pdf" target="_blank" rel="noopener">⬇ Download the full PDF</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<a class="backtop" href="#" aria-label="Back to top">↑</a>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="wrap">
+    <div class="fine">Briefs from AE · Barry Burris, NMD · Functional Medicine &amp; Longevity — built by Accelerated Experiences, LLC</div>
+  </div>
+</footer>
+
+<script src="bb-nav.js"></script>
+</body>
+</html>

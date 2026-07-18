@@ -46,6 +46,7 @@
     video: '<path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/>',
     checkin: '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
     pill: '<rect x="4" y="8" width="16" height="8" rx="4"/><path d="M12 8v8"/>',
+    ledger: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
     shield: '<path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9.2 12l1.9 1.9L15 10"/>'
   };
 
@@ -54,7 +55,7 @@
   var NAV = [
     { g: 'Practice', items: [
       ['home', 'Home', 'home', 'barry-burris-hub.html'],
-      ['welcome', 'AE Welcome', 'star', 'bb-welcome.html'],
+      ['briefs', 'Briefs from AE', 'trend', 'bb-briefs.html'],
       ['calendar', 'Calendar', 'cal', 'barry-calendar.html'],
       ['contacts', 'Contacts', 'users', 'barry-contacts.html'],
       ['charting', 'Charting', 'clip', 'barry-burris-hub.html#charting'],
@@ -64,6 +65,7 @@
     ] },
     { g: 'Business', items: [
       ['billing', 'Billing', 'dollar', 'barry-burris-hub.html#billing'],
+      ['books', 'Books', 'ledger', 'barry-books.html'],
       ['services', 'Services', 'star', 'barry-burris-hub.html#services'],
       ['labs', 'Labs', 'flask', 'barry-burris-hub.html#labs'],
       ['dispensary', 'Dispensary', 'pill', 'barry-dispensary.html']
