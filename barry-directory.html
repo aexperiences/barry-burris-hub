@@ -56,8 +56,13 @@ tr:last-child td{border-bottom:none}
 tr:hover td{background:#fbf8f0}
 .vtag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--teal-soft);color:var(--teal2);white-space:nowrap}
 .vtag.peer{background:var(--warn-soft);color:var(--warn)}
+.vtag.competitor{background:var(--bad-soft);color:var(--bad)}
 .peerrow td{background:#fdf8ee}
+.competitorrow td{background:#fbeeec}
 .peerflag{display:inline-block;margin-left:6px;font-size:10.5px;color:var(--warn);font-weight:700}
+.competitorflag{display:inline-block;margin-left:6px;font-size:10.5px;color:var(--bad);font-weight:700}
+.thinflag{display:inline-block;margin-left:5px;font-size:11px;color:var(--mut);cursor:help}
+.zonetag{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:6px;background:#eef2ee;color:#5a6b5f;margin-left:5px;text-transform:uppercase;letter-spacing:.03em}
 .nm{font-weight:700}
 .ct{color:var(--mut);font-size:12px;margin-top:1px}
 .tier{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;font-weight:800;font-size:12px}
@@ -90,7 +95,7 @@ tr:hover td{background:#fbf8f0}
 </div></header>
 
 <div class="wrap">
-  <div class="note"><b>What this is.</b> The full Accelerated Experiences master leads list (all hub verticals) plus real, sourced research on complementary practitioners and peer NMDs across Kootenai County / Coeur d'Alene and statewide Idaho, Montana, and Washington — filed under Hub: <b>Barry Burris Hub</b>. Everything below came from an actual web search with a real source; nothing here is invented. Rows flagged 🚩 <b>peer NMD</b> share Barry's own credential (NMD/ND) — worth a courtesy call to learn their focus before assuming overlap vs. complement, rather than a straightforward referral. Outreach status and notes you set are on-device (Lane A) — stored in this browser, not synced across devices yet.</div>
+  <div class="note"><b>What this is.</b> The full Accelerated Experiences master leads list (all hub verticals) plus real, sourced research on complementary practitioners and NMDs across Kootenai County / Coeur d'Alene, Spokane County, and statewide Idaho, Montana, Washington, Florida, Ohio, Kentucky, Nevada, Utah, Texas, California, Colorado, and Arizona — filed under Hub: <b>Barry Burris Hub</b>. Everything below came from an actual web search with a real source; nothing here is invented. Rows flagged <span class="vtag competitor" style="padding:1px 6px">competitor</span> are NMDs inside Barry's actual local trade area (Kootenai/Bonner/Spokane) — real head-to-head competition, not just professional peers. Rows flagged <span class="vtag peer" style="padding:1px 6px">peer NMD</span> are NMDs outside that area — same credential, worth a courtesy call, but not a day-to-day competitive threat. A grey <b>thin</b> mark (?) means the entry has little public documentation (no address/phone, or Tier C) — real and sourced, just worth confirming before outreach. Outreach status and notes you set are on-device (Lane A) — stored in this browser, not synced across devices yet.</div>
 
   <div class="quickrow" id="quickRow"></div>
 
@@ -99,6 +104,9 @@ tr:hover td{background:#fbf8f0}
     <div class="fld"><label>Hub</label><select id="fHub" onchange="renderTable()"></select></div>
     <div class="fld"><label>Vertical</label><select id="fVertical" onchange="renderTable()"></select></div>
     <div class="fld"><label>State</label><select id="fState" onchange="renderTable()"></select></div>
+    <div class="fld"><label>Zone</label><select id="fZone" onchange="renderTable()">
+      <option value="">All zones</option><option value="local">Local trade area</option><option value="extended">Extended network</option>
+    </select></div>
     <div class="fld"><label>Status</label><select id="fStatus" onchange="renderTable()">
       <option value="">All</option><option value="new">New</option><option value="contacted">Contacted</option>
       <option value="meeting">Meeting set</option><option value="partnered">Partnered</option><option value="notfit">Not a fit</option>
@@ -147,12 +155,16 @@ function barryVerticalCounts(){
   const rows=DIRECTORY_DATA.filter(r=>r.hub==='Barry Burris Hub');
   const byV={};
   rows.forEach(r=>byV[r.v]=(byV[r.v]||0)+1);
-  return {total:rows.length,byV};
+  const localCount=rows.filter(r=>r.zone==='local').length;
+  const competitorCount=rows.filter(r=>r.competitor).length;
+  return {total:rows.length,byV,localCount,competitorCount};
 }
 function renderQuickRow(){
-  const {total,byV}=barryVerticalCounts();
+  const {total,byV,localCount,competitorCount}=barryVerticalCounts();
   const chips=[
-    {label:'🩺 Barry’s referral network (ID / MT / WA)',hub:'Barry Burris Hub',n:total},
+    {label:'🩺 Barry’s referral network (full)',hub:'Barry Burris Hub',n:total},
+    {label:'📍 Local trade area (Kootenai/Bonner/Spokane)',hub:'Barry Burris Hub',zone:'local',n:localCount},
+    {label:'⚔️ Local competitors (NMDs)',hub:'Barry Burris Hub',zone:'local',vertical:'Naturopathic Medicine',n:competitorCount},
   ].concat(Object.keys(byV).sort().map(v=>({label:(v==='Naturopathic Medicine'?'🚩 ':'')+v,vertical:v,hub:'Barry Burris Hub',n:byV[v]})));
   const el=document.getElementById('quickRow');
   el.innerHTML='<button class="qbtn" id="qbtn-all" onclick="clearQuick()">All ' + DIRECTORY_DATA.length + ' rows</button>'
@@ -162,6 +174,7 @@ function clearQuick(){resetFilters();}
 function applyQuick(c){
   document.getElementById('fHub').value=c.hub||'';
   document.getElementById('fVertical').value=c.vertical||'';
+  document.getElementById('fZone').value=c.zone||'';
   renderTable();
 }
 
@@ -175,6 +188,7 @@ function resetFilters(){
   document.getElementById('fHub').value='';
   document.getElementById('fVertical').value='';
   document.getElementById('fState').value='';
+  document.getElementById('fZone').value='';
   document.getElementById('fStatus').value='';
   activeTiers.clear();
   document.querySelectorAll('.tierbtn').forEach(b=>b.classList.remove('on'));
@@ -186,11 +200,13 @@ function filteredRows(){
   const hub=document.getElementById('fHub').value;
   const vertical=document.getElementById('fVertical').value;
   const state=document.getElementById('fState').value;
+  const zone=document.getElementById('fZone').value;
   const status=document.getElementById('fStatus').value;
   return DIRECTORY_DATA.filter(r=>{
     if(hub&&r.hub!==hub)return false;
     if(vertical&&r.v!==vertical)return false;
     if(state&&r.st!==state)return false;
+    if(zone&&r.zone!==zone)return false;
     if(activeTiers.size&&!activeTiers.has(r.tier))return false;
     if(status){const st=getRowState(r.id).status||'new';if(st!==status)return false;}
     if(q){
@@ -224,9 +240,18 @@ function renderTable(){
     const contact=[r.cf,r.cl].filter(Boolean).join(' ')+(r.title?' · '+r.title:'');
     const loc=[r.city,r.st].filter(Boolean).join(', ')+(r.addr?'<div class="ct">'+esc(r.addr)+'</div>':'');
     const phoneWeb=[r.phone?esc(r.phone):'',r.web?`<a class="website" href="${esc(r.web)}" target="_blank" rel="noopener">${esc(r.web.replace(/^https?:\/\//,''))}</a>`:''].filter(Boolean).join('<br>');
-    const isPeer=r.v==='Naturopathic Medicine';
-    return `<tr class="${isPeer?'peerrow':''}">
-      <td><span class="vtag${isPeer?' peer':''}">${esc(r.v)}</span>${isPeer?'<span class="peerflag" title="Same credential as Barry — NMD/ND. Confirm focus before assuming complement vs. competitor.">🚩 peer NMD</span>':''}</td>
+    const isNMD=r.v==='Naturopathic Medicine';
+    const isCompetitor=!!r.competitor;
+    const isPeer=isNMD&&!isCompetitor;
+    const rowClass=isCompetitor?'competitorrow':(isPeer?'peerrow':'');
+    const vtagClass=isCompetitor?' competitor':(isPeer?' peer':'');
+    const flagHtml=isCompetitor
+      ? '<span class="competitorflag" title="Inside Barry\'s local trade area (Kootenai/Bonner/Spokane) — a real head-to-head competitor, not just a professional peer.">⚔️ local competitor</span>'
+      : (isPeer ? '<span class="peerflag" title="Same credential as Barry — NMD/ND, outside his local trade area. Professional peer, not a day-to-day competitor.">🚩 peer NMD</span>' : '');
+    const zoneTag = r.zone==='local' ? '<span class="zonetag" title="Inside Barry\'s local trade area">local</span>' : '';
+    const thinTag = r.thin ? '<span class="thinflag" title="Thin public documentation — real and sourced, but confirm details before outreach.">﹖</span>' : '';
+    return `<tr class="${rowClass}">
+      <td><span class="vtag${vtagClass}">${esc(r.v)}</span>${flagHtml}${zoneTag}${thinTag}</td>
       <td><div class="nm">${esc(r.name)}</div>${phoneWeb?'<div class="ct">'+phoneWeb+'</div>':''}</td>
       <td>${loc||'<span class="ct">—</span>'}</td>
       <td>${contact.trim()?esc(contact):'<span class="ct">—</span>'}</td>
