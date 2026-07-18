@@ -645,7 +645,24 @@ function renderNav(active){
   });
   document.getElementById('navList').innerHTML=h;
 }
-function unreadCount(){var m=read(pkey('msgs'),null);if(!m)return 1;return m.filter(function(x){return x.from==='them'&&!x.read;}).length;}
+/* Real unread count, backed by /api/connect (same source as the bb-messages.js floating
+   panel — not the old device-local fake thread). Cached + refreshed in the background so
+   renderNav() (synchronous) always has a value to read. */
+var msgUnread=0;
+function readMsgSeen(){try{return JSON.parse(localStorage.getItem('bb_msg_seen')||'{}');}catch(e){return {};}}
+function writeMsgSeen(o){try{localStorage.setItem('bb_msg_seen',JSON.stringify(o));}catch(e){}}
+function refreshMsgBadge(){
+  if(typeof BB_ME==='undefined'||!BB_ME||!BB_ME.key)return;
+  fetch('/api/connect',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({do:'thread',with:BB_ME.key})})
+    .then(function(r){return r.json();}).then(function(r){
+      if(!r||!r.ok){msgUnread=0;return;}
+      var seen=readMsgSeen(),n=0;
+      (r.msgs||[]).forEach(function(m){if(m.role==='provider'&&(m.ts||0)>(seen[BB_ME.key]||0))n++;});
+      msgUnread=n;
+      if(!document.getElementById('app').classList.contains('hide')){var cur=(location.hash||'#home').slice(1);renderNav(VIEWS[cur]?cur:'home');}
+    }).catch(function(){});
+}
+function unreadCount(){return msgUnread;}
 
 /* ================= ROUTER ================= */
 var VIEWS={home:renderHome,plan:renderPlan,appts:renderAppts,labs:renderLabs,messages:renderMessages,docs:renderDocs,checkins:renderCheckins,dispensary:renderDispensary,profile:renderProfile};
@@ -660,7 +677,6 @@ function go(key){
   var v=document.getElementById('view');v.innerHTML='';
   try{VIEWS[key]();}catch(e){v.innerHTML='<div class="empty"><div class="em-ic">⚠️</div><p>'+esc(t('loadError'))+'</p><button class="btn" onclick="go(\'home\')">'+esc(t('backHome'))+'</button></div>';if(window.console)console.error(e);}
   try{window.scrollTo(0,0);}catch(e){}
-  if(typeof translateThread==='function')translateThread();
   closeSideMobile();
 }
 
@@ -722,12 +738,21 @@ function renderHome(){
   if((p.labs||[]).length)p.labs.slice(0,2).forEach(function(fn){h+=docRow('flask',fn,t('received')+' · '+(p.submitted||''),'<span class="status rev">'+esc(t('underReview'))+'</span>');});
   else h+='<p class="small">—</p>';
   h+='<div style="margin-top:8px"><a href="#labs" onclick="go(\'labs\');return false;">'+esc(t('viewAll'))+' →</a></div></div>';
-  var msgs=getMsgs(p);var lastThem=msgs.filter(function(m){return m.from==='them';}).slice(-1)[0];
-  h+='<div class="card"><div class="lbl">'+esc(t('recentMsgs'))+'</div><div style="margin-top:10px">';
-  if(lastThem)h+='<p class="small" style="line-height:1.5">“'+esc(lastThem.text.slice(0,110))+(lastThem.text.length>110?'…':'')+'”</p>';
+  h+='<div class="card"><div class="lbl">'+esc(t('recentMsgs'))+'</div><div style="margin-top:10px" id="homeMsgPrev"><p class="small" style="color:var(--mut)">'+esc(lang==='vi'?'Đang tải…':(lang==='es'?'Cargando…':'Loading…'))+'</p></div>';
   h+='<div style="margin-top:8px"><a href="#messages" onclick="go(\'messages\');return false;">'+esc(t('viewAll'))+' →</a></div></div>';
   h+='</div>';
   v.innerHTML=h;
+  loadHomeMsgPreview();
+}
+function loadHomeMsgPreview(){
+  if(typeof BB_ME==='undefined'||!BB_ME||!BB_ME.key)return;
+  msgApi('thread',{with:BB_ME.key}).then(function(r){
+    var el=document.getElementById('homeMsgPrev');if(!el)return;
+    if(!r||!r.ok){el.innerHTML='<p class="small">—</p>';return;}
+    var fromProvider=(r.msgs||[]).filter(function(m){return m.role==='provider';}).slice(-1)[0];
+    if(fromProvider)el.innerHTML='<p class="small" style="line-height:1.5">“'+esc(fromProvider.text.slice(0,110))+(fromProvider.text.length>110?'…':'')+'”</p>';
+    else el.innerHTML='<p class="small">—</p>';
+  }).catch(function(){var el=document.getElementById('homeMsgPrev');if(el)el.innerHTML='<p class="small">—</p>';});
 }
 function renderTasks(p,next){
   var st=tasksState();
@@ -852,63 +877,89 @@ function docRow(ic,name,meta,right){
     '<div style="min-width:0"><div class="dn">'+esc(name)+'</div><div class="dm">'+esc(meta)+'</div></div><div class="da">'+(right||'')+'</div></div>';
 }
 
-/* ---------- messages ---------- */
-function seedMsgs(p){var f=firstName(p.name);
-  return [{from:'them',cat:'general',text:'Hi '+f+'! We’ve received your intake questionnaire and your uploaded labs. Barry Burris will review everything before your visit. If you have any questions, just reply here.',ts:Date.now()-86400000,read:false}];}
-function getMsgs(p){var m=read(pkey('msgs'),null);if(!m){m=seedMsgs(p);write(pkey('msgs'),m);}return m;}
-var msgCat='all';
-function renderMessages(){
-  var p=current();var v=document.getElementById('view');var msgs=getMsgs(p);
-  msgs.forEach(function(m){if(m.from==='them')m.read=true;});write(pkey('msgs'),msgs);
-  var h=demoBanner();
-  h+='<div class="card"><h3>'+esc(t('msgTitle'))+'</h3><div class="csub">'+esc(t('msgSub'))+'</div>';
-  h+='<div class="seg" role="group" aria-label="'+esc(t('msgTitle'))+'">'+['all','general','clinical','billing'].map(function(c){return '<button aria-pressed="'+(msgCat===c)+'" class="'+(msgCat===c?'on':'')+'" onclick="setMsgCat(\''+c+'\')">'+esc(t('cat'+c.charAt(0).toUpperCase()+c.slice(1)))+'</button>';}).join('')+'</div>';
-  h+='<div class="msgs" id="msgList">';
-  msgs.filter(function(m){return msgCat==='all'||m.cat===msgCat||m.from==='sys';}).forEach(function(m){h+=bubble(m);});
-  h+='</div>';
-  h+='<div class="composer"><button class="btn sm" onclick="attachDemo()" title="'+esc(t('attach'))+'" aria-label="'+esc(t('attach'))+'">📎</button><input type="text" id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()" aria-label="'+esc(t('msgPlaceholder'))+'"><button class="btn solid" onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
-  h+='<div class="small" style="margin-top:8px">🔒 '+esc(t('reply1'))+(lang!=='en'?' · 🌐 '+esc(lang==='vi'?'Tin nhắn từ đội chăm sóc hiển thị bằng ngôn ngữ của bạn.':(lang==='es'?'Los mensajes del equipo se muestran en tu idioma.':'Messages from your care team are shown in your language.')):'')+'</div></div>';
-  v.innerHTML=h;
-  var l=document.getElementById('msgList');if(l)l.scrollTop=l.scrollHeight;
-  renderNav('messages');translateThread();
-}
-function setMsgCat(c){msgCat=c;renderMessages();}
+/* ---------- messages ----------
+   REAL, backed by /api/connect — the exact same thread the bb-messages.js floating
+   panel reads/writes (same BB_ME.key identity), so a message sent from either surface
+   shows up in both. Previously this view was a device-local fake thread that scripted
+   a canned "reached the care team" auto-reply and never actually notified the provider —
+   removed per the AE No-Demos build principle. */
 function origLabel(){return lang==='vi'?'bản gốc':(lang==='es'?'original':'original');}
 function transLabel(){return lang==='vi'?'bản dịch':(lang==='es'?'traducción':'translation');}
-// Provider/system messages are authored in English (Barry's language) and shown in the patient's language.
-// Wrap any English provider-authored text so it shows in the patient's language (with a show-original toggle).
+// Provider-authored text (care-plan goals, etc.) is written in English and shown in the
+// patient's language, with a show-original toggle. Used outside the messages view too
+// (e.g. the care plan's "Goals" card), so this stays a standalone utility.
 function trProv(o){o=String(o==null?'':o);
   if(lang==='en'||!o.trim()||typeof BBTranslate==='undefined')return esc(o);
   var c=BBTranslate.cachedOnly(o,lang);
   if(c!=null&&c!==o)return '<span class="trneed" data-done="1"><span class="bt-tx">'+esc(c)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(c)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button></span>';
-  return '<span class="trneed" data-o="'+esc(o)+'">'+esc(o)+'</span>';
+  var id='tr'+Math.random().toString(36).slice(2,9);
+  BBTranslate.to(o,lang).then(function(tr){var el=document.getElementById(id);if(!el||!tr||tr===o)return;el.outerHTML='<span class="trneed" data-done="1"><span class="bt-tx">'+esc(tr)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(tr)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button></span>';});
+  return '<span class="trneed" id="'+id+'" data-o="'+esc(o)+'">'+esc(o)+'</span>';
 }
-function provText(m){return (m.from==='them'||m.from==='sys')?trProv(m.text):esc(m.text);}
 function btToggle(b){var s=b.getAttribute('data-s'),span=b.parentNode.querySelector('.bt-tx');if(!span)return;if(s==='t'){span.textContent=b.getAttribute('data-o');b.setAttribute('data-s','o');b.textContent='🌐 '+transLabel();}else{span.textContent=b.getAttribute('data-t');b.setAttribute('data-s','t');b.textContent='🌐 '+origLabel();}}
-function translateThread(){
+function renderMessages(){
+  var v=document.getElementById('view');
+  var h=demoBanner();
+  h+='<div class="card"><h3>'+esc(t('msgTitle'))+'</h3><div class="csub">'+esc(t('msgSub'))+'</div>';
+  h+='<div class="msgs" id="msgList"><div class="small" style="padding:10px 0;color:var(--mut)">'+esc(lang==='vi'?'Đang tải…':(lang==='es'?'Cargando…':'Loading…'))+'</div></div>';
+  h+='<div class="composer"><input type="text" id="msgIn" placeholder="'+esc(t('msgPlaceholder'))+'" onkeydown="if(event.key===\'Enter\')sendMsg()" aria-label="'+esc(t('msgPlaceholder'))+'"><button class="btn solid" onclick="sendMsg()">'+esc(t('send'))+'</button></div>';
+  h+='<div class="small" style="margin-top:8px">🔒 '+esc(t('reply1'))+(lang!=='en'?' · 🌐 '+esc(lang==='vi'?'Tin nhắn từ đội chăm sóc hiển thị bằng ngôn ngữ của bạn.':(lang==='es'?'Los mensajes del equipo se muestran en tu idioma.':'Messages from your care team are shown in your language.')):'')+'</div></div>';
+  v.innerHTML=h;
+  renderNav('messages');
+  loadMsgThread(true);
+}
+function msgApi(doName,args){
+  return fetch('/api/connect',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({do:doName},args))})
+    .then(function(r){return r.json();}).catch(function(){return {ok:false,reason:'net'};});
+}
+function loadMsgThread(scroll){
+  msgApi('thread',{with:BB_ME.key}).then(function(r){
+    var l=document.getElementById('msgList');if(!l)return;
+    if(!r||!r.ok){
+      l.innerHTML='<div class="small" style="padding:10px 0;color:var(--mut)">'+esc(lang==='vi'?'Nhắn tin sắp sẵn sàng — sẽ bật khi phòng khám kết nối máy chủ bảo mật.':'Messaging is finishing setup — it turns on as soon as the practice connects its secure server.')+'</div>';
+      return;
+    }
+    var msgs=r.msgs||[];
+    if(!msgs.length){l.innerHTML='<div class="small" style="padding:10px 0;color:var(--mut)">'+esc(lang==='vi'?'Chưa có tin nhắn. Gửi tin nhắn đầu tiên bên dưới.':(lang==='es'?'Aún no hay mensajes. Envía el primero abajo.':'No messages yet — send the first one below.'))+'</div>';}
+    else{
+      var seen=readMsgSeen(),last=0;
+      l.innerHTML=msgs.map(function(m){last=Math.max(last,m.ts||0);return bubbleReal(m);}).join('');
+      seen[BB_ME.key]=Math.max(seen[BB_ME.key]||0,last);writeMsgSeen(seen);msgUnread=0;
+    }
+    if(scroll)l.scrollTop=l.scrollHeight;
+    translateRealThread();
+  });
+}
+function bubbleReal(m){
+  var mine=m.role==='patient';
+  var d=new Date(m.ts||Date.now());var when=fmtDate(d,false)+' · '+fmtTime(d);
+  var who=mine?(lang==='vi'?'Bạn':(lang==='es'?'Tú':'You')):'Barry Burris, NMD';
+  return '<div class="bub '+(mine?'me':'them')+'" data-o="'+esc(m.text)+'" data-mine="'+(mine?1:0)+'"><span class="mtx">'+esc(m.text)+'</span><div class="mm">'+who+' · '+when+'</div></div>';
+}
+function translateRealThread(){
   if(lang==='en'||typeof BBTranslate==='undefined')return;
-  var els=[].slice.call(document.querySelectorAll('.trneed:not([data-done])'));if(!els.length)return;
+  var els=[].slice.call(document.querySelectorAll('#msgList .bub[data-mine="0"]'));if(!els.length)return;
   var origs=els.map(function(e){return e.getAttribute('data-o');});
-  BBTranslate.batch(origs,lang).then(function(tr){els.forEach(function(e,i){var o=origs[i],t2=tr[i]||o;e.setAttribute('data-done','1');if(t2&&t2!==o)e.innerHTML='<span class="bt-tx">'+esc(t2)+'</span> <button class="bt-og" data-o="'+esc(o)+'" data-t="'+esc(t2)+'" data-s="t" onclick="btToggle(this)">🌐 '+esc(origLabel())+'</button>';else e.textContent=o;});});
+  BBTranslate.batch(origs,lang).then(function(tr){
+    els.forEach(function(e,i){
+      var o=origs[i],t2=tr[i]||o;if(!t2||t2===o)return;
+      var span=e.querySelector('.mtx');span.textContent=t2;
+      var btn=document.createElement('button');btn.className='bt-og';btn.textContent='🌐 '+origLabel();
+      btn.onclick=function(){var showingTr=btn.getAttribute('data-s')!=='o';if(showingTr){span.textContent=o;btn.setAttribute('data-s','o');btn.textContent='🌐 '+transLabel();}else{span.textContent=t2;btn.setAttribute('data-s','t');btn.textContent='🌐 '+origLabel();}};
+      e.appendChild(document.createTextNode(' '));e.appendChild(btn);
+    });
+  });
 }
-function bubble(m){
-  if(m.from==='sys')return '<div class="bub sys">'+provText(m)+'</div>';
-  var d=new Date(m.ts);var when=fmtDate(d,false)+' · '+fmtTime(d);
-  var att=m.att?'<div class="att">📎 '+esc(m.att)+'</div>':'';
-  var who=(m.from==='me'?(lang==='vi'?'Bạn':(lang==='es'?'Tú':'You')):'Barry Burris, NMD');
-  var seen=(m.from==='me'?' · '+t('seen'):'');
-  return '<div class="bub '+(m.from==='me'?'me':'them')+'">'+provText(m)+att+'<div class="mm">'+who+' · '+when+seen+'</div></div>';
-}
-function pushMsg(m){var arr=read(pkey('msgs'),[]);arr.push(m);write(pkey('msgs'),arr);}
-function sendMsg(){var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
-  var m={from:'me',cat:(msgCat==='all'?'general':msgCat),text:txt,mlang:lang,ts:Date.now(),read:true};
-  pushMsg(m);
+function sendMsg(){
+  var inp=document.getElementById('msgIn');var txt=(inp.value||'').trim();if(!txt)return;
   inp.value='';
-  if(lang!=='en'&&typeof BBTranslate!=='undefined'){BBTranslate.to(txt,'en').then(function(en){var arr=read(msgKey(),[]);for(var i=arr.length-1;i>=0;i--){if(arr[i].ts===m.ts){arr[i].en=en;break;}}write(msgKey(),arr);});}
-  setTimeout(function(){pushMsg({from:'sys',text:'Your message reached the care team. Barry Burris will review and reply — usually within 1 business day. For anything urgent, please call the clinic or your local emergency number.',ts:Date.now(),read:true});if((location.hash||'#home').slice(1)==='messages')renderMessages();},600);
-  renderMessages();toast(t('toastSent'),'good');
+  var l=document.getElementById('msgList');
+  if(l){var ph=l.querySelector('.small');if(ph)ph.remove();l.insertAdjacentHTML('beforeend',bubbleReal({role:'patient',text:txt,ts:Date.now()}));l.scrollTop=l.scrollHeight;}
+  msgApi('send',{role:'patient',me:BB_ME.key,name:BB_ME.name,lang:BB_ME.lang,text:txt,to:'provider',patientName:BB_ME.name}).then(function(r){
+    if(!r||!r.ok)toast(lang==='vi'?'Không gửi được — thử lại.':(lang==='es'?'No se pudo enviar — intenta de nuevo.':'Could not send — try again.'),'bad');
+    else toast(t('toastSent'),'good');
+  });
 }
-function attachDemo(){var inp=document.getElementById('msgIn');pushMsg({from:'me',cat:(msgCat==='all'?'general':msgCat),text:(inp&&inp.value.trim())||(lang==='vi'?'Đã đính kèm tài liệu.':'Attached a document.'),att:'my-document.pdf',ts:Date.now(),read:true});if(inp)inp.value='';renderMessages();toast(t('toastUploaded'),'good');}
 
 /* ---------- documents ---------- */
 var docCat='all';
@@ -1324,6 +1375,8 @@ try{ var _s=(window.BBPortal&&BBPortal.session&&BBPortal.session())||null;
     key:(_s&&(_s.email||_s.accountId))?('pt-'+String(_s.email||_s.accountId).replace(/[^a-z0-9]+/gi,'-').toLowerCase()):(localStorage.getItem('bb_msg_pid')||'pt-guest'),
     name:(_s&&_s.name)||'You',
     lang:(localStorage.getItem('bb_pt_lang')||'en')};
+  refreshMsgBadge();
+  setInterval(refreshMsgBadge,8000);
 }catch(e){}
 </script>
 <script src="bb-app.js"></script>
