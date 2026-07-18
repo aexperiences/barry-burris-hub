@@ -183,8 +183,32 @@ var LS='bb_records';
 var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 
 /* ---- fixed filing schema (so filing can't drift) ---- */
-var CATS=['Labs','Imaging','Consents','Referrals & letters','Insurance & ID','Visit notes','Treatment plans','Prescriptions/orders','Intake forms','Misc'];
-var CAT_HUE={'Labs':'#b07a2e','Imaging':'#6b3fa0','Consents':'#5f8f6c','Referrals & letters':'#2b6cb0','Insurance & ID':'#4e7433','Visit notes':'#3f6b4e','Treatment plans':'#b3261e','Prescriptions/orders':'#8a5a2b','Intake forms':'#5b6b86','Misc':'#8a7c68'};
+var CATS=['Labs','Imaging','Consents','Referrals & letters','Insurance & ID','Visit notes','Treatment plans','Prescriptions/orders','Intake forms','Practice docs','Misc'];
+var CAT_HUE={'Labs':'#b07a2e','Imaging':'#6b3fa0','Consents':'#5f8f6c','Referrals & letters':'#2b6cb0','Insurance & ID':'#4e7433','Visit notes':'#3f6b4e','Treatment plans':'#b3261e','Prescriptions/orders':'#8a5a2b','Intake forms':'#5b6b86','Practice docs':'#c9992f','Misc':'#8a7c68'};
+
+/* ---- Practice docs: the build briefs, infra map, and session logs behind this
+ * hub, filed automatically so Barry has the full record — not just the app. ---- */
+var DOC_LIBRARY=[
+ {id:'doc-sessionlog-jul17',name:'Session Log — Jul 17 2026.md',url:'docs/Barry Burris Hub — Session Log (Jul 17 2026).md',date:'2026-07-17'},
+ {id:'doc-masterbrief',name:'Master Brief.pdf',url:'docs/Barry Burris Hub — Master Brief.pdf',date:'2026-07-17'},
+ {id:'doc-brandbrief',name:'Brand, Recent Updates & ESPOsocial Brief.md',url:'docs/Barry Burris Hub — Brand, Recent Updates & ESPOsocial Brief.md',date:'2026-07-17'},
+ {id:'doc-infra',name:'Infra & Deploy Map.md',url:'docs/Barry Burris — INFRA & DEPLOY MAP.md',date:'2026-07-14'},
+ {id:'doc-connectbrief',name:'Connect — Build Brief.md',url:'docs/Barry Hub — Connect BUILD BRIEF.md',date:'2026-07-14'},
+ {id:'doc-deployblocker',name:'Deployment Blocker Brief.md',url:'docs/Barry Hub — Deployment Blocker Brief.md',date:'2026-07-14'},
+ {id:'doc-hipaa',name:'HIPAA Go-Live Plan.md',url:'docs/Barry Portal — HIPAA Go-Live Plan.md',date:'2026-07-14'},
+ {id:'doc-playbook',name:'AE Hub Build Playbook.md',url:'docs/AE HUB BUILD PLAYBOOK.md',date:'2026-07-16'},
+ {id:'doc-audit-jul17',name:'Real-Gated-Fake Audit.md',url:'docs/Barry Burris Hub — Real-Gated-Fake Audit (Jul 17 2026).md',date:'2026-07-17'}
+];
+function ensureDocLibrary(){
+ var have={};ALL.forEach(function(r){if(r.docId)have[r.docId]=1;});
+ var added=false;
+ DOC_LIBRARY.forEach(function(d){
+  if(have[d.id])return;
+  ALL.push({id:'r'+d.id,docId:d.id,name:d.name,patient:'Barry Burris, NMD (practice)',category:'Practice docs',date:d.date,sample:false,src:'link',kind:extKind(d.url)||'doc',url:d.url,fileName:'',stored:'link',createdAt:new Date().toISOString()});
+  added=true;
+ });
+ if(added)persist();
+}
 /* the 15 SAMPLE patients that seed the rest of the hub (bb-intakes.js) */
 var SAMPLE_PATIENTS=['Marcus Delgado','Nguyễn Thị Mai','Trần Thị Hương','David Whitfield','Emily Foster','Lê Minh Tuấn','Sarah Chen','Phạm Thị Ngọc','Robert Nguyen','Jake Morrison','Daniel Pham','Vũ Thị Lan','Margaret O’Brien','Đặng Văn Hải','Rachel Kim'];
 
@@ -454,6 +478,7 @@ function init(){
   var raw=readAll();
   ALL=raw||[];
   if(!ALL.length){seed();}
+  ensureDocLibrary();
   buildFilters();render();
   el('q').addEventListener('input',function(){FS.q=this.value;render();});
   el('fPatient').addEventListener('change',function(){FS.patient=this.value;render();});
