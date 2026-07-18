@@ -653,8 +653,13 @@ function renderLabTrends(){
    <div class="muted" style="font-size:11px;margin-top:4px">${arr.length} draw${arr.length===1?'':'s'} · ref ${last.lo}–${last.hi} ${last.unit}</div>
   </div>`;
  }).join('');
- const historyRows=orders.filter(l=>l.readings&&l.readings.length).map(l=>
-  `<tr><td class="muted">${l.d}</td><td>${l.panel}</td><td>${l.readings.map(r=>`${r.marker}: <b style="color:${outOfRange(r.value,r.lo,r.hi)?'var(--bad)':'inherit'}">${r.value}${r.unit?' '+r.unit:''}</b>`).join(' · ')}</td></tr>`
+ const byDate={};
+ orders.forEach(l=>(l.readings||[]).forEach(r=>{
+   const row=byDate[r.date]||(byDate[r.date]={date:r.date,panel:l.panel,items:[]});
+   row.items.push(r);
+ }));
+ const historyRows=Object.values(byDate).sort((a,b)=>a.date<b.date?1:-1).map(row=>
+  `<tr><td class="muted">${row.date}</td><td>${row.panel}</td><td>${row.items.map(r=>`${r.marker}: <b style="color:${outOfRange(r.value,r.lo,r.hi)?'var(--bad)':'inherit'}">${r.value}${r.unit?' '+r.unit:''}</b>`).join(' · ')}</td></tr>`
  ).join('');
  return head+flagCard+`<div class="svc" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${chartCards}</div>
  <div class="card" style="margin-top:16px"><div class="sec-h"><h3 style="margin:0">Draw history</h3></div>
