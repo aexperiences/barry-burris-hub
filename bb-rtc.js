@@ -235,18 +235,35 @@
     _myLang = opts.myLang || 'en';
     ensureOverlay(opts);
     var myName = opts.displayName || opts.patient || 'Guest';
-    stageMsg('<div class="sp"></div><div>Starting your visit…</div>');
-    // 1) probe backend (env-gated). If KV not configured, video is dormant.
+    stageMsg('<div class="sp"></div><div>Connecting…</div>');
+    // 1) probe backend (env-gated). If KV not configured, video is dormant. This probe
+    // touches no camera/mic — safe to do before any consent step.
     api('ping', {}).then(function (pong) {
       if (!pong || pong.reason === 'no_kv') {
         stageMsg('<div style="font-size:15px;color:#e7edf2">Video is finishing setup.</div><div style="max-width:420px">Native video switches on as soon as the practice connects its secure server. Your visit link is saved — please try again shortly.</div>');
         return;
       }
-      startMedia(room, myName);
+      showJoinGate(room, myName);
     });
     return room;
   }
+  // 2) CONSENT GATE — required before any getUserMedia call, no matter which entry
+  // point led here (a button click, a shared link, or an auto-opened ?room= tab).
+  // Nothing touches the camera/mic until the person in front of the screen clicks
+  // Join here. This is the one place every open() path funnels through, so fixing
+  // it here protects every caller (telehealth.html, bb-meet.html, patient-account.html)
+  // without having to change each one.
+  function showJoinGate(room, myName) {
+    stageMsg(
+      '<div style="font-size:17px;font-weight:700;color:#e7edf2">Ready to join, ' + _esc(myName) + '?</div>' +
+      '<div style="max-width:380px;font-size:13px;line-height:1.5;color:#aeb9c4">Joining turns on your camera and microphone so the other person can see and hear you. Nothing starts until you click Join.</div>' +
+      '<button id="bbtele-joinbtn" type="button" style="margin-top:4px;border:none;border-radius:10px;padding:12px 24px;font:inherit;font-weight:700;font-size:14.5px;color:#fff;background:linear-gradient(180deg,#5f8f6c,#3f6b4e);cursor:pointer">🎥 Join call</button>'
+    );
+    var b = document.getElementById('bbtele-joinbtn');
+    if (b) b.addEventListener('click', function () { startMedia(room, myName); });
+  }
   function startMedia(room, myName) {
+    stageMsg('<div class="sp"></div><div>Requesting camera &amp; microphone…</div>');
     navigator.mediaDevices.getUserMedia({ audio: true, video: true }).then(function (stream) {
       S = { room: room, peerId: 'p' + Math.random().toString(36).slice(2, 9) + hash(String(Date.now())), myName: myName, localStream: stream, pcs: {}, timer: null, camOn: true, micOn: true, screen: null };
       document.getElementById('bbtele-ctrls').style.display = 'flex';
