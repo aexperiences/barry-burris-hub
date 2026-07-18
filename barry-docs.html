@@ -51,13 +51,13 @@ header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:
 .toolbar button.on{background:var(--gold-soft);border-color:#e7d29a;color:#6b551f}
 .toolbar .sep{width:1px;height:22px;background:var(--line);margin:0 5px}
 .toolbar .sp{flex:1}
-.toolbar .mic{width:auto;padding:0 12px;gap:7px;font-weight:700;font-size:12.5px;font-family:Inter,sans-serif}
+.toolbar .mic{width:auto;padding:0 12px;gap:7px;font-weight:700;font-size:12.5px;font-family:Inter,sans-serif;white-space:nowrap;flex:none}
 .toolbar .mic.on{background:var(--bad);border-color:var(--bad);color:#fff;animation:pulse 1.1s ease-in-out infinite}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(179,38,30,.4)}50%{box-shadow:0 0 0 6px rgba(179,38,30,0)}}
-.savebtn{background:linear-gradient(180deg,var(--teal),var(--teal2));color:#fff;border:none;border-radius:9px;padding:0 15px;height:32px;font-weight:700;font-size:12.5px;cursor:pointer}
+.savebtn{background:linear-gradient(180deg,var(--teal),var(--teal2));color:#fff;border:none;border-radius:9px;padding:0 15px;height:32px;font-weight:700;font-size:12.5px;cursor:pointer;white-space:nowrap;flex:none}
 .savebtn:disabled{opacity:.5;cursor:default}
-.dlbtn{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:0 13px;height:32px;font-weight:700;font-size:12.5px;cursor:pointer}
-.delbtn{background:var(--card);border:1px solid #e6bdb9;color:var(--bad);border-radius:9px;padding:0 13px;height:32px;font-weight:600;font-size:12.5px;cursor:pointer}
+.dlbtn{background:var(--card);border:1px solid var(--line);color:var(--ink);border-radius:9px;padding:0 13px;height:32px;font-weight:700;font-size:12.5px;cursor:pointer;white-space:nowrap;flex:none}
+.delbtn{background:var(--card);border:1px solid #e6bdb9;color:var(--bad);border-radius:9px;padding:0 13px;height:32px;font-weight:600;font-size:12.5px;cursor:pointer;white-space:nowrap;flex:none}
 #editor{flex:1;overflow:auto;padding:8px 26px 40px;font-size:15.5px;line-height:1.7;color:var(--ink)}
 #editor:focus{outline:none}
 #editor h1{font-family:Fraunces,Georgia,serif;font-size:26px;margin:.6em 0 .3em}
@@ -104,7 +104,7 @@ header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:
       <button onclick="makeLink()" title="Link">🔗</button>
       <div class="sp"></div>
       <button class="mic" id="micBtn" onclick="toggleDictation()" title="Dictate — Barry speaks, Brian writes it down">🎙️ <span id="micLbl">Dictate</span></button>
-      <button class="dlbtn" onclick="downloadWord()" title="Download a real .doc file — opens in Microsoft Word and imports cleanly into Google Docs">⭳ Word / Google Docs</button>
+      <button class="dlbtn" onclick="downloadWord()" title="Download a real .doc file — opens in Microsoft Word and imports cleanly into Google Docs">⭳ Download .doc</button>
       <button class="delbtn" id="delBtn" onclick="deleteDoc()" style="display:none">Delete</button>
       <button class="savebtn" id="saveBtn" onclick="saveDoc()">Save</button>
     </div>
