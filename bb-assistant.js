@@ -119,6 +119,7 @@
     ['✍️ Draft a patient reply', 'Draft a warm, plain-language reply to this patient message:\n\n'],
     ['🧾 Summarize a chart', 'Summarize these notes into a clean SOAP note:\n\n'],
     ['🔬 Explain a lab result', 'Explain this lab result in plain language I can share with a patient:\n\n'],
+    ['📊 Market research', 'What am I missing that other practices in my market have?'],
     ['🏔️ North Idaho', 'Coach me on '],
     ['❓ How do I…', 'How do I ']
   ];
@@ -241,7 +242,7 @@
   function render() {
     if (!thread.length) {
       var chips = CHIPS.map(function (c, i) { return '<button class="chip" data-i="' + i + '" type="button">' + esc(c[0]) + '</button>'; }).join('');
-      bodyEl.innerHTML = '<div class="intro"><b>Hey Doc — Brian here.</b><br>Ask me anything: draft a patient note, turn your scribbles into a SOAP, explain a lab, prep for a North Idaho interview, or just tell me where something lives in the hub. Tap the 🎤 to talk to me — I\'ll talk back. Hit 🔊 up top if you\'d rather I zip it.<div class="chips">' + chips + '</div></div>';
+      bodyEl.innerHTML = '<div class="intro"><b>Hey Doc — Brian here.</b><br>Ask me anything: draft a patient note, turn your scribbles into a SOAP, explain a lab, run market research on your tri-county competition, or prep for a North Idaho interview. Tap the 🎤 to talk to me — I\'ll talk back. Hit 🔊 up top if you\'d rather I zip it.<div class="chips">' + chips + '</div></div>';
       [].slice.call(bodyEl.querySelectorAll('.chip')).forEach(function (ch) {
         ch.addEventListener('click', function () { var c = CHIPS[+ch.getAttribute('data-i')]; inputEl.value = c[1]; autoGrow(); inputEl.focus(); inputEl.setSelectionRange(inputEl.value.length, inputEl.value.length); });
       });
