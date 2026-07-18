@@ -201,14 +201,24 @@ var DOC_LIBRARY=[
  {id:'doc-beemarketbrief-jul18',name:'Bee Mark & Market Research Department Brief.pdf',url:'docs/Barry-Burris-Bee-Mark-Market-Research-Brief.pdf',date:'2026-07-18'}
 ];
 function ensureDocLibrary(){
- var have={};ALL.forEach(function(r){if(r.docId)have[r.docId]=1;});
- var added=false;
+ var byId={};ALL.forEach(function(r){if(r.docId)byId[r.docId]=r;});
+ var changed=false;
  DOC_LIBRARY.forEach(function(d){
-  if(have[d.id])return;
-  ALL.push({id:'r'+d.id,docId:d.id,name:d.name,patient:'Barry Burris, NMD (practice)',category:'Practice docs',date:d.date,sample:false,src:'link',kind:extKind(d.url)||'doc',url:d.url,fileName:'',stored:'link',createdAt:new Date().toISOString()});
-  added=true;
+  var existing=byId[d.id];
+  if(!existing){
+   ALL.push({id:'r'+d.id,docId:d.id,name:d.name,patient:'Barry Burris, NMD (practice)',category:'Practice docs',date:d.date,sample:false,src:'link',kind:extKind(d.url)||'doc',url:d.url,fileName:'',stored:'link',createdAt:new Date().toISOString()});
+   changed=true;
+   return;
+  }
+  /* self-heal: if the source-of-truth name/url/date for this doc changed since it was
+   * first cached (e.g. a markdown draft got replaced by the real branded PDF), update
+   * the cached record in place instead of leaving stale data stuck in localStorage. */
+  if(existing.name!==d.name||existing.url!==d.url||existing.date!==d.date){
+   existing.name=d.name;existing.url=d.url;existing.date=d.date;existing.kind=extKind(d.url)||'doc';
+   changed=true;
+  }
  });
- if(added)persist();
+ if(changed)persist();
 }
 /* the 15 SAMPLE patients that seed the rest of the hub (bb-intakes.js) */
 var SAMPLE_PATIENTS=['Marcus Delgado','Nguyễn Thị Mai','Trần Thị Hương','David Whitfield','Emily Foster','Lê Minh Tuấn','Sarah Chen','Phạm Thị Ngọc','Robert Nguyen','Jake Morrison','Daniel Pham','Vũ Thị Lan','Margaret O’Brien','Đặng Văn Hải','Rachel Kim'];
