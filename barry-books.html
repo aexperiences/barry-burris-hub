@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Books · Barry Burris, NMD</title>
+<link rel="icon" type="image/svg+xml" href="bee-mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700;9..144,900&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf4e8;--card:#fffdf8;--ink:#40352a;--mut:#8a7c68;--line:#e8dcc4;--red:#95463f;--red2:#763530;--gold:#c9992f;--gold2:#e6c67e;--green:#4e7433;--green-soft:#eaf2e0;--red-soft:#f6e7e3;--disp:Fraunces,Georgia,serif}
+*{box-sizing:border-box}html,body{margin:0}
+body{font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);-webkit-text-size-adjust:100%}
+h1,h2,h3,h4{font-family:var(--disp)}
+header{background:linear-gradient(180deg,var(--red),var(--red2));color:#f4e8d0;padding:12px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.hbar{max-width:1120px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:11px}
+.coin{width:36px;height:36px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.htitle{font-family:var(--disp);font-weight:900;font-size:20px;line-height:1;color:var(--gold2)}
+.hsub{font-size:11px;color:#e0b5ad;margin-top:2px}
+.wrap{max-width:1120px;margin:0 auto;padding:18px 16px 70px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:11px;margin-bottom:16px}
+.kc{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:13px 15px}
+.kc .l{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut);font-family:Oswald,sans-serif}
+.kc .v{font-family:var(--disp);font-weight:900;font-size:23px;margin-top:4px;line-height:1}
+.kc .s{font-size:11.5px;color:var(--mut);margin-top:3px}
+.kc.net .v{color:var(--green)}.kc.tax .v{color:var(--red)}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.tab{border:1px solid var(--line);background:var(--card);color:#6b5c44;border-radius:999px;padding:8px 15px;font-size:13px;cursor:pointer;font-weight:600}
+.tab.on{background:var(--red);color:#fff;border-color:var(--red)}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+.sec h2{font-family:var(--disp);font-weight:900;font-size:18px;margin:0 0 3px}
+.note{font-size:12px;color:var(--mut);line-height:1.45;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{text-align:left;padding:8px 6px;border-bottom:1px solid #f0e7d4}
+th{font-family:Oswald,sans-serif;font-weight:600;font-size:11px;letter-spacing:.05em;text-transform:uppercase;color:var(--mut)}
+td.rt,th.rt{text-align:right;font-variant-numeric:tabular-nums}
+tr.tot td{border-top:2px solid var(--line);border-bottom:none;font-weight:800;font-family:var(--disp)}
+tr.sub td{color:var(--mut)}
+.pos{color:var(--green)}.neg{color:var(--red)}
+button{font:inherit;border:none;border-radius:10px;cursor:pointer;font-weight:600}
+.btn{background:linear-gradient(180deg,var(--red),var(--red2));color:#fff;padding:9px 14px}
+.btn.ghost{background:#f2ece0;color:var(--red)}.btn.sm{padding:6px 11px;font-size:12.5px}
+.btn.gold{background:linear-gradient(180deg,var(--gold2),var(--gold));color:#3a2b08}
+.btn:disabled{opacity:.5;cursor:default}
+input,select,textarea{border:1px solid var(--line);border-radius:9px;padding:9px 10px;font:inherit;font-size:14px;color:var(--ink);width:100%;background:#fff}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:9px}
+.pill{font-size:11px;padding:2px 8px;border-radius:20px;font-weight:600}
+.pill.in{background:var(--green-soft);color:var(--green)}.pill.out{background:var(--red-soft);color:var(--red)}
+.chat{max-height:340px;overflow:auto;padding:4px;margin-bottom:10px}
+.msg{max-width:88%;padding:9px 12px;border-radius:13px;margin-bottom:9px;font-size:14px;line-height:1.45}
+.msg.me{margin-left:auto;background:var(--red);color:#fff}
+.msg.ai{background:#f4efe4;border:1px solid var(--line)}
+.propose{background:#fbf5e6;border:1px solid var(--gold2);border-radius:12px;padding:12px;margin:2px 0 10px}
+.propose .amt{font-family:var(--disp);font-weight:900;font-size:20px;margin:5px 0}
+.chips{display:flex;gap:7px;flex-wrap:wrap;margin-top:8px}
+.chip{border:1px solid var(--line);background:#fff;color:#6b4f2a;border-radius:999px;padding:6px 11px;font-size:12.5px;cursor:pointer;font-weight:600}
+.crow{display:flex;gap:8px;margin-top:8px}
+.empty{color:var(--mut);font-size:13.5px;padding:16px 4px;text-align:center;line-height:1.5}
+@media print{header,.tabs,.crow,#ask-wrap{display:none}}
+</style>
+</head>
+<body>
+<header><div class="hbar">
+  <img class="coin" src="bee-mark.svg" alt="Barry Burris, NMD">
+  <div><div class="htitle">Books</div><div class="hsub">Barry Burris, NMD &middot; one money spine · cash basis</div></div>
+</div></header>
+<main class="wrap">
+  <div class="kpis" id="kpis"></div>
+  <div class="tabs" id="tabs">
+    <button class="tab on" data-tab="overview">Overview</button>
+    <button class="tab" data-tab="register">Register</button>
+    <button class="tab" data-tab="tax">Sales Tax</button>
+    <button class="tab" data-tab="reports">Reports</button>
+    <button class="tab" data-tab="ask">Ask Brian</button>
+  </div>
+  <div id="body"><div class="sec"><div class="empty">Loading your books…</div></div></div>
+</main>
+
+<script>
+var ROLL=null, TAB='overview';
+function el(id){return document.getElementById(id);}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+function money(n){var v=Math.round((Number(n)||0)*100)/100;return (v<0?'-$':'$')+Math.abs(v).toFixed(2);}
+function getBooks(){return fetch('/api/books').then(function(r){return r.json();});}
+function postEvent(ev){return fetch('/api/books',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(ev)}).then(function(r){return r.json();});}
+function ask(cmd){return fetch('/api/bookkeeper',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({command:cmd,context:ROLL&&{pnl:ROLL.pnl,salesTax:ROLL.salesTax,ar:ROLL.ar,balance:ROLL.balance}})}).then(function(r){return r.json();});}
+
+function kpis(){
+  var p=ROLL.pnl, t=ROLL.salesTax;
+  el('kpis').innerHTML=
+    '<div class="kc net"><div class="l">Net income</div><div class="v">'+money(p.netIncome)+'</div><div class="s">income &minus; COGS &minus; expenses</div></div>'+
+    '<div class="kc"><div class="l">Income</div><div class="v">'+money(p.totalIncome)+'</div><div class="s">'+ROLL.counts.incomeEvents+' entries + dispensary</div></div>'+
+    '<div class="kc"><div class="l">Expenses</div><div class="v">'+money(p.cogs+p.totalOpex)+'</div><div class="s">COGS '+money(p.cogs)+' · opex '+money(p.totalOpex)+'</div></div>'+
+    '<div class="kc tax"><div class="l">Sales tax owed</div><div class="v">'+money(t.owed)+'</div><div class="s">held for Idaho (6%)</div></div>'+
+    '<div class="kc"><div class="l">A / R</div><div class="v">'+money(ROLL.ar.total)+'</div><div class="s">'+ROLL.ar.count+' unpaid orders</div></div>';
+}
+
+/* ---------- OVERVIEW: P&L + quick record ---------- */
+function renderOverview(){
+  var p=ROLL.pnl;
+  var inc=Object.keys(p.income).filter(function(k){return p.income[k].n>0||p.income[k].net!==0;}).map(function(k){var s=p.income[k];return '<tr><td>'+esc(s.label)+(s.taxable?' <span class="pill in" style="font-size:10px">taxable</span>':'')+'</td><td class="rt">'+money(s.net)+'</td></tr>';}).join('')||'<tr class="sub"><td colspan="2">No income recorded yet.</td></tr>';
+  var opexRows=Object.keys(p.expenses).filter(function(k){return !p.expenses[k].cogs && p.expenses[k].net>0;}).map(function(k){var e=p.expenses[k];return '<tr><td>'+esc(e.label)+'</td><td class="rt">'+money(e.net)+'</td></tr>';}).join('')||'<tr class="sub"><td colspan="2">No operating expenses yet.</td></tr>';
+  el('body').innerHTML=
+    '<div class="sec"><h2>Profit &amp; Loss</h2><div class="note">Cash basis · the dispensary folds in automatically · Idaho sales tax and card fees are already removed.</div>'+
+    '<table><tbody>'+
+    '<tr class="sub"><td colspan="2"><b>Income</b></td></tr>'+inc+
+    '<tr class="tot"><td>Total income</td><td class="rt">'+money(p.totalIncome)+'</td></tr>'+
+    '<tr><td>Cost of goods (supplements, labs)</td><td class="rt neg">'+money(-p.cogs)+'</td></tr>'+
+    '<tr class="tot"><td>Gross profit</td><td class="rt">'+money(p.grossProfit)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2" style="padding-top:10px"><b>Operating expenses</b></td></tr>'+opexRows+
+    '<tr class="tot"><td>Total operating expenses</td><td class="rt neg">'+money(-p.totalOpex)+'</td></tr>'+
+    '<tr class="tot"><td>Net income</td><td class="rt '+(p.netIncome>=0?'pos':'neg')+'">'+money(p.netIncome)+'</td></tr>'+
+    '</tbody></table></div>'+
+    recordCard();
+  wireRecord();
+}
+function recordCard(){
+  var incOpts=Object.keys(ROLL.pnl.income).map(function(k){return '<option value="'+k+'">'+esc(ROLL.pnl.income[k].label)+'</option>';}).join('');
+  var exOpts='<option value="cogs">Product cost (COGS)</option><option value="labcost">Outside lab costs</option><option value="rent">Rent / facility</option><option value="payroll">Payroll & contractors</option><option value="malpractice">Malpractice / liability</option><option value="software">Software</option><option value="merchantfee">Merchant / card fees</option><option value="marketing">Marketing</option><option value="cme">CE / licensing / dues</option><option value="insurance">Business insurance</option><option value="utilities">Utilities & office</option><option value="supplies">Clinical supplies</option><option value="other">Other expense</option>';
+  return '<div class="sec"><h2>Record a transaction</h2><div class="note">Or just tell Brian in plain English — "record a $175 visit paid by card." (Ask Brian tab.)</div>'+
+    '<div class="grid">'+
+    '<select id="r-dir"><option value="in">Money in (income)</option><option value="out">Money out (expense)</option></select>'+
+    '<select id="r-cat">'+incOpts+'</select>'+
+    '<input id="r-amt" placeholder="Amount, e.g. 175.00" inputmode="decimal">'+
+    '<select id="r-proc"><option value="stripe">Card (Stripe)</option><option value="cash">Cash</option><option value="check">Check</option><option value="none">Other</option></select>'+
+    '</div><div class="crow"><input id="r-note" placeholder="Note (optional) — patient, invoice #, etc."><button class="btn" id="r-save">Record</button></div>'+
+    '<div id="r-msg" class="note" style="margin-top:8px"></div></div>';
+  }
+function wireRecord(){
+  var dir=el('r-dir'), cat=el('r-cat');
+  var inOpts=Object.keys(ROLL.pnl.income).map(function(k){return '<option value="'+k+'">'+esc(ROLL.pnl.income[k].label)+'</option>';}).join('');
+  var exOpts='<option value="cogs">Product cost (COGS)</option><option value="labcost">Outside lab costs</option><option value="rent">Rent / facility</option><option value="payroll">Payroll & contractors</option><option value="malpractice">Malpractice / liability</option><option value="software">Software</option><option value="merchantfee">Merchant / card fees</option><option value="marketing">Marketing</option><option value="cme">CE / licensing / dues</option><option value="insurance">Business insurance</option><option value="utilities">Utilities & office</option><option value="supplies">Clinical supplies</option><option value="other">Other expense</option>';
+  dir.addEventListener('change',function(){cat.innerHTML=dir.value==='in'?inOpts:exOpts;});
+  el('r-save').addEventListener('click',function(){
+    var amt=parseFloat(el('r-amt').value||'0'); if(!amt){el('r-amt').focus();return;}
+    var ev={dir:dir.value,gross:amt,processor:el('r-proc').value,note:el('r-note').value};
+    if(dir.value==='in')ev.source=cat.value; else ev.category=cat.value;
+    el('r-save').disabled=true;
+    postEvent(ev).then(function(r){ el('r-save').disabled=false; if(r&&r.ok){ el('r-msg').textContent='Recorded '+money(amt)+'.'; refresh(); } else { el('r-msg').textContent=(r&&r.reason==='zero_amount')?'Enter an amount.':'Could not record.'; }});
+  });
+}
+
+/* ---------- REGISTER ---------- */
+function renderRegister(){
+  var rows=(ROLL.recent||[]).map(function(e){
+    var label=e.dir==='in'?(ROLL.pnl.income[e.source]?ROLL.pnl.income[e.source].label:'Income'):(e.category?(e.category==='taxremit'?'Sales tax paid to Idaho':(ROLL.pnl.expenses[e.category]?ROLL.pnl.expenses[e.category].label:'Expense')):'Expense');
+    return '<tr><td>'+new Date(e.ts).toLocaleDateString()+'</td><td><span class="pill '+e.dir+'">'+(e.dir==='in'?'in':'out')+'</span> '+esc(label)+(e.note?' · <span style="color:var(--mut)">'+esc(e.note)+'</span>':'')+'</td><td class="rt">'+money(e.dir==='in'?e.net:-e.net)+'</td></tr>';
+  }).join('');
+  el('body').innerHTML='<div class="sec"><h2>Register</h2><div class="note">Most recent transactions. Dispensary sales post automatically as they’re paid.</div>'+
+    (rows?('<table><thead><tr><th>Date</th><th>Description</th><th class="rt">Net</th></tr></thead><tbody>'+rows+'</tbody></table>'):'<div class="empty">No transactions yet. Record one on the Overview tab, or ask Brian.</div>')+'</div>';
+}
+
+/* ---------- SALES TAX ---------- */
+function renderTax(){
+  var t=ROLL.salesTax;
+  el('body').innerHTML='<div class="sec"><h2>Idaho Sales Tax</h2><div class="note">'+esc(t.note)+'</div>'+
+    '<table><tbody>'+
+    '<tr><td>Collected on taxable sales (6%)</td><td class="rt">'+money(t.collected)+'</td></tr>'+
+    '<tr><td>Already remitted to Idaho</td><td class="rt">'+money(-t.remitted)+'</td></tr>'+
+    '<tr class="tot"><td>Owed to Idaho now</td><td class="rt '+(t.owed>0?'neg':'')+'">'+money(t.owed)+'</td></tr>'+
+    '</tbody></table>'+
+    '<div class="crow" style="margin-top:12px"><input id="tx-amt" placeholder="Record a remittance you paid, e.g. 84.00" inputmode="decimal"><button class="btn ghost" id="tx-save">Record remittance</button></div><div id="tx-msg" class="note" style="margin-top:8px"></div></div>';
+  el('tx-save').addEventListener('click',function(){var a=parseFloat(el('tx-amt').value||'0');if(!a)return;el('tx-save').disabled=true;postEvent({dir:'out',category:'taxremit',gross:a,processor:'none',note:'Idaho sales tax remittance'}).then(function(r){el('tx-save').disabled=false;if(r&&r.ok){el('tx-msg').textContent='Recorded.';refresh();}});});
+}
+
+/* ---------- REPORTS: P&L + Balance + A/R ---------- */
+function renderReports(){
+  var b=ROLL.balance,p=ROLL.pnl;
+  el('body').innerHTML=
+    '<div class="sec"><h2>Balance snapshot</h2><div class="note">'+esc(b.note)+'</div><table><tbody>'+
+    '<tr class="sub"><td colspan="2"><b>What you have</b></td></tr>'+
+    '<tr><td>Cash position (period net)</td><td class="rt">'+money(b.cashBasisNet)+'</td></tr>'+
+    '<tr><td>Accounts receivable</td><td class="rt">'+money(b.receivable)+'</td></tr>'+
+    '<tr class="sub"><td colspan="2" style="padding-top:8px"><b>What you owe</b></td></tr>'+
+    '<tr><td>Sales tax payable (Idaho)</td><td class="rt neg">'+money(b.salesTaxPayable)+'</td></tr>'+
+    '</tbody></table></div>'+
+    '<div class="sec"><h2>Accounts receivable</h2><div class="note">'+esc(ROLL.ar.note)+'</div>'+
+    '<table><tbody><tr class="tot"><td>Outstanding ('+ROLL.ar.count+' orders)</td><td class="rt">'+money(ROLL.ar.total)+'</td></tr></tbody></table></div>'+
+    '<div class="sec"><h2>Card fees (year)</h2><div class="note">Merchant processing already netted out of income — shown so it’s never a surprise.</div><table><tbody><tr><td>Total card fees</td><td class="rt neg">'+money(b.cardFees)+'</td></tr></tbody></table></div>'+
+    '<div style="text-align:center"><button class="btn ghost sm" onclick="window.print()">Print / save P&L</button></div>';
+}
+
+/* ---------- ASK BRIAN ---------- */
+var CHAT=[];
+function renderAsk(){
+  el('body').innerHTML='<div class="sec" id="ask-wrap"><h2>Ask Brian, your bookkeeper</h2><div class="note">Record money in plain English or ask about the numbers. Brian proposes; you confirm before anything posts.</div>'+
+    '<div class="chat" id="chat"></div>'+
+    '<div class="chips" id="chips"></div>'+
+    '<div class="crow"><input id="ask-in" placeholder="e.g. record a $175 new-patient visit paid by card"><button class="btn" id="ask-send">Ask</button></div></div>';
+  var chips=[['💵 Record a visit','record a $175 new-patient visit paid by card'],['🧾 Record an expense','record $1,200 rent paid by check'],['📊 How am I doing?','how am I doing this period — net income?'],['🌿 Supplement revenue','how much have I made on supplements?'],['🏛️ Sales tax owed','how much sales tax do I owe Idaho?']];
+  el('chips').innerHTML=chips.map(function(c,i){return '<button class="chip" data-i="'+i+'">'+esc(c[0])+'</button>';}).join('');
+  [].slice.call(el('chips').querySelectorAll('.chip')).forEach(function(ch){ch.addEventListener('click',function(){el('ask-in').value=chips[+ch.getAttribute('data-i')][1];send();});});
+  el('ask-send').addEventListener('click',send);
+  el('ask-in').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  drawChat();
+  function drawChat(){var c=el('chat');c.innerHTML=CHAT.map(function(m){if(m.propose)return '';return '<div class="msg '+m.who+'">'+esc(m.text)+'</div>';}).join('');
+    CHAT.forEach(function(m,i){ if(m.propose){ var d=document.createElement('div'); d.className='propose'; var ev=m.propose; var lbl=ev.dir==='in'?'Income':'Expense'; d.innerHTML='<div class="note" style="margin:0">Brian proposes recording:</div><div class="amt">'+money(ev.gross)+' · '+esc(lbl)+'</div><div class="note" style="margin:0">'+esc(m.say||'')+'</div><div class="crow"><button class="btn gold sm" data-post="'+i+'">Post it</button><button class="btn ghost sm" data-cancel="'+i+'">Cancel</button></div>'; c.appendChild(d);} });
+    [].slice.call(c.querySelectorAll('[data-post]')).forEach(function(b){b.addEventListener('click',function(){var m=CHAT[+b.getAttribute('data-post')];b.disabled=true;postEvent(m.propose).then(function(r){if(r&&r.ok){m.text='Posted '+money(m.propose.gross)+'. ✓';m.who='ai';m.propose=null;CHAT.push({who:'ai',text:'Done — recorded. Anything else?'});refresh(true);}});});});
+    [].slice.call(c.querySelectorAll('[data-cancel]')).forEach(function(b){b.addEventListener('click',function(){var m=CHAT[+b.getAttribute('data-cancel')];m.propose=null;m.text='(canceled)';m.who='ai';drawChat();});});
+    c.scrollTop=c.scrollHeight;}
+  window.__drawChat=drawChat;
+  function send(){var t=(el('ask-in').value||'').trim();if(!t)return;el('ask-in').value='';CHAT.push({who:'me',text:t});drawChat();
+    CHAT.push({who:'ai',text:'…'});drawChat();
+    ask(t).then(function(j){CHAT.pop();var rep=j&&j.reply;if(!rep){CHAT.push({who:'ai',text:'Hmm, try again.'});drawChat();return;}
+      if(rep.intent==='post'&&rep.event){CHAT.push({who:'ai',text:'',say:rep.say,propose:rep.event});}
+      else{CHAT.push({who:'ai',text:rep.say||'Done.'});}
+      drawChat();});
+  }
+}
+
+function draw(){ if(TAB==='overview')renderOverview(); else if(TAB==='register')renderRegister(); else if(TAB==='tax')renderTax(); else if(TAB==='reports')renderReports(); else renderAsk(); }
+function refresh(keepAsk){ getBooks().then(function(j){ if(!j||!j.configured){ el('body').innerHTML='<div class="sec"><div class="empty">The money store isn’t switched on yet.</div></div>'; return; } ROLL=j; kpis(); if(keepAsk&&TAB==='ask'){ kpis(); if(window.__drawChat)window.__drawChat(); } else draw(); }); }
+el('tabs').addEventListener('click',function(e){var b=e.target.closest('.tab');if(!b)return;[].slice.call(document.querySelectorAll('.tab')).forEach(function(x){x.classList.remove('on');});b.classList.add('on');TAB=b.getAttribute('data-tab');draw();});
+refresh();
+</script>
+<script>window.BB_NAV_ACTIVE='books'</script>
+<script src="bb-nav.js"></script>
+</body>
+</html>

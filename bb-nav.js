@@ -127,7 +127,7 @@
   function build() {
     if (document.getElementById('bb-side')) return;
     ensureFonts();
-    try { var _f = document.querySelector('link[rel="icon"]'); if (!_f) { _f = document.createElement('link'); _f.rel = 'icon'; document.head.appendChild(_f); } _f.type = 'image/svg+xml'; _f.href = 'bee-coin.svg'; } catch (e) {}
+    try { var _f = document.querySelector('link[rel="icon"]'); if (!_f) { _f = document.createElement('link'); _f.rel = 'icon'; document.head.appendChild(_f); } _f.type = 'image/svg+xml'; _f.href = 'bee-mark.svg'; } catch (e) {}
 
     var style = document.createElement('style');
     style.id = 'bb-nav-style';
@@ -137,7 +137,7 @@
     var active = String(window.BB_NAV_ACTIVE || '').trim();
 
     var html = '<div class="bbn-brand">' +
-      '<img src="bee-coin.svg" alt="Barry Burris, NMD">' +
+      '<img src="bee-mark.svg" alt="Barry Burris, NMD">' +
       '<div><div class="bbn-bn">Barry Burris</div><div class="bbn-bt">NMD &middot; Functional Medicine</div></div>' +
       '</div><nav class="bbn-nav" aria-label="Sections">';
     for (var i = 0; i < NAV.length; i++) {
