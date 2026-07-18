@@ -55,6 +55,9 @@ td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top;fon
 tr:last-child td{border-bottom:none}
 tr:hover td{background:#fbf8f0}
 .vtag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--teal-soft);color:var(--teal2);white-space:nowrap}
+.vtag.peer{background:var(--warn-soft);color:var(--warn)}
+.peerrow td{background:#fdf8ee}
+.peerflag{display:inline-block;margin-left:6px;font-size:10.5px;color:var(--warn);font-weight:700}
 .nm{font-weight:700}
 .ct{color:var(--mut);font-size:12px;margin-top:1px}
 .tier{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;font-weight:800;font-size:12px}
@@ -87,7 +90,7 @@ tr:hover td{background:#fbf8f0}
 </div></header>
 
 <div class="wrap">
-  <div class="note"><b>What this is.</b> The full Accelerated Experiences master leads list (all hub verticals) plus real, sourced research on complementary practitioners in Kootenai County / Coeur d'Alene — filed under Hub: <b>Barry Burris Hub</b>. Everything below came from an actual web search with a real source; nothing here is invented. Outreach status and notes you set are on-device (Lane A) — stored in this browser, not synced across devices yet.</div>
+  <div class="note"><b>What this is.</b> The full Accelerated Experiences master leads list (all hub verticals) plus real, sourced research on complementary practitioners and peer NMDs across Kootenai County / Coeur d'Alene and statewide Idaho, Montana, and Washington — filed under Hub: <b>Barry Burris Hub</b>. Everything below came from an actual web search with a real source; nothing here is invented. Rows flagged 🚩 <b>peer NMD</b> share Barry's own credential (NMD/ND) — worth a courtesy call to learn their focus before assuming overlap vs. complement, rather than a straightforward referral. Outreach status and notes you set are on-device (Lane A) — stored in this browser, not synced across devices yet.</div>
 
   <div class="quickrow" id="quickRow"></div>
 
@@ -149,8 +152,8 @@ function barryVerticalCounts(){
 function renderQuickRow(){
   const {total,byV}=barryVerticalCounts();
   const chips=[
-    {label:'🩺 Barry’s referral network (Kootenai Co.)',hub:'Barry Burris Hub',n:total},
-  ].concat(Object.keys(byV).sort().map(v=>({label:v,vertical:v,hub:'Barry Burris Hub',n:byV[v]})));
+    {label:'🩺 Barry’s referral network (ID / MT / WA)',hub:'Barry Burris Hub',n:total},
+  ].concat(Object.keys(byV).sort().map(v=>({label:(v==='Naturopathic Medicine'?'🚩 ':'')+v,vertical:v,hub:'Barry Burris Hub',n:byV[v]})));
   const el=document.getElementById('quickRow');
   el.innerHTML='<button class="qbtn" id="qbtn-all" onclick="clearQuick()">All ' + DIRECTORY_DATA.length + ' rows</button>'
     + chips.map((c,i)=>`<button class="qbtn" id="qbtn-${i}" onclick='applyQuick(${JSON.stringify(c).replace(/'/g,"&#39;")})'>${esc(c.label)} <span class="n">${c.n}</span></button>`).join('');
@@ -221,8 +224,9 @@ function renderTable(){
     const contact=[r.cf,r.cl].filter(Boolean).join(' ')+(r.title?' · '+r.title:'');
     const loc=[r.city,r.st].filter(Boolean).join(', ')+(r.addr?'<div class="ct">'+esc(r.addr)+'</div>':'');
     const phoneWeb=[r.phone?esc(r.phone):'',r.web?`<a class="website" href="${esc(r.web)}" target="_blank" rel="noopener">${esc(r.web.replace(/^https?:\/\//,''))}</a>`:''].filter(Boolean).join('<br>');
-    return `<tr>
-      <td><span class="vtag">${esc(r.v)}</span></td>
+    const isPeer=r.v==='Naturopathic Medicine';
+    return `<tr class="${isPeer?'peerrow':''}">
+      <td><span class="vtag${isPeer?' peer':''}">${esc(r.v)}</span>${isPeer?'<span class="peerflag" title="Same credential as Barry — NMD/ND. Confirm focus before assuming complement vs. competitor.">🚩 peer NMD</span>':''}</td>
       <td><div class="nm">${esc(r.name)}</div>${phoneWeb?'<div class="ct">'+phoneWeb+'</div>':''}</td>
       <td>${loc||'<span class="ct">—</span>'}</td>
       <td>${contact.trim()?esc(contact):'<span class="ct">—</span>'}</td>
