@@ -25,6 +25,11 @@
   var THEME = ME.role === 'patient' ? { c: '#4a6b52', c2: '#3d5a45' } : { c: '#95463f', c2: '#763530' };
   var openKey = null;      // provider: which patient thread is open
   var pollTimer = null, kvOK = null;
+  // Provider pages also carry Brian's launcher (#bbai-btn) at right:18px/bottom:20px —
+  // stack this button directly above it so the two never overlap. Patient pages have
+  // no assistant button today, so the patient launcher keeps its original spot.
+  var BTN_BOTTOM = ME.role === 'provider' ? '90px' : '20px';
+  var BTN_BOTTOM_MOBILE = ME.role === 'provider' ? 'calc(144px + env(safe-area-inset-bottom))' : 'calc(74px + env(safe-area-inset-bottom))';
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
   function api(doName, args) {
@@ -36,11 +41,11 @@
     if (document.getElementById('bbmsg-css')) return;
     var s = document.createElement('style'); s.id = 'bbmsg-css';
     s.textContent = [
-      '#bbmsg-btn{position:fixed;right:18px;bottom:20px;z-index:1400;width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;',
+      '#bbmsg-btn{position:fixed;right:18px;bottom:' + BTN_BOTTOM + ';z-index:1400;width:56px;height:56px;border-radius:50%;border:none;cursor:pointer;',
       'background:linear-gradient(180deg,' + THEME.c + ',' + THEME.c2 + ');color:#fff;font-size:23px;box-shadow:0 8px 24px rgba(40,25,20,.3);display:flex;align-items:center;justify-content:center}',
       '#bbmsg-btn .bdg{position:absolute;top:-3px;right:-3px;min-width:20px;height:20px;border-radius:10px;background:#c9992f;color:#3a2c10;font:700 11px Inter,sans-serif;display:none;align-items:center;justify-content:center;padding:0 5px;border:2px solid #fffdf8}',
       '#bbmsg-btn .bdg.on{display:flex}',
-      '@media(max-width:900px){#bbmsg-btn{bottom:calc(74px + env(safe-area-inset-bottom))}}',
+      '@media(max-width:900px){#bbmsg-btn{bottom:' + BTN_BOTTOM_MOBILE + '}}',
       '#bbmsg-scrim{position:fixed;inset:0;z-index:1401;background:rgba(20,14,10,.4);opacity:0;pointer-events:none;transition:opacity .2s}',
       '#bbmsg-scrim.on{opacity:1;pointer-events:auto}',
       '#bbmsg{position:fixed;top:0;right:0;bottom:0;z-index:1402;width:390px;max-width:92vw;background:#fffdf8;border-left:1px solid #e6ddca;',
