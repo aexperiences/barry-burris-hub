@@ -245,6 +245,47 @@ const DATA={
  reviews:[]
 };
 
+/* ---- On-device persistence (Lane A) for invoices/leads/lab orders — same honest,
+   real, local-only pattern already used by Contacts/Records/Calendar. Real CRUD, real
+   numbers, just not synced/secure-hosted across devices yet (that's the HIPAA-hosting
+   step). Replaces buttons that used to just toast('this would...') and do nothing. ---- */
+function lsGet(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+DATA.invoices=lsGet('bb_invoices',[]);
+DATA.leads=lsGet('bb_leads',[]);
+DATA.labs=lsGet('bb_labs',[]);
+function nextInvId(){var n=lsGet('bb_inv_seq',0)+1;lsSet('bb_inv_seq',n);return 'INV-'+String(1000+n);}
+function addInvoice(p,item,amt){
+  if(!p||!item||!(amt>0))return false;
+  DATA.invoices.unshift({id:nextInvId(),p:p,item:item,amt:amt,st:'open',d:new Date().toISOString().slice(0,10)});
+  lsSet('bb_invoices',DATA.invoices);
+  return true;
+}
+function addLead(n,src,want){
+  if(!n)return false;
+  DATA.leads.unshift({n:n,src:src||'Direct',want:want||'—',st:'new'});
+  lsSet('bb_leads',DATA.leads);
+  return true;
+}
+function addLabOrder(panel,p){
+  if(!panel||!p)return false;
+  DATA.labs.unshift({panel:panel,p:p,st:'Ordered',d:new Date().toISOString().slice(0,10)});
+  lsSet('bb_labs',DATA.labs);
+  return true;
+}
+function csvCell(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function downloadCSV(filename,rows){
+  var csv=rows.map(function(r){return r.map(csvCell).join(',');}).join('\r\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=filename;document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+}
+function exportLedger(){
+  downloadCSV('barry-burris-nmd-ledger.csv',[['Invoice','Patient','For','Amount','Status','Date']].concat(
+    DATA.invoices.map(function(i){return [i.id,i.p,i.item,i.amt,i.st,i.d];})));
+  toast('Downloaded '+DATA.invoices.length+' invoices as CSV');
+}
+
 const ICN={
  home:'<path d="M3 11l9-7 9 7"/><path d="M5 10v10h14V10"/>',
  cal:'<rect x="3" y="4" width="18" height="17" rx="2"/><path d="M3 9h18M8 2v4M16 2v4"/>',
@@ -371,30 +412,75 @@ function renderCharting(){
 function renderBilling(){
  const paid=DATA.invoices.filter(i=>i.st==='ok').reduce((s,i)=>s+i.amt,0);
  const open=DATA.invoices.filter(i=>i.st!=='ok').reduce((s,i)=>s+i.amt,0);
+ const inp='width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px';
  return pageHead('Billing','One money spine — every tool posts here.')+`
+ <div class="gate">On-device (Lane A). Real invoices, real numbers — stored in this browser, not synced across devices yet. That turns on with the secure-hosting step.</div>
  <div class="grid tiles">
-  <div class="tile"><div class="l">Revenue (MTD)</div><div class="v">${money(DATA.metrics.revMonth)}</div><div class="s up">▲ ${DATA.metrics.revUp}</div></div>
-  <div class="tile"><div class="l">Collected (recent)</div><div class="v">${money(paid)}</div><div class="s">${DATA.invoices.filter(i=>i.st==='ok').length} invoices</div></div>
+  <div class="tile"><div class="l">Revenue (MTD)</div><div class="v">${money(paid+open)}</div><div class="s">${DATA.invoices.length} invoice${DATA.invoices.length===1?'':'s'}</div></div>
+  <div class="tile"><div class="l">Collected</div><div class="v">${money(paid)}</div><div class="s">${DATA.invoices.filter(i=>i.st==='ok').length} paid</div></div>
   <div class="tile"><div class="l">Outstanding</div><div class="v">${money(open)}</div><div class="s">${DATA.invoices.filter(i=>i.st!=='ok').length} open</div></div>
-  <div class="tile"><div class="l">Est. YTD</div><div class="v">${money(0)}</div><div class="s">—</div></div></div>
- <div class="card" style="margin-top:16px"><div class="sec-h"><h3 style="margin:0">Invoices</h3><button class="btn sm p" onclick="toast('new invoice')">＋ New invoice</button></div>
+  <div class="tile"><div class="l">Est. YTD</div><div class="v">${money(paid+open)}</div><div class="s">—</div></div></div>
+ <div class="card" style="margin-top:16px"><div class="sec-h"><h3 style="margin:0">Invoices</h3></div>
  <table><thead><tr><th>Invoice</th><th>Patient</th><th>For</th><th class="rt">Amount</th><th>Status</th><th>Date</th></tr></thead><tbody>
- ${DATA.invoices.length?DATA.invoices.map(i=>`<tr><td><b>${i.id}</b></td><td>${i.p}</td><td>${i.item}</td><td class="rt">${money(i.amt)}</td><td><span class="pill ${i.st}">${i.st==='ok'?'Paid':i.st==='open'?'Open':'Overdue'}</span></td><td class="muted">${i.d}</td></tr>`).join(''):`<tr><td colspan="6" class="muted" style="padding:12px">No invoices yet.</td></tr>`}
- </tbody></table></div>
- <div class="card" style="margin-top:16px"><h3>Where it goes</h3><div class="muted">Shared-root numbering (EST → PRO → JOB → INV) and one ledger for income & expenses. Export to CSV for your accountant anytime. <button class="btn sm" onclick="toast('export ledger to CSV')">Export</button></div></div>`;
+ ${DATA.invoices.length?DATA.invoices.map(i=>`<tr><td><b>${i.id}</b></td><td>${i.p}</td><td>${i.item}</td><td class="rt">${money(i.amt)}</td><td><span class="pill ${i.st}" style="cursor:pointer" onclick="toggleInvoicePaid('${i.id}')" title="Click to toggle paid">${i.st==='ok'?'Paid':i.st==='open'?'Open':'Overdue'}</span></td><td class="muted">${i.d}</td></tr>`).join(''):`<tr><td colspan="6" class="muted" style="padding:12px">No invoices yet — add your first below.</td></tr>`}
+ </tbody></table>
+ <div style="margin-top:14px;display:grid;grid-template-columns:1.4fr 1.4fr 0.9fr;gap:10px">
+   <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Patient</div><input id="invP" style="${inp}" placeholder="e.g. Marcus Delgado"></div>
+   <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">For</div><input id="invItem" style="${inp}" placeholder="e.g. Discovery Consult"></div>
+   <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Amount</div><input id="invAmt" type="number" min="0" step="0.01" style="${inp}" placeholder="250"></div>
+ </div>
+ <div style="margin-top:8px"><button class="btn p" onclick="submitInvoice()">＋ New invoice</button></div>
+ </div>
+ <div class="card" style="margin-top:16px"><h3>Where it goes</h3><div class="muted">Shared-root numbering (EST → PRO → JOB → INV) and one ledger for income & expenses. <button class="btn sm" onclick="exportLedger()">Export CSV</button></div></div>`;
+}
+function submitInvoice(){
+  const p=(document.getElementById('invP').value||'').trim();
+  const item=(document.getElementById('invItem').value||'').trim();
+  const amt=parseFloat(document.getElementById('invAmt').value);
+  if(!p){document.getElementById('invP').focus();return;}
+  if(!item){document.getElementById('invItem').focus();return;}
+  if(!(amt>0)){document.getElementById('invAmt').focus();return;}
+  addInvoice(p,item,amt);toast('Invoice created for '+p);go('billing');
+}
+function toggleInvoicePaid(id){
+  const i=DATA.invoices.find(x=>x.id===id);if(!i)return;
+  i.st=i.st==='ok'?'open':'ok';lsSet('bb_invoices',DATA.invoices);go('billing');
 }
 function renderServices(){
  return pageHead('Services & Programs','Your productized offerings — the menu clients book from.')+`
- <div class="svc">${DATA.services.map(s=>`<div class="c"><div class="nm">${s.n}</div><div class="ds">${s.d}</div><div class="pr">${s.pr}<small> ${s.u}</small></div><button class="btn sm p" onclick="toast('this would create an invoice / booking')">Add to invoice</button></div>`).join('')}</div>
- <div class="card" style="margin-top:16px"><h3>Memberships snapshot</h3><div class="muted">No members yet — your Core / Plus / Hormone / Peptide plans are ready to enroll patients into. <button class="btn sm" onclick="toast('manage plans')">Manage plans</button></div></div>`;
+ <div class="svc">${DATA.services.map(s=>`<div class="c"><div class="nm">${s.n}</div><div class="ds">${s.d}</div><div class="pr">${s.pr}<small> ${s.u}</small></div><button class="btn sm p" onclick="addToInvoice(${JSON.stringify(s.n)},${JSON.stringify(s.pr)})">Add to invoice</button></div>`).join('')}</div>
+ <div class="card" style="margin-top:16px"><h3>Memberships snapshot</h3><div class="muted">No members yet — your Core / Plus / Hormone / Peptide plans are ready to enroll patients into from Billing once you're seeing patients.</div></div>`;
+}
+function addToInvoice(serviceName,priceStr){
+  const p=(prompt('Patient name for '+serviceName+'?')||'').trim();
+  if(!p)return;
+  const amt=parseFloat(String(priceStr).replace(/[^0-9.]/g,''))||0;
+  if(!(amt>0)){toast('Set a numeric price on this service first');return;}
+  addInvoice(p,serviceName,amt);
+  toast('Added to '+p+'’s invoice — see Billing');
 }
 function renderLabs(){
+ const inp='width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px';
+ const panelOpts=['Comprehensive metabolic + lipid','Micronutrients','Hormones','Inflammation (hs-CRP)','Thyroid full','Food sensitivity','Heavy metals'];
  return pageHead('Labs','Order & track panels — results open in the note tool.')+`
- <div class="card"><div class="sec-h"><h3 style="margin:0">Orders</h3><button class="btn sm p" onclick="toast('order a panel')">＋ Order panel</button></div>
+ <div class="gate">On-device (Lane A). Real orders, real tracking — stored in this browser. Results viewing turns on with the secure-hosting step (that part's a real, disclosed gate, not a stub).</div>
+ <div class="card"><div class="sec-h"><h3 style="margin:0">Orders</h3></div>
  <table><thead><tr><th>Panel</th><th>Patient</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody>
- ${DATA.labs.length?DATA.labs.map(l=>`<tr><td><b>${l.panel}</b></td><td>${l.p}</td><td><span class="pill ${l.st==='Resulted'?'ok':l.st==='Collected'?'open':'new'}">${l.st}</span></td><td class="muted">${l.d}</td><td class="rt"><button class="btn sm" onclick="toast('results open in the note tool once secure storage is live')">View ⌁</button></td></tr>`).join(''):`<tr><td colspan="5" class="muted" style="padding:12px">No labs ordered yet.</td></tr>`}
- </tbody></table></div>
+ ${DATA.labs.length?DATA.labs.map(l=>`<tr><td><b>${l.panel}</b></td><td>${l.p}</td><td><span class="pill ${l.st==='Resulted'?'ok':l.st==='Collected'?'open':'new'}">${l.st}</span></td><td class="muted">${l.d}</td><td class="rt"><button class="btn sm" onclick="toast('Results open in the note tool once secure storage is live — a real, disclosed gate, not a stub.')">View ⌁</button></td></tr>`).join(''):`<tr><td colspan="5" class="muted" style="padding:12px">No labs ordered yet — order your first below.</td></tr>`}
+ </tbody></table>
+ <div style="margin-top:14px;display:grid;grid-template-columns:1.6fr 1.2fr;gap:10px">
+   <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Panel</div><select id="labPanel" style="${inp}">${panelOpts.map(o=>`<option>${o}</option>`).join('')}</select></div>
+   <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Patient</div><input id="labP" style="${inp}" placeholder="e.g. Marcus Delgado"></div>
+ </div>
+ <div style="margin-top:8px"><button class="btn p" onclick="submitLabOrder()">＋ Order panel</button></div>
+ </div>
  <div class="card" style="margin-top:16px"><h3>Panels you offer</h3><div class="muted">Comprehensive metabolic + lipid · Micronutrients · Hormones · Inflammation (hs-CRP) · Thyroid full · Food sensitivity · Heavy metals. <button class="btn sm" onclick="go('services')">See pricing</button></div></div>`;
+}
+function submitLabOrder(){
+  const panel=document.getElementById('labPanel').value;
+  const p=(document.getElementById('labP').value||'').trim();
+  if(!p){document.getElementById('labP').focus();return;}
+  addLabOrder(panel,p);toast('Ordered '+panel+' for '+p);go('labs');
 }
 function renderProtocols(){
  return pageHead('Protocols','Your knowledge library — reference, not auto-prescribing.')+`
@@ -402,18 +488,34 @@ function renderProtocols(){
  <div class="gate" style="margin-top:16px">Educational reference for your own use. Treatment decisions and documentation stay with you — the library informs, it doesn't prescribe.</div>`;
 }
 function renderGrowth(){
+ const inp='width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px';
  return pageHead('Growth','Leads, reputation & reach for the practice.')+`
+ <div class="gate">On-device (Lane A). Real pipeline, stored in this browser — not synced across devices yet.</div>
  <div class="two">
-  <div class="card"><div class="sec-h"><h3 style="margin:0">Lead pipeline</h3><button class="btn sm p" onclick="toast('add lead')">＋ Add</button></div>
+  <div class="card"><div class="sec-h"><h3 style="margin:0">Lead pipeline</h3></div>
    <table><thead><tr><th>Name</th><th>Source</th><th>Interest</th><th>Status</th></tr></thead><tbody>
-   ${DATA.leads.length?DATA.leads.map(l=>`<tr><td><b>${l.n}</b></td><td>${l.src}</td><td>${l.want}</td><td><span class="pill ${l.st}">${l.st==='ok'?'Converting':l.st==='new'?'New':'Nurturing'}</span></td></tr>`).join(''):`<tr><td colspan="4" class="muted" style="padding:12px">No leads yet.</td></tr>`}
-   </tbody></table></div>
+   ${DATA.leads.length?DATA.leads.map(l=>`<tr><td><b>${l.n}</b></td><td>${l.src}</td><td>${l.want}</td><td><span class="pill ${l.st}">${l.st==='ok'?'Converting':l.st==='new'?'New':'Nurturing'}</span></td></tr>`).join(''):`<tr><td colspan="4" class="muted" style="padding:12px">No leads yet — add your first below.</td></tr>`}
+   </tbody></table>
+   <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+     <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Name</div><input id="ldN" style="${inp}" placeholder="e.g. Jordan Reyes"></div>
+     <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Source</div><input id="ldSrc" style="${inp}" placeholder="e.g. Referral"></div>
+     <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Interest</div><input id="ldWant" style="${inp}" placeholder="e.g. Longevity Core"></div>
+   </div>
+   <div style="margin-top:8px"><button class="btn p" onclick="submitLead()">＋ Add lead</button></div>
+  </div>
   <div class="grid" style="gap:16px">
-   <div class="card"><h3>Public page</h3><div class="muted">Your bio, services & booking link — matches this brand. <button class="btn sm p" onclick="toast('a matching public site would deploy here')">Preview site</button></div></div>
+   <div class="card"><h3>Public page</h3><div class="muted">Your bio, services &amp; booking link — matches this brand. <b>Not built yet</b> — a real build, not a stub, the moment you want it. <button class="btn sm" disabled title="Not built yet" style="opacity:.5;cursor:default">Preview site</button></div></div>
    <div class="card"><h3>Content ideas</h3><div class="muted">• “What longevity labs actually matter”<br>• Peptides 101 (honest version)<br>• Testosterone: myths vs monitoring</div></div>
   </div></div>
  <div class="card" style="margin-top:16px"><h3>What patients say</h3>
   <div class="svc">${DATA.reviews.length?DATA.reviews.map(r=>`<div class="rev"><div class="stars">${'★'.repeat(r.r)}</div><div style="margin:8px 0;font-size:13.5px">“${r.t}”</div><div class="muted">— ${r.n}</div></div>`).join(''):`<div class="muted">No reviews yet.</div>`}</div></div>`;
+}
+function submitLead(){
+  const n=(document.getElementById('ldN').value||'').trim();
+  const src=(document.getElementById('ldSrc').value||'').trim();
+  const want=(document.getElementById('ldWant').value||'').trim();
+  if(!n){document.getElementById('ldN').focus();return;}
+  addLead(n,src,want);toast('Added '+n+' to the pipeline');go('growth');
 }
 function renderProfile(){
  return pageHead('Profile','Your identity, brand & compliance status.')+`
