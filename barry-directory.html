@@ -1,0 +1,262 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Directory · Barry Burris, NMD</title>
+<link rel="icon" type="image/svg+xml" href="bee-coin.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Oswald:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+--paper:#faf4e8;--card:#fffdf7;--cream:#f4ecdb;
+--ink:#40352a;--ink2:#63543f;--mut:#8a7c68;
+--line:#e8dcc4;--line2:#f2ebda;
+--gold:#c9992f;--gold2:#e6c67e;--goldsoft:#efdcae;--gold-soft:#f8efd6;
+--teal:#5f8f6c;--teal2:#3f6b4e;--teal3:#345c43;--teal-soft:#e6f0e9;
+--good:#4e7433;--good-soft:#eaf2e0;--warn:#b07a2e;--warn-soft:#f7edd8;--bad:#b3261e;--bad-soft:#f6e6e2;
+--r:14px;--shadow:0 10px 30px rgba(60,40,20,.09)}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font:14.5px/1.55 Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+h1,h2,h3{font-family:Fraunces,Georgia,serif;margin:0}
+a{color:inherit}
+header{background:linear-gradient(180deg,#4a6b52,#3d5a45);color:#f4e8d0;padding:11px 0;position:sticky;top:0;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.22)}
+.hb{max-width:1400px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:11px}
+.hb .back{font-size:20px;text-decoration:none;color:#e6c67e;flex:none}
+.coin{width:34px;height:34px;border-radius:50%;flex:none;box-shadow:0 0 0 1px rgba(230,198,126,.35)}
+.htitle{font-family:Fraunces,serif;font-weight:700;font-size:19px;color:#e6c67e;line-height:1}.hsub{font-size:11px;color:#b8a986;margin-top:2px}.sp{flex:1}
+.hbtn{background:rgba(255,255,255,.10);border:1px solid rgba(230,198,126,.25);color:#f4e8d0;border-radius:9px;padding:7px 11px;font-size:12.5px;cursor:pointer;text-decoration:none}
+.wrap{max-width:1400px;margin:0 auto;padding:16px}
+.note{background:var(--gold-soft);border:1px solid var(--goldsoft);border-radius:12px;padding:13px 16px;color:#7a5f22;font-size:13px;line-height:1.55;margin-bottom:16px}
+.note b{color:#5a4413}
+.quickrow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.qbtn{background:var(--card);border:1px solid var(--line);border-radius:11px;padding:9px 14px;font-weight:700;font-size:13px;cursor:pointer;color:var(--ink);display:flex;align-items:center;gap:7px}
+.qbtn:hover{border-color:var(--gold2)}
+.qbtn.on{background:linear-gradient(180deg,var(--teal),var(--teal2));border-color:var(--teal2);color:#fff}
+.qbtn .n{background:rgba(0,0,0,.08);border-radius:99px;padding:1px 7px;font-size:11px}
+.qbtn.on .n{background:rgba(255,255,255,.22)}
+.toolbar{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);padding:14px 16px;margin-bottom:14px;display:flex;gap:10px;flex-wrap:wrap;align-items:end}
+.fld{display:flex;flex-direction:column;gap:4px}
+.fld label{font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mut)}
+.fld select,.fld input{border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 10px;font:inherit;font-size:13px;color:var(--ink)}
+.fld.grow{flex:1;min-width:200px}
+.tiers{display:flex;gap:6px}
+.tierbtn{border:1.5px solid var(--line);background:#fff;border-radius:8px;width:34px;height:34px;font-weight:800;cursor:pointer;font-size:13px;color:var(--mut)}
+.tierbtn[data-t="A"].on{background:var(--good-soft);border-color:var(--good);color:var(--good)}
+.tierbtn[data-t="B"].on{background:var(--teal-soft);border-color:var(--teal2);color:var(--teal2)}
+.tierbtn[data-t="C"].on{background:#f0f0f0;border-color:#999;color:#666}
+.countline{font-size:12.5px;color:var(--mut);margin:0 0 10px 2px}
+.dirtable{background:var(--card);border:1px solid var(--line);border-radius:var(--r);box-shadow:var(--shadow);overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-family:Oswald,sans-serif;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--mut);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--line);background:#fbf7ec;position:sticky;top:66px}
+td{padding:10px 12px;border-bottom:1px solid var(--line2);vertical-align:top;font-size:13px}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fbf8f0}
+.vtag{display:inline-block;font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:99px;background:var(--teal-soft);color:var(--teal2);white-space:nowrap}
+.nm{font-weight:700}
+.ct{color:var(--mut);font-size:12px;margin-top:1px}
+.tier{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;border-radius:7px;font-weight:800;font-size:12px}
+.tier.A{background:var(--good-soft);color:var(--good)}
+.tier.B{background:var(--teal-soft);color:var(--teal2)}
+.tier.C{background:#eee;color:#777}
+.notes{color:var(--ink2);font-size:12px;max-width:340px;line-height:1.45}
+.statussel{border:1px solid var(--line);border-radius:8px;padding:5px 7px;font:inherit;font-size:12px;background:#fff}
+.statussel.st-new{color:var(--mut)}
+.statussel.st-contacted{color:var(--teal2);border-color:var(--teal2)}
+.statussel.st-meeting{color:#8a6a1e;border-color:var(--gold)}
+.statussel.st-partnered{color:var(--good);border-color:var(--good)}
+.statussel.st-notfit{color:var(--bad);border-color:var(--bad)}
+.notebtn{background:none;border:1px solid var(--line);border-radius:7px;width:26px;height:26px;cursor:pointer;font-size:12px;margin-left:5px}
+.notebtn.has{border-color:var(--gold);background:var(--gold-soft)}
+.website{color:var(--teal2);font-size:12px;word-break:break-all}
+.empty{padding:40px;text-align:center;color:var(--mut)}
+.dlbtn{background:var(--card);border:1px solid var(--line);border-radius:9px;padding:8px 13px;font-weight:700;font-size:12.5px;cursor:pointer;color:var(--ink)}
+.cred{text-align:center;color:#9aa6b2;font-size:11.5px;padding:18px 0}
+@media(max-width:900px){.notes{max-width:180px}}
+</style>
+</head>
+<body>
+<header><div class="hb">
+  <a class="back" href="barry-burris-hub.html" title="Back to the hub">←</a>
+  <img class="coin" src="bee-coin.svg" alt="BB">
+  <div><div class="htitle">Directory</div><div class="hsub">Every AE lead list, plus Barry's own referral network — one filterable table</div></div>
+  <div class="sp"></div>
+  <button class="dlbtn" onclick="exportCSV()">⭳ Export filtered CSV</button>
+</div></header>
+
+<div class="wrap">
+  <div class="note"><b>What this is.</b> The full Accelerated Experiences master leads list (all hub verticals) plus real, sourced research on complementary practitioners in Kootenai County / Coeur d'Alene — filed under Hub: <b>Barry Burris Hub</b>. Everything below came from an actual web search with a real source; nothing here is invented. Outreach status and notes you set are on-device (Lane A) — stored in this browser, not synced across devices yet.</div>
+
+  <div class="quickrow" id="quickRow"></div>
+
+  <div class="toolbar">
+    <div class="fld grow"><label>Search</label><input id="fSearch" placeholder="Name, contact, city, notes…" oninput="renderTable()"></div>
+    <div class="fld"><label>Hub</label><select id="fHub" onchange="renderTable()"></select></div>
+    <div class="fld"><label>Vertical</label><select id="fVertical" onchange="renderTable()"></select></div>
+    <div class="fld"><label>State</label><select id="fState" onchange="renderTable()"></select></div>
+    <div class="fld"><label>Status</label><select id="fStatus" onchange="renderTable()">
+      <option value="">All</option><option value="new">New</option><option value="contacted">Contacted</option>
+      <option value="meeting">Meeting set</option><option value="partnered">Partnered</option><option value="notfit">Not a fit</option>
+    </select></div>
+    <div class="fld"><label>Fit tier</label><div class="tiers" id="tierBtns">
+      <button class="tierbtn" data-t="A" onclick="toggleTier('A')">A</button>
+      <button class="tierbtn" data-t="B" onclick="toggleTier('B')">B</button>
+      <button class="tierbtn" data-t="C" onclick="toggleTier('C')">C</button>
+    </div></div>
+    <div class="fld"><button class="dlbtn" onclick="resetFilters()">Reset filters</button></div>
+  </div>
+
+  <div class="countline" id="countLine"></div>
+  <div class="dirtable"><table>
+    <thead><tr><th>Vertical</th><th>Account</th><th>Location</th><th>Contact</th><th>Fit</th><th>Status</th><th>Notes</th></tr></thead>
+    <tbody id="tbody"></tbody>
+  </table></div>
+</div>
+<div class="cred">Directory by <b>Accelerated Experiences, LLC</b></div>
+
+<script src="barry-directory-data.js"></script>
+<script>
+const STATUS_LABEL={new:'New',contacted:'Contacted',meeting:'Meeting set',partnered:'Partnered',notfit:'Not a fit'};
+let activeTiers=new Set();
+
+function lsGet(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}}
+function lsSet(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+let STATE=lsGet('bb_directory_state',{}); // {rowId:{status,note}}
+function saveState(){lsSet('bb_directory_state',STATE);}
+function getRowState(id){return STATE[id]||{status:'new',note:''};}
+
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+
+function uniqueSorted(arr){return [...new Set(arr)].filter(Boolean).sort();}
+
+function populateSelects(){
+  const hubs=uniqueSorted(DIRECTORY_DATA.map(r=>r.hub));
+  const verticals=uniqueSorted(DIRECTORY_DATA.map(r=>r.v));
+  const states=uniqueSorted(DIRECTORY_DATA.map(r=>r.st));
+  document.getElementById('fHub').innerHTML='<option value="">All hubs</option>'+hubs.map(h=>`<option>${esc(h)}</option>`).join('');
+  document.getElementById('fVertical').innerHTML='<option value="">All verticals</option>'+verticals.map(v=>`<option>${esc(v)}</option>`).join('');
+  document.getElementById('fState').innerHTML='<option value="">All states</option>'+states.map(s=>`<option>${esc(s)}</option>`).join('');
+}
+
+function barryVerticalCounts(){
+  const rows=DIRECTORY_DATA.filter(r=>r.hub==='Barry Burris Hub');
+  const byV={};
+  rows.forEach(r=>byV[r.v]=(byV[r.v]||0)+1);
+  return {total:rows.length,byV};
+}
+function renderQuickRow(){
+  const {total,byV}=barryVerticalCounts();
+  const chips=[
+    {label:'🩺 Barry’s referral network (Kootenai Co.)',hub:'Barry Burris Hub',n:total},
+  ].concat(Object.keys(byV).sort().map(v=>({label:v,vertical:v,hub:'Barry Burris Hub',n:byV[v]})));
+  const el=document.getElementById('quickRow');
+  el.innerHTML='<button class="qbtn" id="qbtn-all" onclick="clearQuick()">All ' + DIRECTORY_DATA.length + ' rows</button>'
+    + chips.map((c,i)=>`<button class="qbtn" id="qbtn-${i}" onclick='applyQuick(${JSON.stringify(c).replace(/'/g,"&#39;")})'>${esc(c.label)} <span class="n">${c.n}</span></button>`).join('');
+}
+function clearQuick(){resetFilters();}
+function applyQuick(c){
+  document.getElementById('fHub').value=c.hub||'';
+  document.getElementById('fVertical').value=c.vertical||'';
+  renderTable();
+}
+
+function toggleTier(t){
+  if(activeTiers.has(t))activeTiers.delete(t);else activeTiers.add(t);
+  document.querySelectorAll('.tierbtn').forEach(b=>b.classList.toggle('on',activeTiers.has(b.dataset.t)));
+  renderTable();
+}
+function resetFilters(){
+  document.getElementById('fSearch').value='';
+  document.getElementById('fHub').value='';
+  document.getElementById('fVertical').value='';
+  document.getElementById('fState').value='';
+  document.getElementById('fStatus').value='';
+  activeTiers.clear();
+  document.querySelectorAll('.tierbtn').forEach(b=>b.classList.remove('on'));
+  renderTable();
+}
+
+function filteredRows(){
+  const q=(document.getElementById('fSearch').value||'').trim().toLowerCase();
+  const hub=document.getElementById('fHub').value;
+  const vertical=document.getElementById('fVertical').value;
+  const state=document.getElementById('fState').value;
+  const status=document.getElementById('fStatus').value;
+  return DIRECTORY_DATA.filter(r=>{
+    if(hub&&r.hub!==hub)return false;
+    if(vertical&&r.v!==vertical)return false;
+    if(state&&r.st!==state)return false;
+    if(activeTiers.size&&!activeTiers.has(r.tier))return false;
+    if(status){const st=getRowState(r.id).status||'new';if(st!==status)return false;}
+    if(q){
+      const hay=(r.name+' '+r.cf+' '+r.cl+' '+r.city+' '+r.st+' '+r.notes+' '+r.v).toLowerCase();
+      if(hay.indexOf(q)===-1)return false;
+    }
+    return true;
+  });
+}
+
+function setStatus(id,val){
+  const s=getRowState(id);s.status=val;STATE[id]=s;saveState();
+  const sel=document.querySelector('select[data-row="'+id+'"]');
+  if(sel){sel.className='statussel st-'+val;}
+}
+function editNote(id){
+  const s=getRowState(id);
+  const val=prompt('Note for this contact:',s.note||'');
+  if(val===null)return;
+  s.note=val;STATE[id]=s;saveState();
+  renderTable();
+}
+
+function renderTable(){
+  const rows=filteredRows();
+  document.getElementById('countLine').textContent=rows.length+' of '+DIRECTORY_DATA.length+' rows';
+  const tb=document.getElementById('tbody');
+  if(!rows.length){tb.innerHTML='<tr><td colspan="7" class="empty">No rows match those filters.</td></tr>';return;}
+  tb.innerHTML=rows.map(r=>{
+    const s=getRowState(r.id);
+    const contact=[r.cf,r.cl].filter(Boolean).join(' ')+(r.title?' · '+r.title:'');
+    const loc=[r.city,r.st].filter(Boolean).join(', ')+(r.addr?'<div class="ct">'+esc(r.addr)+'</div>':'');
+    const phoneWeb=[r.phone?esc(r.phone):'',r.web?`<a class="website" href="${esc(r.web)}" target="_blank" rel="noopener">${esc(r.web.replace(/^https?:\/\//,''))}</a>`:''].filter(Boolean).join('<br>');
+    return `<tr>
+      <td><span class="vtag">${esc(r.v)}</span></td>
+      <td><div class="nm">${esc(r.name)}</div>${phoneWeb?'<div class="ct">'+phoneWeb+'</div>':''}</td>
+      <td>${loc||'<span class="ct">—</span>'}</td>
+      <td>${contact.trim()?esc(contact):'<span class="ct">—</span>'}</td>
+      <td><span class="tier ${esc(r.tier)}">${esc(r.tier)}</span></td>
+      <td>
+        <select class="statussel st-${s.status||'new'}" data-row="${r.id}" onchange="setStatus('${r.id}',this.value)">
+          ${Object.keys(STATUS_LABEL).map(k=>`<option value="${k}" ${(s.status||'new')===k?'selected':''}>${STATUS_LABEL[k]}</option>`).join('')}
+        </select>
+        <button class="notebtn ${s.note?'has':''}" title="${s.note?esc(s.note):'Add a note'}" onclick="editNote('${r.id}')">✎</button>
+      </td>
+      <td><div class="notes">${esc(r.notes)}</div></td>
+    </tr>`;
+  }).join('');
+}
+
+function csvCell(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
+function exportCSV(){
+  const rows=filteredRows();
+  const header=['Vertical','Hub','State','Account Name','Contact First Name','Contact Last Name','Title','Street Address','City','ZIP','Phone','Email','Website','Fit Tier','Status','My Note','Notes'];
+  const body=rows.map(r=>{
+    const s=getRowState(r.id);
+    return [r.v,r.hub,r.st,r.name,r.cf,r.cl,r.title,r.addr,r.city,r.zip,r.phone,r.email,r.web,r.tier,STATUS_LABEL[s.status||'new'],s.note||'',r.notes];
+  });
+  const csv=[header].concat(body).map(row=>row.map(csvCell).join(',')).join('\r\n');
+  const blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='barry-directory-filtered.csv';
+  document.body.appendChild(a);a.click();
+  setTimeout(function(){URL.revokeObjectURL(a.href);a.remove();},400);
+}
+
+populateSelects();
+renderQuickRow();
+renderTable();
+</script>
+</body>
+</html>
