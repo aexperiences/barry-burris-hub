@@ -269,10 +269,47 @@ function addLead(n,src,want){
 }
 function addLabOrder(panel,p){
   if(!panel||!p)return false;
-  DATA.labs.unshift({panel:panel,p:p,st:'Ordered',d:new Date().toISOString().slice(0,10)});
+  DATA.labs.unshift({id:'lab-'+Date.now().toString(36)+Math.random().toString(36).slice(2,6),panel:panel,p:p,st:'Ordered',d:new Date().toISOString().slice(0,10),readings:[]});
   lsSet('bb_labs',DATA.labs);
   return true;
 }
+function saveLabs(){lsSet('bb_labs',DATA.labs);}
+
+/* ---- Lab result markers: standard published adult reference ranges (LabCorp/Quest/
+   Mayo-style commercial-lab defaults), shown as an editable starting point per marker —
+   not a diagnosis, not lab-specific. Barry can override lo/hi to his own or his lab's
+   numbers per reading. Real trend charting below is built on whatever he actually enters;
+   nothing here fabricates a result. ---- */
+const MARKER_LIBRARY={
+ 'Comprehensive metabolic + lipid':[
+  {m:'Glucose (fasting)',u:'mg/dL',lo:70,hi:99},{m:'BUN',u:'mg/dL',lo:7,hi:20},
+  {m:'Creatinine',u:'mg/dL',lo:0.6,hi:1.3},{m:'ALT',u:'U/L',lo:7,hi:56},{m:'AST',u:'U/L',lo:10,hi:40},
+  {m:'Total Cholesterol',u:'mg/dL',lo:100,hi:199},{m:'LDL',u:'mg/dL',lo:0,hi:99},
+  {m:'HDL',u:'mg/dL',lo:40,hi:90},{m:'Triglycerides',u:'mg/dL',lo:0,hi:149}],
+ 'Micronutrients':[
+  {m:'Vitamin D, 25-OH',u:'ng/mL',lo:30,hi:100},{m:'Vitamin B12',u:'pg/mL',lo:200,hi:900},
+  {m:'Folate',u:'ng/mL',lo:2.7,hi:17},{m:'Ferritin',u:'ng/mL',lo:20,hi:250},
+  {m:'Magnesium (RBC)',u:'mg/dL',lo:4.2,hi:6.8},{m:'Zinc',u:'mcg/dL',lo:60,hi:120}],
+ 'Hormones':[
+  {m:'TSH',u:'mIU/L',lo:0.4,hi:4.0},{m:'Free T4',u:'ng/dL',lo:0.8,hi:1.8},
+  {m:'Total Testosterone',u:'ng/dL',lo:264,hi:916},{m:'Estradiol',u:'pg/mL',lo:15,hi:350},
+  {m:'Cortisol (AM)',u:'mcg/dL',lo:6,hi:23},{m:'DHEA-S',u:'mcg/dL',lo:65,hi:380}],
+ 'Inflammation (hs-CRP)':[
+  {m:'hs-CRP',u:'mg/L',lo:0,hi:3.0},{m:'ESR',u:'mm/hr',lo:0,hi:20},{m:'Homocysteine',u:'umol/L',lo:5,hi:15}],
+ 'Thyroid full':[
+  {m:'TSH',u:'mIU/L',lo:0.4,hi:4.0},{m:'Free T4',u:'ng/dL',lo:0.8,hi:1.8},
+  {m:'Free T3',u:'pg/mL',lo:2.3,hi:4.2},{m:'Reverse T3',u:'ng/dL',lo:9.2,hi:24.1},
+  {m:'TPO Antibodies',u:'IU/mL',lo:0,hi:34}],
+ 'Food sensitivity':[{m:'Food IgG reactivity (0–6 scale)',u:'class',lo:0,hi:1}],
+ 'Heavy metals':[
+  {m:'Lead (blood)',u:'mcg/dL',lo:0,hi:5},{m:'Mercury (blood)',u:'mcg/L',lo:0,hi:10},
+  {m:'Arsenic (urine)',u:'mcg/L',lo:0,hi:35},{m:'Cadmium (blood)',u:'mcg/L',lo:0,hi:5}],
+};
+let LAB_RESULTS_ID=null, LAB_TRENDS_PATIENT=null;
+function openEnterResults(id){LAB_RESULTS_ID=id;go('labresults');}
+function openLabTrends(patient){LAB_TRENDS_PATIENT=patient;go('labtrends');}
+function markCollected(id){const l=DATA.labs.find(x=>x.id===id);if(!l)return;l.st='Collected';saveLabs();go('labs');}
+function outOfRange(v,lo,hi){return typeof v==='number'&&(v<lo||v>hi);}
 function csvCell(v){v=String(v==null?'':v);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}
 function downloadCSV(filename,rows){
   var csv=rows.map(function(r){return r.map(csvCell).join(',');}).join('\r\n');
@@ -460,14 +497,21 @@ function addToInvoice(serviceName,priceStr){
   addInvoice(p,serviceName,amt);
   toast('Added to '+p+'’s invoice — see Billing');
 }
+function labRowAction(l){
+ if(l.st==='Ordered')return `<button class="btn sm" onclick="markCollected('${l.id}')">Mark collected</button>`;
+ if(l.st==='Collected')return `<button class="btn sm p" onclick="openEnterResults('${l.id}')">Enter results</button>`;
+ return `<button class="btn sm" onclick="openEnterResults('${l.id}')" title="Add another draw for this panel">＋ More</button> <button class="btn sm p" onclick="openLabTrends('${l.p}')">View trends</button>`;
+}
 function renderLabs(){
  const inp='width:100%;border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;font:inherit;font-size:14px';
  const panelOpts=['Comprehensive metabolic + lipid','Micronutrients','Hormones','Inflammation (hs-CRP)','Thyroid full','Food sensitivity','Heavy metals'];
- return pageHead('Labs','Order & track panels — results open in the note tool.')+`
- <div class="gate">On-device (Lane A). Real orders, real tracking — stored in this browser. Results viewing turns on with the secure-hosting step (that part's a real, disclosed gate, not a stub).</div>
+ const patientsWithResults=[...new Set(DATA.labs.filter(l=>l.readings&&l.readings.length).map(l=>l.p))];
+ return pageHead('Labs','Order, collect & chart results — real trend lines, not just a status pill.')+`
+ <div class="gate">On-device (Lane A). Real orders, real result entry, real trend charts — stored in this browser, not synced across devices yet. That turns on with the secure-hosting step.</div>
+ ${patientsWithResults.length?`<div class="card" style="margin-bottom:16px"><div class="sec-h"><h3 style="margin:0">Trend charts</h3></div><div style="display:flex;gap:8px;flex-wrap:wrap">${patientsWithResults.map(p=>`<button class="btn sm" onclick="openLabTrends(${JSON.stringify(p)})">📈 ${p}</button>`).join('')}</div></div>`:''}
  <div class="card"><div class="sec-h"><h3 style="margin:0">Orders</h3></div>
  <table><thead><tr><th>Panel</th><th>Patient</th><th>Status</th><th>Date</th><th></th></tr></thead><tbody>
- ${DATA.labs.length?DATA.labs.map(l=>`<tr><td><b>${l.panel}</b></td><td>${l.p}</td><td><span class="pill ${l.st==='Resulted'?'ok':l.st==='Collected'?'open':'new'}">${l.st}</span></td><td class="muted">${l.d}</td><td class="rt"><button class="btn sm" onclick="toast('Results open in the note tool once secure storage is live — a real, disclosed gate, not a stub.')">View ⌁</button></td></tr>`).join(''):`<tr><td colspan="5" class="muted" style="padding:12px">No labs ordered yet — order your first below.</td></tr>`}
+ ${DATA.labs.length?DATA.labs.map(l=>`<tr><td><b>${l.panel}</b></td><td>${l.p}</td><td><span class="pill ${l.st==='Resulted'?'ok':l.st==='Collected'?'open':'new'}">${l.st}</span></td><td class="muted">${l.d}</td><td class="rt">${labRowAction(l)}</td></tr>`).join(''):`<tr><td colspan="5" class="muted" style="padding:12px">No labs ordered yet — order your first below.</td></tr>`}
  </tbody></table>
  <div style="margin-top:14px;display:grid;grid-template-columns:1.6fr 1.2fr;gap:10px">
    <div><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Panel</div><select id="labPanel" style="${inp}">${panelOpts.map(o=>`<option>${o}</option>`).join('')}</select></div>
@@ -482,6 +526,139 @@ function submitLabOrder(){
   const p=(document.getElementById('labP').value||'').trim();
   if(!p){document.getElementById('labP').focus();return;}
   addLabOrder(panel,p);toast('Ordered '+panel+' for '+p);go('labs');
+}
+
+/* ---- Enter results: pulls the standard marker set for this order's panel, lets Barry
+   type real values (with editable ref ranges), stores them on the order as a dated draw.
+   Every reading here is one Barry typed in — nothing pre-fills a value. ---- */
+function renderLabResults(){
+ const l=DATA.labs.find(x=>x.id===LAB_RESULTS_ID);
+ if(!l)return pageHead('Enter results','')+`<div class="card">That order wasn't found. <button class="btn sm" onclick="go('labs')">Back to Labs</button></div>`;
+ const markers=MARKER_LIBRARY[l.panel]||[{m:'Result',u:'',lo:0,hi:0}];
+ const inp='width:100%;border:1px solid var(--line);background:#fff;border-radius:8px;padding:7px 9px;font:inherit;font-size:13.5px';
+ return pageHead('Enter results',l.panel+' — '+l.p+' — draw date')+`
+ <div class="gate">Reference ranges below are standard commercial-lab defaults, shown as an editable starting point — not a diagnosis, and not specific to any one lab. Adjust lo/hi to match your lab's report or your own optimal range before saving. Leave a marker blank to skip it.</div>
+ <div class="card">
+ <div style="margin-bottom:12px"><div class="muted" style="font-size:11px;font-weight:700;text-transform:uppercase;margin-bottom:5px">Draw date</div><input id="lrDate" type="date" value="${new Date().toISOString().slice(0,10)}" style="${inp};max-width:220px"></div>
+ <table><thead><tr><th>Marker</th><th>Value</th><th>Unit</th><th>Low</th><th>High</th></tr></thead><tbody>
+ ${markers.map((mk,i)=>`<tr>
+   <td><b>${mk.m}</b></td>
+   <td><input id="lrV${i}" style="${inp};max-width:110px" placeholder="value" inputmode="decimal"></td>
+   <td><input id="lrU${i}" style="${inp};max-width:90px" value="${mk.u}"></td>
+   <td><input id="lrLo${i}" style="${inp};max-width:80px" value="${mk.lo}"></td>
+   <td><input id="lrHi${i}" style="${inp};max-width:80px" value="${mk.hi}"></td>
+ </tr>`).join('')}
+ </tbody></table>
+ <div style="margin-top:14px;display:flex;gap:10px">
+   <button class="btn p" onclick="saveLabResults('${l.id}',${markers.length})">Save results</button>
+   <button class="btn" onclick="go('labs')">Cancel</button>
+ </div>
+ </div>`;
+}
+function saveLabResults(id,count){
+ const l=DATA.labs.find(x=>x.id===id);if(!l)return;
+ const markers=MARKER_LIBRARY[l.panel]||[{m:'Result',u:'',lo:0,hi:0}];
+ const date=document.getElementById('lrDate').value||new Date().toISOString().slice(0,10);
+ let added=0;
+ for(let i=0;i<count;i++){
+   const raw=(document.getElementById('lrV'+i).value||'').trim();
+   if(raw==='')continue;
+   const v=parseFloat(raw);
+   if(isNaN(v))continue;
+   const u=(document.getElementById('lrU'+i).value||'').trim();
+   const lo=parseFloat(document.getElementById('lrLo'+i).value);
+   const hi=parseFloat(document.getElementById('lrHi'+i).value);
+   l.readings.push({marker:markers[i].m,value:v,unit:u,lo:isNaN(lo)?markers[i].lo:lo,hi:isNaN(hi)?markers[i].hi:hi,date:date});
+   added++;
+ }
+ if(!added){toast('No values entered — nothing saved.');return;}
+ l.st='Resulted';l.d=date;
+ saveLabs();
+ toast('Saved '+added+' result'+(added===1?'':'s')+' for '+l.p);
+ openLabTrends(l.p);
+}
+
+/* ---- Trend charts: real, dependency-free inline SVG. Merges readings for the same
+   marker across every order this patient has ever had, sorted by draw date, with a
+   shaded reference-range band and out-of-range points flagged red. ---- */
+function svgTrendChart(points,w,h){
+ // points: [{date,value,lo,hi}] sorted ascending by date
+ const pad={l:34,r:10,t:10,b:20};
+ const iw=w-pad.l-pad.r, ih=h-pad.t-pad.b;
+ const vals=points.map(p=>p.value), los=points.map(p=>p.lo), his=points.map(p=>p.hi);
+ let vmin=Math.min(...vals,...los), vmax=Math.max(...vals,...his);
+ if(vmin===vmax){vmin-=1;vmax+=1;}
+ const pad2=(vmax-vmin)*0.12; vmin-=pad2; vmax+=pad2;
+ const times=points.map(p=>new Date(p.date+'T00:00').getTime());
+ let tmin=Math.min(...times), tmax=Math.max(...times);
+ if(tmin===tmax){tmin-=86400000;tmax+=86400000;}
+ const x=t=>pad.l+((t-tmin)/(tmax-tmin))*iw;
+ const y=v=>pad.t+ih-((v-vmin)/(vmax-vmin))*ih;
+ const bandTop=y(Math.max(...his)), bandBot=y(Math.min(...los));
+ const bandY=Math.min(bandTop,bandBot), bandH=Math.abs(bandBot-bandTop);
+ const linePts=points.map(p=>x(new Date(p.date+'T00:00').getTime())+','+y(p.value)).join(' ');
+ const dots=points.map(p=>{
+   const bad=outOfRange(p.value,p.lo,p.hi);
+   return `<circle cx="${x(new Date(p.date+'T00:00').getTime())}" cy="${y(p.value)}" r="4" fill="${bad?'#b3261e':'#3f6b4e'}"><title>${p.date}: ${p.value} (ref ${p.lo}–${p.hi})</title></circle>`;
+ }).join('');
+ return `<svg viewBox="0 0 ${w} ${h}" width="${w}" height="${h}">
+  <rect x="${pad.l}" y="${bandY}" width="${iw}" height="${Math.max(bandH,1)}" fill="#4e7433" opacity="0.10"/>
+  <line x1="${pad.l}" y1="${pad.t}" x2="${pad.l}" y2="${pad.t+ih}" stroke="#e8dcc4"/>
+  <line x1="${pad.l}" y1="${pad.t+ih}" x2="${pad.l+iw}" y2="${pad.t+ih}" stroke="#e8dcc4"/>
+  <polyline points="${linePts}" fill="none" stroke="#c9992f" stroke-width="2"/>
+  ${dots}
+  <text x="${pad.l}" y="${pad.t+8}" font-size="9" fill="#8a7c68">${vmax.toFixed(1)}</text>
+  <text x="${pad.l}" y="${pad.t+ih}" font-size="9" fill="#8a7c68">${vmin.toFixed(1)}</text>
+ </svg>`;
+}
+function renderLabTrends(){
+ const patient=LAB_TRENDS_PATIENT;
+ const patients=[...new Set(DATA.labs.map(l=>l.p))];
+ if(!patient||!patients.includes(patient)){
+   return pageHead('Lab trends','Pick a patient to chart.')+`<div class="card">${patients.length?`<div style="display:flex;gap:8px;flex-wrap:wrap">${patients.map(p=>`<button class="btn sm" onclick="openLabTrends(${JSON.stringify(p)})">${p}</button>`).join('')}</div>`:`<div class="muted">No lab orders yet.</div>`}</div>`;
+ }
+ const orders=DATA.labs.filter(l=>l.p===patient);
+ const byMarker={};
+ orders.forEach(l=>(l.readings||[]).forEach(r=>{
+   (byMarker[r.marker]=byMarker[r.marker]||[]).push(r);
+ }));
+ Object.values(byMarker).forEach(arr=>arr.sort((a,b)=>a.date<b.date?-1:1));
+ const markerNames=Object.keys(byMarker);
+ const latestFlags=markerNames.map(m=>{
+   const arr=byMarker[m]; const last=arr[arr.length-1];
+   return {m,last,bad:outOfRange(last.value,last.lo,last.hi)};
+ }).filter(x=>x.bad);
+ const otherPatients=patients.filter(p=>p!==patient);
+ const head=pageHead('Lab trends',patient)+`
+ <div style="margin-bottom:14px;display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+  <span class="muted" style="font-size:12.5px">Patient:</span>
+  <select onchange="openLabTrends(this.value)" style="border:1px solid var(--line);border-radius:8px;padding:6px 9px;font:inherit;font-size:13px;background:#fff">
+   <option>${patient}</option>${otherPatients.map(p=>`<option>${p}</option>`).join('')}
+  </select>
+  <button class="btn sm" onclick="go('labs')">← Back to Labs</button>
+ </div>`;
+ if(!markerNames.length){
+  return head+`<div class="card"><div class="muted">No results entered yet for ${patient} — enter results from an order in Labs to see trend charts here.</div></div>`;
+ }
+ const flagCard=`<div class="card" style="margin-bottom:16px;border-color:${latestFlags.length?'#e6bdb9':'var(--line)'}">
+  <div class="sec-h"><h3 style="margin:0">Flagged now</h3></div>
+  ${latestFlags.length?`<div style="display:flex;flex-direction:column;gap:6px">${latestFlags.map(f=>`<div class="kv"><span class="k">${f.m}</span><span style="color:var(--bad);font-weight:700">${f.last.value} ${f.last.unit} <span class="muted" style="font-weight:400">(ref ${f.last.lo}–${f.last.hi})</span></span></div>`).join('')}</div>`:`<div class="muted">Nothing out of range on the most recent draw.</div>`}
+ </div>`;
+ const chartCards=markerNames.map(m=>{
+  const arr=byMarker[m]; const last=arr[arr.length-1];
+  const bad=outOfRange(last.value,last.lo,last.hi);
+  return `<div class="card">
+   <div class="sec-h" style="margin-bottom:6px"><h3 style="margin:0;font-size:14px">${m}</h3><span class="pill ${bad?'bad':'ok'}">${last.value} ${last.unit}</span></div>
+   ${svgTrendChart(arr,300,110)}
+   <div class="muted" style="font-size:11px;margin-top:4px">${arr.length} draw${arr.length===1?'':'s'} · ref ${last.lo}–${last.hi} ${last.unit}</div>
+  </div>`;
+ }).join('');
+ const historyRows=orders.filter(l=>l.readings&&l.readings.length).map(l=>
+  `<tr><td class="muted">${l.d}</td><td>${l.panel}</td><td>${l.readings.map(r=>`${r.marker}: <b style="color:${outOfRange(r.value,r.lo,r.hi)?'var(--bad)':'inherit'}">${r.value}${r.unit?' '+r.unit:''}</b>`).join(' · ')}</td></tr>`
+ ).join('');
+ return head+flagCard+`<div class="svc" style="grid-template-columns:repeat(auto-fit,minmax(300px,1fr))">${chartCards}</div>
+ <div class="card" style="margin-top:16px"><div class="sec-h"><h3 style="margin:0">Draw history</h3></div>
+ <table><thead><tr><th>Date</th><th>Panel</th><th>Values</th></tr></thead><tbody>${historyRows}</tbody></table></div>`;
 }
 function renderProtocols(){
  return pageHead('Protocols','Your knowledge library — reference, not auto-prescribing.')+`
@@ -645,7 +822,7 @@ function bbAnswers(i){
 }
 function bbCloseModal(){var ov=document.getElementById('bbModal');if(ov)ov.style.display='none';document.removeEventListener('keydown',bbIxEscKey);}
 function bbIxEscKey(e){if(e.key==='Escape')bbCloseModal();}
-const VIEWS={home:renderHome,schedule:renderSchedule,patients:renderPatients,intakes:renderIntakes,charting:renderCharting,billing:renderBilling,services:renderServices,labs:renderLabs,protocols:renderProtocols,growth:renderGrowth,team:renderTeam,profile:renderProfile};
+const VIEWS={home:renderHome,schedule:renderSchedule,patients:renderPatients,intakes:renderIntakes,charting:renderCharting,billing:renderBilling,services:renderServices,labs:renderLabs,labresults:renderLabResults,labtrends:renderLabTrends,protocols:renderProtocols,growth:renderGrowth,team:renderTeam,profile:renderProfile};
 function go(k){setActive(k);document.getElementById('view').innerHTML=VIEWS[k]();window.scrollTo(0,0);if(k==='home'){const n=document.getElementById('notes');if(n)n.value=loadNotes();}if(window.innerWidth<920)document.getElementById('app').classList.add('collapsed');}
 function loadNotes(){try{return localStorage.getItem('bb_notes')||''}catch(e){return ''}}
 function saveNotes(v){try{localStorage.setItem('bb_notes',v)}catch(e){}}
