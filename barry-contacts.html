@@ -144,8 +144,8 @@ textarea{min-height:64px;resize:vertical}
       <button type="button" data-k="business" id="kBusiness" onclick="edSetKind('business')">🏢 Business</button>
     </div>
     <div class="grid2">
-      <div class="fld" id="fFirst"><label>First name</label><input id="eFirst"></div>
-      <div class="fld" id="fLast"><label>Last name</label><input id="eLast"></div>
+      <div class="fld" id="fFirst"><label id="fFirstLbl">First name</label><input id="eFirst"></div>
+      <div class="fld" id="fLast"><label id="fLastLbl">Last name</label><input id="eLast"></div>
     </div>
     <div class="grid2">
       <div class="fld"><label id="lAccount">Company / clinic (optional)</label><input id="eAccount"></div>
@@ -210,11 +210,13 @@ document.getElementById('coin').src='bee-mark.svg';
 var TYPES=['patient','prospect','referring provider','vendor','lab','pharmacy','partner','other'];
 var ALL=[];
 var FS={q:'',kind:'',type:'',tag:'',status:'',state:'',by:'name',dir:1};
-var BASECOLS=[['name','Name'],['account','Company'],['type','Type'],['address','Address'],['city','City'],['state','State'],['phone','Phone'],['email','Email'],['status','Status'],['program','Program'],['source','Source'],['specialty','Specialty'],['tags','Tags'],['createdAt','Added']];
-var DEFAULTVIS=['name','type','address','city','state','phone','email','status','tags'];
+var BASECOLS=[['name','Name'],['account','Company'],['contact','Contact'],['type','Type'],['specialty','Business Type'],['cf:naics','NAICS'],['cf:naicsDesc','NAICS Description'],['phone','Phone'],['email','Email'],['website','Website'],['linkedin','LinkedIn'],['address','Address'],['city','City'],['state','State'],['zip','Zip'],['status','Status'],['program','Program'],['source','Source'],['tags','Tags'],['createdAt','Added']];
+var DEFAULTVIS=['name','specialty','cf:naics','contact','phone','email','website','linkedin','address','city','state','zip','tags'];
 var VIS=[];try{VIS=JSON.parse(localStorage.getItem('bb_cols')||'null');}catch(e){}if(!VIS||!VIS.length)VIS=DEFAULTVIS.slice();
 function saveVis(){try{localStorage.setItem('bb_cols',JSON.stringify(VIS));}catch(e){}}
-function customKeys(){var s={};ALL.forEach(function(c){Object.keys(c.custom||{}).forEach(function(k){s[k]=1;});});return Object.keys(s).sort();}
+function customKeys(){var s={};ALL.forEach(function(c){Object.keys(c.custom||{}).forEach(function(k){s[k]=1;});});
+  var already={};BASECOLS.forEach(function(b){if(b[0].indexOf('cf:')===0)already[b[0].slice(3)]=1;});
+  return Object.keys(s).filter(function(k){return !already[k];}).sort();}
 function colLabel(key){for(var i=0;i<BASECOLS.length;i++){if(BASECOLS[i][0]===key)return BASECOLS[i][1];}return key.indexOf('cf:')===0?key.slice(3):key;}
 function esc(s){return String(s==null?'':s).replace(/[<>&]/g,function(c){return{'<':'&lt;','>':'&gt;','&':'&amp;'}[c];});}
 function toast(m){var t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2200);}
@@ -222,6 +224,8 @@ function nameOf(c){return c.kind==='business'?(c.account||((c.firstName||'')+' '
 function dstr(iso){if(!iso)return '';try{return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'2-digit'});}catch(e){return '';}}
 function telLink(p){if(!p)return '';var d=String(p).replace(/[^0-9+]/g,'');return '<a href="tel:'+d+'" onclick="event.stopPropagation()">'+esc(p)+'</a>';}
 function mailLink(e){if(!e)return '';return '<a href="mailto:'+esc(e)+'" onclick="event.stopPropagation()">'+esc(e)+'</a>';}
+function webLink(u){if(!u)return '';var href=/^https?:\/\//i.test(u)?u:'https://'+u;var disp=String(u).replace(/^https?:\/\//i,'').replace(/^www\./i,'').replace(/\/$/,'');return '<a href="'+esc(href)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">'+esc(disp)+'</a>';}
+function linkedinLink(u){if(!u)return '';var href=/^https?:\/\//i.test(u)?u:'https://'+u;return '<a href="'+esc(href)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()">View profile ↗</a>';}
 
 /* ---- store (device-local) ---- */
 function persist(){try{localStorage.setItem(LS,JSON.stringify(ALL));}catch(e){}}
@@ -323,7 +327,8 @@ function filtered(){
     if(FS.tag&&!(c.tags||[]).includes(FS.tag))return false;
     if(FS.status&&c.status!==FS.status)return false;
     if(FS.state&&c.state!==FS.state)return false;
-    if(q){var hay=[nameOf(c),c.account,c.email,c.phone,c.address,c.city,c.state,c.type,c.program,c.source,c.specialty,c.notes,(c.tags||[]).join(' ')].join(' ').toLowerCase();if(hay.indexOf(q)<0)return false;}
+    if(q){var custVals=Object.keys(c.custom||{}).map(function(k){return c.custom[k];}).join(' ');
+      var hay=[nameOf(c),c.firstName,c.lastName,c.account,c.email,c.phone,c.address,c.city,c.state,c.zip,c.website,c.linkedin,c.type,c.program,c.source,c.specialty,c.notes,(c.tags||[]).join(' '),custVals].join(' ').toLowerCase();if(hay.indexOf(q)<0)return false;}
     return true;
   });
   var by=FS.by,dir=FS.dir;
@@ -333,12 +338,16 @@ function filtered(){
 function cellFor(c,key){
   if(key==='name')return '<span class="kdot '+c.kind+'"></span>'+esc(nameOf(c))+(c.type?'<span class="tybadge">'+esc(c.type)+'</span>':'');
   if(key==='account')return esc(c.kind==='person'?(c.account||''):'');
+  if(key==='contact')return esc([c.firstName,c.lastName].filter(Boolean).join(' '));
   if(key==='type')return esc(c.type||'');
   if(key==='address')return esc(c.address||'');
   if(key==='city')return esc(c.city||'');
   if(key==='state')return esc(c.state||'');
+  if(key==='zip')return esc(c.zip||'');
   if(key==='phone')return telLink(c.phone);
   if(key==='email')return mailLink(c.email);
+  if(key==='website')return webLink(c.website);
+  if(key==='linkedin')return linkedinLink(c.linkedin);
   if(key==='status')return c.status?('<span class="st '+c.status+'">'+esc(c.status)+'</span>'):'';
   if(key==='program')return esc(c.program||'');
   if(key==='source')return esc(c.source||'');
@@ -348,7 +357,7 @@ function cellFor(c,key){
   if(key.indexOf('cf:')===0)return esc((c.custom||{})[key.slice(3)]||'');
   return '';
 }
-function cellClass(key){if(key==='name')return 'nm';if(['account','address','city','state','source','specialty','createdAt'].indexOf(key)>=0)return 'muted';return '';}
+function cellClass(key){if(key==='name')return 'nm';if(['account','address','city','state','zip','source','specialty','createdAt','website','linkedin'].indexOf(key)>=0)return 'muted';return '';}
 function buildTypeSelect(){
   var sel=document.getElementById('typeF');var cur=FS.type;
   sel.innerHTML='<option value="">All types</option>'+TYPES.map(function(t){return '<option value="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>';}).join('');
@@ -400,7 +409,8 @@ document.addEventListener('click',function(e){var m=document.getElementById('col
 var edId=null, edKind='person';
 function edSetKind(k){edKind=k;document.getElementById('kPerson').classList.toggle('on',k==='person');document.getElementById('kBusiness').classList.toggle('on',k==='business');
   document.getElementById('lAccount').textContent=k==='business'?'Company / organization':'Company / clinic (optional)';
-  document.getElementById('fFirst').style.display=k==='business'?'none':'';document.getElementById('fLast').style.display=k==='business'?'none':'';}
+  document.getElementById('fFirstLbl').textContent=k==='business'?'Contact first name':'First name';
+  document.getElementById('fLastLbl').textContent=k==='business'?'Contact last name':'Last name';}
 function setVal(id,v){var e=document.getElementById(id);if(e)e.value=v==null?'':v;}
 function getVal(id){var e=document.getElementById(id);return e?e.value:'';}
 function openEdit(id){
