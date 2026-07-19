@@ -5,8 +5,10 @@
    Usage (place near the end of <body>):
      <script>window.BB_NAV_ACTIVE='calendar'</script>
      <script src="bb-nav.js"></script>
-   BB_NAV_ACTIVE keys: home, calendar, contacts, charting, records,
-                       billing, services, labs, protocols, growth, team, profile.
+   BB_NAV_ACTIVE keys: home, briefs, calendar, contacts, intakes, charting,
+                       telehealth, checkins, records, docs, billing, books,
+                       services, labs, dispensary, protocols, growth,
+                       directory, team, profile, privacy.
 
    Presentation only — it appends its own fixed sidebar and pushes page
    content right on desktop (body padding-left) / overlays on mobile.
@@ -47,7 +49,10 @@
     checkin: '<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
     pill: '<rect x="4" y="8" width="16" height="8" rx="4"/><path d="M12 8v8"/>',
     ledger: '<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>',
-    shield: '<path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9.2 12l1.9 1.9L15 10"/>'
+    shield: '<path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9.2 12l1.9 1.9L15 10"/>',
+    inbox: '<polyline points="22 12 16 12 14 15 10 15 8 12 2 12"/><path d="M5.45 5.11L2 12v6a2 2 0 002 2h16a2 2 0 002-2v-6l-3.45-6.89A2 2 0 0016.76 4H7.24a2 2 0 00-1.79 1.11z"/>',
+    doc: '<path d="M7 2h7l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M14 2v5h5"/><path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/>',
+    network: '<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="12" cy="18" r="2.6"/><path d="M8.2 7.4L10.3 16M15.8 7.4L13.7 16M8.3 6h7.4"/>'
   };
 
   // Bump this date every time a new brief lands in bb-briefs.html — it's the
@@ -59,18 +64,25 @@
     try { return localStorage.getItem('bb_briefs_seen') !== LATEST_BRIEF; } catch (e) { return false; }
   }
 
-  // Nav groups: [key, label, icon, url]. Internal hub views are reached
-  // via URL hash — the hub routes on load from location.hash.
+  // Canonical hub nav — keep this list (items, order, icons, labels) identical
+  // to the NAV array in barry-burris-hub.html so every page in the hub shows
+  // the same sidebar. Only the url column differs on purpose: here (every page
+  // except the SPA itself) every item needs a real url to navigate TO the SPA;
+  // inside the SPA, internal views instead route in-page via go(k).
+  // Internal hub views are reached via URL hash — the hub routes on load from
+  // location.hash.
   var NAV = [
     { g: 'Practice', items: [
       ['home', 'Home', 'home', 'barry-burris-hub.html'],
       ['briefs', 'Briefs from AE', 'trend', 'bb-briefs.html'],
       ['calendar', 'Calendar', 'cal', 'barry-calendar.html'],
       ['contacts', 'Contacts', 'users', 'barry-contacts.html'],
+      ['intakes', 'Intakes', 'inbox', 'barry-burris-hub.html#intakes'],
       ['charting', 'Charting', 'clip', 'barry-burris-hub.html#charting'],
       ['telehealth', 'Video visits', 'video', 'telehealth.html'],
       ['checkins', 'Check-Ins', 'checkin', 'barry-checkins.html'],
-      ['records', 'Records', 'cabinet', 'barry-records.html']
+      ['records', 'Records', 'cabinet', 'barry-records.html'],
+      ['docs', 'Documents', 'doc', 'barry-docs.html']
     ] },
     { g: 'Business', items: [
       ['billing', 'Billing', 'dollar', 'barry-burris-hub.html#billing'],
@@ -82,6 +94,7 @@
     { g: 'Grow', items: [
       ['protocols', 'Protocols', 'book', 'barry-burris-hub.html#protocols'],
       ['growth', 'Growth', 'trend', 'barry-burris-hub.html#growth'],
+      ['directory', 'Directory', 'network', 'barry-directory.html'],
       ['team', 'Team', 'team', 'barry-burris-hub.html#team'],
       ['profile', 'Profile', 'gear', 'barry-burris-hub.html#profile'],
       ['privacy', 'Privacy & Security', 'shield', 'bb-privacy.html']

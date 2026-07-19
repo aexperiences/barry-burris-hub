@@ -342,11 +342,19 @@ const ICN={
  shield:'<path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9.2 12l1.9 1.9L15 10"/>',
  video:'<path d="M15 10l6-3v10l-6-3z"/><rect x="3" y="6" width="12" height="12" rx="2"/>',
  doc:'<path d="M7 2h7l5 5v13a2 2 0 01-2 2H7a2 2 0 01-2-2V4a2 2 0 012-2z"/><path d="M14 2v5h5"/><path d="M8.5 12h7M8.5 15.5h7M8.5 8.5h3"/>',
- network:'<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="12" cy="18" r="2.6"/><path d="M8.2 7.4L10.3 16M15.8 7.4L13.7 16M8.3 6h7.4"/>'
+ network:'<circle cx="6" cy="6" r="2.6"/><circle cx="18" cy="6" r="2.6"/><circle cx="12" cy="18" r="2.6"/><path d="M8.2 7.4L10.3 16M15.8 7.4L13.7 16M8.3 6h7.4"/>',
+ checkin:'<circle cx="12" cy="12" r="9"/><path d="M10 8.5l5 3.5-5 3.5z"/>',
+ pill:'<rect x="4" y="8" width="16" height="8" rx="4"/><path d="M12 8v8"/>',
+ ledger:'<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'
 };
+/* Canonical hub nav — keep this list (items, order, icons, labels) identical
+ * to the NAV array in bb-nav.js so every page in the hub shows the same
+ * sidebar. Only the url column differs on purpose: here (the SPA itself)
+ * internal views omit a url and route in-page via go(k); bb-nav.js (every
+ * other page) always supplies a url since it has to navigate TO this page. */
 const NAV=[
- {g:'Practice',items:[['home','Home','home'],['briefs','Briefs from AE','star','bb-briefs.html'],['calendar','Calendar','cal','barry-calendar.html'],['contacts','Contacts','users','barry-contacts.html'],['intakes','Intakes','inbox'],['charting','Charting','clip'],['telehealth','Video visits','video','telehealth.html'],['records','Records','cabinet','barry-records.html'],['docs','Documents','doc','barry-docs.html']]},
- {g:'Business',items:[['billing','Billing','dollar'],['services','Services','star'],['labs','Labs','flask']]},
+ {g:'Practice',items:[['home','Home','home'],['briefs','Briefs from AE','trend','bb-briefs.html'],['calendar','Calendar','cal','barry-calendar.html'],['contacts','Contacts','users','barry-contacts.html'],['intakes','Intakes','inbox'],['charting','Charting','clip'],['telehealth','Video visits','video','telehealth.html'],['checkins','Check-Ins','checkin','barry-checkins.html'],['records','Records','cabinet','barry-records.html'],['docs','Documents','doc','barry-docs.html']]},
+ {g:'Business',items:[['billing','Billing','dollar'],['books','Books','ledger','barry-books.html'],['services','Services','star'],['labs','Labs','flask'],['dispensary','Dispensary','pill','barry-dispensary.html']]},
  {g:'Grow',items:[['protocols','Protocols','book'],['growth','Growth','trend'],['directory','Directory','network','barry-directory.html'],['team','Team','team'],['profile','Profile','gear'],['privacy','Privacy & Security','shield','bb-privacy.html']]}];
 
 /* Bump this date every time a new brief lands in bb-briefs.html — bb-briefs.html
