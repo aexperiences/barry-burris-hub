@@ -104,7 +104,7 @@ textarea{min-height:64px;resize:vertical}
 </header>
 
 <div class="wrap" id="main">
-  <div class="note"><b>On‑device (Lane A).</b> Contact &amp; scheduling info only — no diagnoses or labs. Saved in this browser; moves to secure shared storage with the HIPAA hosting step.</div>
+  <div class="note" id="syncNote"><b>On‑device (Lane A).</b> Contact &amp; scheduling info only — no diagnoses or labs. Saved in this browser; moves to secure shared storage with the HIPAA hosting step.</div>
   <div class="sum" id="summary"></div>
   <div class="tools">
     <div class="kindtog" id="kindTog">
@@ -202,6 +202,8 @@ textarea{min-height:64px;resize:vertical}
 
 <script>
 var LS='bb_contacts';
+var API='/api/contacts';
+var SYNCED=false;
 var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='0'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%23f4e0a6'/%3E%3Cstop%20offset='.5'%20stop-color='%23c6a04a'/%3E%3Cstop%20offset='1'%20stop-color='%238f6f2e'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='50'%20cy='50'%20r='49'%20fill='%230e1d30'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='45'%20fill='none'%20stroke='url(%23g)'%20stroke-width='2.4'/%3E%3Ccircle%20cx='50'%20cy='50'%20r='40'%20fill='none'%20stroke='url(%23g)'%20stroke-width='1'/%3E%3Ctext%20x='50'%20y='64'%20font-family='Georgia,serif'%20font-size='41'%20font-weight='700'%20fill='url(%23g)'%20text-anchor='middle'%3EBB%3C/text%3E%3C/svg%3E";
 document.getElementById('coin').src='bee-mark.svg';
 var TYPES=['patient','prospect','referring provider','vendor','lab','pharmacy','partner','other'];
@@ -234,12 +236,71 @@ function load(){
   ALL=raw||[];
   if(!ALL.length){seedData();persist();}
   buildTypeSelect();render();
+  syncInit();
 }
+
+/* ---- server sync (KV via /api/contacts) ---- */
+function api(doName,extra){
+  return fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({do:doName},extra||{}))})
+    .then(function(r){return r.json();}).catch(function(){return {ok:false,reason:'net'};});
+}
+function setSyncNote(state){
+  var n=document.getElementById('syncNote');if(!n)return;
+  if(state==='synced') n.innerHTML='<b>Synced.</b> Contacts sync automatically across every device signed into this hub — no diagnoses or labs are stored here.';
+  else if(state==='offline') n.innerHTML='<b>Offline.</b> Couldn’t reach the sync server just now — changes are saved on this device and will sync once you’re back online.';
+  else n.innerHTML='<b>On‑device (Lane A).</b> Contact &amp; scheduling info only — no diagnoses or labs. Saved in this browser; moves to secure shared storage with the HIPAA hosting step.';
+}
+function syncPull(silent){
+  return api('list').then(function(r){
+    if(!r||!r.ok){SYNCED=false;if(!silent)setSyncNote(r&&r.reason==='no_kv'?'local':'offline');return;}
+    SYNCED=true;setSyncNote('synced');
+    ALL=(r.contacts||[]).map(normalize);persist();buildTypeSelect();render();
+  });
+}
+function syncInit(){
+  api('list').then(function(r){
+    if(!r||!r.ok){SYNCED=false;setSyncNote(r&&r.reason==='no_kv'?'local':'offline');return;}
+    SYNCED=true;
+    var server=(r.contacts||[]).map(normalize);
+    var serverIds={};server.forEach(function(c){serverIds[c.id]=1;});
+    var onlyLocal=ALL.filter(function(c){return c.id&&!serverIds[c.id];});
+    if(onlyLocal.length){
+      api('migrate',{contacts:onlyLocal}).then(function(){return api('list');}).then(function(r2){
+        ALL=((r2&&r2.ok?r2.contacts:server)||server).map(normalize);persist();setSyncNote('synced');buildTypeSelect();render();
+      });
+    } else {
+      ALL=server;persist();setSyncNote('synced');buildTypeSelect();render();
+    }
+  });
+  setInterval(function(){syncPull(true);},20000);
+  window.addEventListener('focus',function(){syncPull(true);});
+}
+
 function post(b){
-  if(b.action==='add'){var c=normalize(b.contact);c.id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);c.accountNo=nextNo();c.createdAt=new Date().toISOString();ALL.push(c);}
-  else if(b.action==='update'){var i=ALL.findIndex(function(x){return x.id===b.id;});if(i>=0)ALL[i]=normalize(Object.assign({},ALL[i],b.patch));}
-  else if(b.action==='delete'){ALL=ALL.filter(function(x){return x.id!==b.id;});}
-  else if(b.action==='import'){var added=0,skipped=0;(b.rows||[]).forEach(function(r){var c=normalize(r);var dup=ALL.some(function(x){return (c.email&&x.email&&x.email.toLowerCase()===c.email.toLowerCase())||(nameOf(x).toLowerCase()===nameOf(c).toLowerCase()&&(x.city||'')===(c.city||''));});if(dup){skipped++;return;}c.id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+added;c.accountNo=nextNo();c.createdAt=new Date().toISOString();ALL.push(c);added++;});persist();return Promise.resolve({ok:true,added:added,skipped:skipped});}
+  if(b.action==='add'){
+    var c=normalize(b.contact);c.id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);c.accountNo=nextNo();c.createdAt=new Date().toISOString();ALL.push(c);persist();
+    if(SYNCED){return api('add',{contact:c}).then(function(r){if(r&&r.ok&&r.contact){var i=ALL.findIndex(function(x){return x.id===c.id;});if(i>=0){ALL[i]=normalize(r.contact);persist();render();}}else{syncPull(true);}return {ok:true};});}
+    return Promise.resolve({ok:true});
+  }
+  else if(b.action==='update'){
+    var i=ALL.findIndex(function(x){return x.id===b.id;});if(i>=0)ALL[i]=normalize(Object.assign({},ALL[i],b.patch));persist();
+    if(SYNCED){return api('update',{id:b.id,patch:b.patch}).then(function(r){if(r&&r.ok&&r.contact){var j=ALL.findIndex(function(x){return x.id===b.id;});if(j>=0){ALL[j]=normalize(r.contact);persist();render();}}else{syncPull(true);}return {ok:true};});}
+    return Promise.resolve({ok:true});
+  }
+  else if(b.action==='delete'){
+    ALL=ALL.filter(function(x){return x.id!==b.id;});persist();
+    if(SYNCED){return api('delete',{id:b.id}).then(function(r){if(!r||!r.ok)syncPull(true);return {ok:true};});}
+    return Promise.resolve({ok:true});
+  }
+  else if(b.action==='import'){
+    if(SYNCED){
+      return api('import',{rows:b.rows}).then(function(r){
+        if(!r||!r.ok)return {ok:false,added:0,skipped:0};
+        return syncPull(true).then(function(){return {ok:true,added:r.added,skipped:r.skipped};});
+      });
+    }
+    var added=0,skipped=0;(b.rows||[]).forEach(function(r){var c=normalize(r);var dup=ALL.some(function(x){return (c.email&&x.email&&x.email.toLowerCase()===c.email.toLowerCase())||(nameOf(x).toLowerCase()===nameOf(c).toLowerCase()&&(x.city||'')===(c.city||''));});if(dup){skipped++;return;}c.id='c'+Date.now().toString(36)+Math.random().toString(36).slice(2,6)+added;c.accountNo=nextNo();c.createdAt=new Date().toISOString();ALL.push(c);added++;});persist();return Promise.resolve({ok:true,added:added,skipped:skipped});
+  }
   persist();return Promise.resolve({ok:true});
 }
 
