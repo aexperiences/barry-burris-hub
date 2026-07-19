@@ -91,6 +91,8 @@ function sanitizeContact(raw, existing) {
     account: clip(c.account, 160),
     email: clip(c.email, 160),
     phone: clip(c.phone, 60),
+    website: clip(c.website, 300),
+    linkedin: clip(c.linkedin, 300),
     address: clip(c.address, 200),
     city: clip(c.city, 100),
     state: clip(c.state, 60),
@@ -204,8 +206,26 @@ async function tag(p) {
   if (touched) await setJSON(ALL_KEY, all);
   return { ok: true, touched };
 }
+// Bulk per-record patch: applies a DIFFERENT patch to each id, in one read-modify-write —
+// used for backfilling fields (contact name, website, linkedin, NAICS) across many records
+// at once without racing 100s of single-record update() calls against each other.
+async function bulkPatch(p) {
+  const patches = Array.isArray(p.patches) ? p.patches : [];
+  if (!patches.length) return { ok: false, reason: 'bad_args' };
+  const all = await getJSON(ALL_KEY, []);
+  const byId = {}; all.forEach((c, i) => { byId[c.id] = i; });
+  let touched = 0;
+  patches.forEach((pt) => {
+    const i = byId[clip(pt.id, 40)];
+    if (i == null) return;
+    all[i] = sanitizeContact(pt.patch || {}, all[i]);
+    touched++;
+  });
+  if (touched) await setJSON(ALL_KEY, all);
+  return { ok: true, touched };
+}
 
-const ACT = { list, add, update, delete: remove, import: doImport, migrate, tag, ping: async () => ({ ok: true, ts: now() }) };
+const ACT = { list, add, update, delete: remove, import: doImport, migrate, tag, bulkPatch, ping: async () => ({ ok: true, ts: now() }) };
 
 export default async function handler(req, res) {
   cors(res);
