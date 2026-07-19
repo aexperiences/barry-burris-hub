@@ -112,8 +112,9 @@ textarea{min-height:64px;resize:vertical}
       <button data-k="person" onclick="setKind('person')">People</button>
       <button data-k="business" onclick="setKind('business')">Businesses</button>
     </div>
-    <div class="search"><span class="mag">&#128269;</span><input id="q" placeholder="Search name, company, email, city, tag…" oninput="FS.q=this.value;render()"></div>
+    <div class="search"><span class="mag">&#128269;</span><input id="q" placeholder="Search name, company, email, address, city, tag…" oninput="FS.q=this.value;render()"></div>
     <select id="typeF" onchange="FS.type=this.value;render()"><option value="">All types</option></select>
+    <select id="stateF" onchange="FS.state=this.value;render()"><option value="">All states</option></select>
     <select id="tagF" onchange="FS.tag=this.value;render()"><option value="">All tags</option></select>
     <select id="statusF" onchange="FS.status=this.value;render()"><option value="">Status: any</option><option value="active">Active</option><option value="new">New</option><option value="prospect">Prospect</option><option value="inactive">Inactive</option></select>
     <select id="sortF" onchange="setSort(this.value)">
@@ -208,9 +209,9 @@ var COIN="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewB
 document.getElementById('coin').src='bee-mark.svg';
 var TYPES=['patient','prospect','referring provider','vendor','lab','pharmacy','partner','other'];
 var ALL=[];
-var FS={q:'',kind:'',type:'',tag:'',status:'',by:'name',dir:1};
-var BASECOLS=[['name','Name'],['account','Company'],['type','Type'],['city','City'],['phone','Phone'],['email','Email'],['status','Status'],['program','Program'],['source','Source'],['specialty','Specialty'],['tags','Tags'],['createdAt','Added']];
-var DEFAULTVIS=['name','type','city','phone','email','status','program','tags'];
+var FS={q:'',kind:'',type:'',tag:'',status:'',state:'',by:'name',dir:1};
+var BASECOLS=[['name','Name'],['account','Company'],['type','Type'],['address','Address'],['city','City'],['state','State'],['phone','Phone'],['email','Email'],['status','Status'],['program','Program'],['source','Source'],['specialty','Specialty'],['tags','Tags'],['createdAt','Added']];
+var DEFAULTVIS=['name','type','address','city','state','phone','email','status','tags'];
 var VIS=[];try{VIS=JSON.parse(localStorage.getItem('bb_cols')||'null');}catch(e){}if(!VIS||!VIS.length)VIS=DEFAULTVIS.slice();
 function saveVis(){try{localStorage.setItem('bb_cols',JSON.stringify(VIS));}catch(e){}}
 function customKeys(){var s={};ALL.forEach(function(c){Object.keys(c.custom||{}).forEach(function(k){s[k]=1;});});return Object.keys(s).sort();}
@@ -306,7 +307,7 @@ function post(b){
 
 function setKind(k){FS.kind=k;document.querySelectorAll('#kindTog button').forEach(function(b){b.classList.toggle('on',b.dataset.k===k);});render();}
 function setSort(v){var m={name:'name',added:'createdAt',city:'city',type:'type'};FS.by=m[v]||v;render();}
-function clearF(){FS={q:'',kind:'',type:'',tag:'',status:'',by:'name',dir:1};document.getElementById('q').value='';document.getElementById('typeF').value='';document.getElementById('tagF').value='';document.getElementById('statusF').value='';document.getElementById('sortF').value='name';setKind('');}
+function clearF(){FS={q:'',kind:'',type:'',tag:'',status:'',state:'',by:'name',dir:1};document.getElementById('q').value='';document.getElementById('typeF').value='';document.getElementById('stateF').value='';document.getElementById('tagF').value='';document.getElementById('statusF').value='';document.getElementById('sortF').value='name';setKind('');}
 
 function sortVal(c,key){
   if(key==='createdAt')return c.createdAt||'';
@@ -321,7 +322,8 @@ function filtered(){
     if(FS.type&&c.type!==FS.type)return false;
     if(FS.tag&&!(c.tags||[]).includes(FS.tag))return false;
     if(FS.status&&c.status!==FS.status)return false;
-    if(q){var hay=[nameOf(c),c.account,c.email,c.phone,c.city,c.state,c.type,c.program,c.source,c.specialty,c.notes,(c.tags||[]).join(' ')].join(' ').toLowerCase();if(hay.indexOf(q)<0)return false;}
+    if(FS.state&&c.state!==FS.state)return false;
+    if(q){var hay=[nameOf(c),c.account,c.email,c.phone,c.address,c.city,c.state,c.type,c.program,c.source,c.specialty,c.notes,(c.tags||[]).join(' ')].join(' ').toLowerCase();if(hay.indexOf(q)<0)return false;}
     return true;
   });
   var by=FS.by,dir=FS.dir;
@@ -332,7 +334,9 @@ function cellFor(c,key){
   if(key==='name')return '<span class="kdot '+c.kind+'"></span>'+esc(nameOf(c))+(c.type?'<span class="tybadge">'+esc(c.type)+'</span>':'');
   if(key==='account')return esc(c.kind==='person'?(c.account||''):'');
   if(key==='type')return esc(c.type||'');
-  if(key==='city')return esc([c.city,c.state].filter(Boolean).join(', '));
+  if(key==='address')return esc(c.address||'');
+  if(key==='city')return esc(c.city||'');
+  if(key==='state')return esc(c.state||'');
   if(key==='phone')return telLink(c.phone);
   if(key==='email')return mailLink(c.email);
   if(key==='status')return c.status?('<span class="st '+c.status+'">'+esc(c.status)+'</span>'):'';
@@ -344,7 +348,7 @@ function cellFor(c,key){
   if(key.indexOf('cf:')===0)return esc((c.custom||{})[key.slice(3)]||'');
   return '';
 }
-function cellClass(key){if(key==='name')return 'nm';if(['account','city','source','specialty','createdAt'].indexOf(key)>=0)return 'muted';return '';}
+function cellClass(key){if(key==='name')return 'nm';if(['account','address','city','state','source','specialty','createdAt'].indexOf(key)>=0)return 'muted';return '';}
 function buildTypeSelect(){
   var sel=document.getElementById('typeF');var cur=FS.type;
   sel.innerHTML='<option value="">All types</option>'+TYPES.map(function(t){return '<option value="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>';}).join('');
@@ -353,6 +357,10 @@ function buildTypeSelect(){
   var tsel=document.getElementById('tagF');var tcur=FS.tag;
   tsel.innerHTML='<option value="">All tags</option>'+Object.keys(tags).sort().map(function(t){return '<option value="'+esc(t)+'">'+esc(t)+'</option>';}).join('');
   tsel.value=tcur;
+  var states={};ALL.forEach(function(c){if(c.state)states[c.state]=(states[c.state]||0)+1;});
+  var ssel=document.getElementById('stateF');var scur=FS.state;
+  ssel.innerHTML='<option value="">All states</option>'+Object.keys(states).sort().map(function(s){return '<option value="'+esc(s)+'">'+esc(s)+' ('+states[s]+')</option>';}).join('');
+  ssel.value=scur;
   var e=document.getElementById('eType');if(e)e.innerHTML=TYPES.map(function(t){return '<option value="'+t+'">'+t.charAt(0).toUpperCase()+t.slice(1)+'</option>';}).join('');
 }
 function render(){
