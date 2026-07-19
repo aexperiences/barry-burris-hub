@@ -69,12 +69,13 @@ select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;bac
 </div></header>
 
 <div class="wrap">
-  <div class="note"><b>On‑device (Lane A).</b> Real appointments, stored in this browser — not synced across devices yet. That turns on with the secure‑hosting step.</div>
+  <div class="note" id="syncNote"><b>On‑device (Lane A).</b> Real appointments, stored in this browser — not synced across devices yet. That turns on with the secure‑hosting step.</div>
   <div class="note" id="roNote" style="display:none"><b>View only.</b> Your role can see the schedule but not change it.</div>
   <div class="tools">
     <select id="fType" onchange="FT=this.value;refetch()"><option value="">All types</option></select>
     <select id="fRes" onchange="FR=this.value;refetch()"><option value="">All providers / rooms</option></select>
     <div class="sp"></div>
+    <button class="tbtn" id="subBtn" onclick="openSub()">📅 Subscribe (Apple / Google)</button>
     <button class="tbtn dark hide" id="newBtn" onclick="openEv()">＋ Appointment</button>
   </div>
   <div id="cal"></div>
@@ -104,6 +105,13 @@ select,.tbtn{padding:8px 11px;border:1px solid var(--line);border-radius:9px;bac
   </div>
 </div></div>
 
+<!-- subscribe panel -->
+<div class="scrim" id="subScrim" onclick="if(event.target===this)closeSub()"><div class="sheet">
+  <h3>Subscribe on Apple / Google Calendar</h3>
+  <div id="subBody" class="muted">Checking sync status…</div>
+  <div class="rowbtns"><button class="cancel" onclick="closeSub()">Close</button></div>
+</div></div>
+
 <div class="toast" id="toast"></div>
 
 <script src="bb-auth.js"></script>
@@ -114,6 +122,9 @@ document.getElementById('coin').src='bee-mark.svg';
 document.getElementById('chip').innerHTML=BBAuth.chipHTML();
 
 var LS='bb_cal_events';
+var API='/api/calendar';
+var SYNCED=false;         // true once we've confirmed KV is connected and events are shared
+var EVENTS=readLocal();   // in-memory cache FullCalendar reads from; kept in lockstep with localStorage
 var CANEDIT=BBAuth.can('schedule.edit');
 var CAT={teal:'#5f8f6c',sky:'#2b6cb0',purple:'#6b3fa0',gold:'#b8860b',green:'#2e7d4f',red:'#b3261e',slate:'#5b6b86'};
 var TYPELABEL={consult:'Discovery consult',followup:'Follow-up',telehealth:'Telehealth',labs:'Labs / blood draw',iv:'IV therapy',procedure:'Procedure',meeting:'Meeting',block:'Blocked / OOO',personal:'Personal'};
@@ -124,8 +135,50 @@ var el=function(id){return document.getElementById(id);};
 var two=function(n){return String(n).padStart(2,'0');};
 function toast(m){var t=el('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},2000);}
 function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
-function readEv(){try{return JSON.parse(localStorage.getItem(LS))||[];}catch(e){return[];}}
-function writeEv(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(e){}}
+function readLocal(){try{return JSON.parse(localStorage.getItem(LS))||[];}catch(e){return[];}}
+function writeLocal(a){try{localStorage.setItem(LS,JSON.stringify(a));}catch(e){}}
+function readEv(){return EVENTS;}
+function writeEv(a){EVENTS=a;writeLocal(a);} // local-first write; used as fallback and as the instant-paint path
+
+// ---- server sync (KV via /api/calendar) ----
+function api(doName,extra){
+  return fetch(API,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({do:doName},extra||{}))})
+    .then(function(r){return r.json();}).catch(function(){return {ok:false,reason:'net'};});
+}
+function setSyncNote(state){
+  var n=el('syncNote');
+  if(state==='synced') n.innerHTML='<b>Synced.</b> Appointments sync automatically across every device signed into this hub.';
+  else if(state==='offline') n.innerHTML='<b>Offline.</b> Couldn’t reach the sync server just now — changes are saved on this device and will sync once you’re back online.';
+  else n.innerHTML='<b>On‑device (Lane A).</b> Real appointments, stored in this browser — not synced across devices yet. That turns on the moment the practice connects its secure hosting/KV step.';
+}
+function syncPull(silent){
+  return api('list').then(function(r){
+    if(!r||!r.ok){ SYNCED=false; if(!silent)setSyncNote(r&&r.reason==='no_kv'?'local':'offline'); return; }
+    SYNCED=true; setSyncNote('synced');
+    EVENTS=r.events||[]; writeLocal(EVENTS); refetch();
+  });
+}
+function syncInit(){
+  api('list').then(function(r){
+    if(!r||!r.ok){ SYNCED=false; setSyncNote(r&&r.reason==='no_kv'?'local':'offline'); return; }
+    SYNCED=true;
+    var server=r.events||[];
+    var local=readLocal();
+    var serverIds={}; server.forEach(function(e){serverIds[e.id]=1;});
+    var onlyLocal=local.filter(function(e){return e.id&&!serverIds[e.id];});
+    if(onlyLocal.length){
+      // one-time migration: fold pre-sync, on-device-only appointments into the shared list
+      api('migrate',{events:onlyLocal}).then(function(){return api('list');}).then(function(r2){
+        EVENTS=(r2&&r2.ok?r2.events:server)||server; writeLocal(EVENTS); setSyncNote('synced'); refetch();
+      });
+    } else {
+      EVENTS=server; writeLocal(EVENTS); setSyncNote('synced'); refetch();
+    }
+  });
+  // keep every open device roughly in step: light polling + refresh on tab focus
+  setInterval(function(){syncPull(true);},20000);
+  window.addEventListener('focus',function(){syncPull(true);});
+}
 function catColor(e){return CAT[TYPECAT[e.type]]||CAT.slate;}
 function localISO(d,allDay){if(!d)return'';return d.getFullYear()+'-'+two(d.getMonth()+1)+'-'+two(d.getDate())+(allDay?'':'T'+two(d.getHours())+':'+two(d.getMinutes()));}
 function passFilter(e){return (!FT||e.type===FT)&&(!FR||e.resource===FR);}
@@ -151,14 +204,50 @@ function boot(){
     events:function(info,succ){succ(readEv().filter(passFilter).map(toFC));}
   });
   CAL.render();
+  syncInit();
 }
 function refetch(){if(CAL)CAL.refetchEvents();}
+
+// ---- Subscribe (Apple / Google) panel ----
+function copySub(txt,btn){
+  var done=function(){var o=btn.textContent;btn.textContent='Copied ✓';setTimeout(function(){btn.textContent=o;},1400);};
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(done).catch(done);}
+  else{done();}
+}
+function openSub(){
+  el('subScrim').classList.add('on');
+  var body=el('subBody');
+  if(!SYNCED){
+    body.innerHTML='<div>Subscribing isn’t on yet for this hub — it turns on automatically the moment the practice connects its secure sync step. Nothing to configure on your end; check back once sync is active (the banner above the calendar will say <b>Synced</b>).</div>';
+    return;
+  }
+  body.innerHTML='Getting your calendar link…';
+  api('feedUrl',{origin:location.origin}).then(function(r){
+    if(!r||!r.ok||!r.url){body.innerHTML='Couldn’t generate a subscribe link just now — try again in a moment.';return;}
+    var httpsUrl=r.url;
+    var webcalUrl=httpsUrl.replace(/^https?:\/\//,'webcal://');
+    body.innerHTML=
+      '<div style="font-size:13.5px;color:var(--mut);margin-bottom:10px">This link auto-updates as appointments change — subscribe once, no need to re-download.</div>'+
+      '<div style="display:flex;gap:8px;margin-bottom:10px">'+
+        '<input readonly value="'+esc(httpsUrl)+'" style="flex:1;min-width:0;padding:9px 10px;border:1px solid var(--ln);border-radius:8px;font-size:12.5px;font-family:monospace" onclick="this.select()">'+
+        '<button class="tbtn" onclick="copySub(\''+httpsUrl.replace(/'/g,"\\'")+'\',this)">Copy</button>'+
+      '</div>'+
+      '<div style="display:grid;gap:10px;margin-top:6px">'+
+        '<div><b>Apple Calendar (Mac):</b> File → New Calendar Subscription → paste the link above.</div>'+
+        '<div><b>Apple Calendar (iPhone/iPad):</b> Settings → Calendar → Accounts → Add Account → Other → Add Subscribed Calendar → paste the link.</div>'+
+        '<div><b>Google Calendar:</b> Other calendars (+) → From URL → paste the link above.</div>'+
+        '<div><a href="'+esc(webcalUrl)+'" style="color:var(--gold)">Or tap here on a device with Apple/Google Calendar set as default ↗</a></div>'+
+      '</div>';
+  });
+}
+function closeSub(){el('subScrim').classList.remove('on');}
 function onMove(a){
   if(!CANEDIT){a.revert();return;}
   var arr=readEv();var i=arr.findIndex(function(x){return x.id===a.event.extendedProps.raw.id;});
   if(i<0){a.revert();return;}
   arr[i].start=localISO(a.event.start,a.event.allDay);arr[i].end=localISO(a.event.end,a.event.allDay);arr[i].allDay=a.event.allDay;
   writeEv(arr);toast('Moved');
+  if(SYNCED)api('save',arr[i]).then(function(r){if(!r||!r.ok)syncPull(true);});
 }
 function fmtT(iso){var d=new Date(iso);var h=d.getHours(),m=d.getMinutes();var ap=h>=12?'PM':'AM';h=h%12||12;return h+(m?':'+two(m):'')+' '+ap;}
 function openEv(raw,startStr,endStr,allDay){
@@ -184,12 +273,18 @@ function saveEv(){
   var ev={title:el('eTitle').value.trim(),type:el('eType').value,resource:el('eRes').value,start:el('eStart').value,end:el('eEnd').value,allDay:el('eAll').value==='true',mode:el('eMode').value,notes:el('eNotes').value.trim()};
   if(!ev.title){toast('Add a title.');return;}
   if(!ev.start){toast('Pick a start.');return;}
-  var arr=readEv();
-  if(edId){var i=arr.findIndex(function(x){return x.id===edId;});if(i>=0)arr[i]=Object.assign(arr[i],ev);}
-  else{ev.id='e'+Date.now().toString(36)+Math.floor(Math.random()*900+100);arr.push(ev);}
+  var arr=readEv();var saved;
+  if(edId){var i=arr.findIndex(function(x){return x.id===edId;});if(i>=0){arr[i]=Object.assign(arr[i],ev);saved=arr[i];}}
+  else{ev.id='e'+Date.now().toString(36)+Math.floor(Math.random()*900+100);arr.push(ev);saved=ev;}
   writeEv(arr);closeEv();refetch();toast('Saved');
+  if(SYNCED&&saved)api('save',saved).then(function(r){if(r&&r.ok&&r.event){var a2=readEv();var j=a2.findIndex(function(x){return x.id===saved.id;});if(j>=0){a2[j]=r.event;writeEv(a2);refetch();}}else{syncPull(true);}});
 }
-function delEv(){if(!edId||!confirm('Delete this appointment?'))return;writeEv(readEv().filter(function(x){return x.id!==edId;}));closeEv();refetch();toast('Deleted');}
+function delEv(){
+  if(!edId||!confirm('Delete this appointment?'))return;
+  var goneId=edId;
+  writeEv(readEv().filter(function(x){return x.id!==goneId;}));closeEv();refetch();toast('Deleted');
+  if(SYNCED)api('delete',{id:goneId}).then(function(r){if(!r||!r.ok)syncPull(true);});
+}
 document.addEventListener('keydown',function(e){if(e.key==='Escape')closeEv();});
 boot();
 </script>
