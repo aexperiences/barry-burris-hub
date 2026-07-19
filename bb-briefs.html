@@ -85,7 +85,13 @@
 </style>
 </head>
 <body>
-<script>window.BB_NAV_ACTIVE='briefs'</script>
+<script>window.BB_NAV_ACTIVE='briefs';
+/* Mark the current brief set as seen the moment this page actually opens —
+ * this is what clears the "new brief" dot in the nav everywhere else in the
+ * hub. Keep this date in lockstep with LATEST_BRIEF in bb-nav.js and
+ * barry-burris-hub.html whenever a new brief is added above. */
+try{localStorage.setItem('bb_briefs_seen','2026-07-18');}catch(e){}
+</script>
 
 <!-- HERO -->
 <header class="hero">

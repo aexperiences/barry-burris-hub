@@ -50,6 +50,15 @@
     shield: '<path d="M12 3l7 3v5c0 4.5-3 7.7-7 9-4-1.3-7-4.5-7-9V6z"/><path d="M9.2 12l1.9 1.9L15 10"/>'
   };
 
+  // Bump this date every time a new brief lands in bb-briefs.html — it's the
+  // single source of truth the "new brief" dot compares against. bb-briefs.html
+  // writes this same value to localStorage the moment Barry actually opens the
+  // page, which is what clears the dot everywhere else in the hub.
+  var LATEST_BRIEF = '2026-07-18';
+  function briefIsUnseen() {
+    try { return localStorage.getItem('bb_briefs_seen') !== LATEST_BRIEF; } catch (e) { return false; }
+  }
+
   // Nav groups: [key, label, icon, url]. Internal hub views are reached
   // via URL hash — the hub routes on load from location.hash.
   var NAV = [
@@ -93,6 +102,8 @@
     "#bb-side a.bbn-link:hover{background:rgba(255,255,255,.06);color:#fff}",
     "#bb-side a.bbn-link.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:#f2f0e2;box-shadow:inset 3px 0 0 #e6c67e}",
     "#bb-side a.bbn-link svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}",
+    "#bb-side .bbn-dot{width:8px;height:8px;border-radius:50%;background:#e6c67e;margin-left:auto;flex:none;box-shadow:0 0 0 3px rgba(230,198,126,.22);animation:bbnPulse 1.8s ease-in-out infinite}",
+    "@keyframes bbnPulse{0%,100%{opacity:1}50%{opacity:.45}}",
     "#bb-side .bbn-foot{padding:13px 16px;border-top:1px solid "+T.line+";font-size:10.5px;color:"+T.foot+";line-height:1.5}",
     "#bb-side .bbn-foot b{color:#e6c67e;font-weight:600}",
     "#bb-burger{display:none;position:fixed;top:12px;left:12px;z-index:1150;width:42px;height:42px;align-items:center;justify-content:center;padding:0;border:1px solid #e8dcc4;background:#fffdf7;color:"+T.burg+";border-radius:10px;cursor:pointer;box-shadow:0 4px 14px rgba(60,40,20,.16)}",
@@ -147,9 +158,10 @@
         var k = items[j][0], label = items[j][1], ic = items[j][2], url = items[j][3];
         var cls = 'bbn-link' + (k === active ? ' active' : '');
         var cur = (k === active) ? ' aria-current="page"' : '';
+        var dot = (k === 'briefs' && briefIsUnseen()) ? '<span class="bbn-dot" title="New brief from AE"></span>' : '';
         html += '<a class="' + cls + '" href="' + url + '"' + cur + '>' +
           '<svg viewBox="0 0 24 24" aria-hidden="true">' + (ICN[ic] || '') + '</svg>' +
-          '<span>' + esc(label) + '</span></a>';
+          '<span>' + esc(label) + '</span>' + dot + '</a>';
       }
     }
     html += '</nav><div class="bbn-foot"><a href="patient-account.html" target="_blank" rel="noopener" style="color:#e6c67e;text-decoration:none">&#9636; Patient portal &#8599;</a><br><span style="opacity:.85">Barry Burris, NMD &middot; Functional Medicine</span><br>Built by <b>Accelerated Experiences, LLC</b></div>';

@@ -35,6 +35,8 @@ a{color:inherit;text-decoration:none}
 .nav a:hover{background:rgba(255,255,255,.06);color:#fff}
 .nav a.active{background:linear-gradient(90deg,rgba(230,198,126,.16),rgba(230,198,126,.02));color:var(--sink);box-shadow:inset 3px 0 0 var(--gold2)}
 .nav a svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.nav a .dot{width:8px;height:8px;border-radius:50%;background:var(--gold2);margin-left:auto;flex:none;box-shadow:0 0 0 3px rgba(230,198,126,.22);animation:navPulse 1.8s ease-in-out infinite}
+@keyframes navPulse{0%,100%{opacity:1}50%{opacity:.45}}
 .side .foot{padding:13px 16px;border-top:1px solid var(--sideline);font-size:10.5px;color:#d9aaa2;line-height:1.5}
 .side .foot b{color:var(--gold2);font-weight:600}
 .side .foot .laneA{display:inline-block;background:rgba(230,198,126,.12);color:var(--gold2);border:1px solid rgba(230,198,126,.28);padding:1px 8px;border-radius:20px;font-family:Oswald,sans-serif;font-weight:600;font-size:9.5px;letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
@@ -347,12 +349,19 @@ const NAV=[
  {g:'Business',items:[['billing','Billing','dollar'],['services','Services','star'],['labs','Labs','flask']]},
  {g:'Grow',items:[['protocols','Protocols','book'],['growth','Growth','trend'],['directory','Directory','network','barry-directory.html'],['team','Team','team'],['profile','Profile','gear'],['privacy','Privacy & Security','shield','bb-privacy.html']]}];
 
+/* Bump this date every time a new brief lands in bb-briefs.html — bb-briefs.html
+ * writes this same value to localStorage the moment Barry actually opens the
+ * page, which is what clears the "new brief" dot everywhere in the hub. */
+const LATEST_BRIEF='2026-07-18';
+function briefIsUnseen(){try{return localStorage.getItem('bb_briefs_seen')!==LATEST_BRIEF;}catch(e){return false;}}
 function buildNav(){
  let h='';
  for(const s of NAV){h+=`<div class="grp">${s.g}</div>`;
-  for(const [k,l,ic,url] of s.items) h+= url
-    ? `<a href="${url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">${ICN[ic]}</svg><span>${l}</span></a>`
-    : `<a data-k="${k}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${ICN[ic]}</svg><span>${l}</span></a>`;}
+  for(const [k,l,ic,url] of s.items){
+   const dot=(k==='briefs'&&briefIsUnseen())?'<span class="dot" title="New brief from AE"></span>':'';
+   h+= url
+    ? `<a href="${url}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24">${ICN[ic]}</svg><span>${l}</span>${dot}</a>`
+    : `<a data-k="${k}" onclick="go('${k}')"><svg viewBox="0 0 24 24">${ICN[ic]}</svg><span>${l}</span>${dot}</a>`;}}
  document.getElementById('nav').innerHTML=h;
 }
 function setActive(k){document.querySelectorAll('#nav a').forEach(a=>a.classList.toggle('active',a.dataset.k===k));}
