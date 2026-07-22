@@ -59,7 +59,7 @@
   // single source of truth the "new brief" dot compares against. bb-briefs.html
   // writes this same value to localStorage the moment Barry actually opens the
   // page, which is what clears the dot everywhere else in the hub.
-  var LATEST_BRIEF = '2026-07-18';
+  var LATEST_BRIEF = '2026-07-22';
   function briefIsUnseen() {
     try { return localStorage.getItem('bb_briefs_seen') !== LATEST_BRIEF; } catch (e) { return false; }
   }
