@@ -4,7 +4,7 @@
    deploys always show fresh; stale-while-revalidate for static assets so a new
    deploy self-heals on the next load (no more frozen JS between deploys).
    Built by Accelerated Experiences, LLC. */
-var CACHE = 'bb-app-v3';
+var CACHE = 'bb-app-v4';
 var SHELL = [
   '/barry-burris-hub.html', '/manifest.webmanifest',
   '/icon-192.png', '/icon-512.png', '/apple-touch-icon.png', '/bee-coin.svg', '/bee-mark.svg',
