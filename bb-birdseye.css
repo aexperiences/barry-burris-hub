@@ -1,0 +1,47 @@
+/* bb-birdseye.css — Barry's hub under the Birdseye shell (loaded after birdseye/birdseye.css by bb-birdseye.js).
+   Presentation only. Legacy chrome is hidden, never removed; the moment Birdseye is off, every rule here is inert. */
+
+/* the legacy sidebar, burger, scrim, hub top bar and phone tab bar step aside (some are injected after load) */
+html.bs-on #bb-side, html.bs-on #bb-burger, html.bs-on #bb-scrim,
+html.bs-on .bb-tabbar, html.bs-on .bb-scrim,
+html.bs-on .app > .side, html.bs-on .app > .main > .top { display: none !important; }
+
+/* bb-nav.js pushes the page right for its sidebar, bb-app.js pads for its tab bar — Birdseye has neither */
+html.bs-on body { padding-left: 0 !important; padding-bottom: 0 !important; }
+
+/* room content: centered; the Birdseye views keep the 16px side gutter (the footer already clears the dock) */
+html.bs-on .app > .main > .wrap { margin: 0 auto; }
+html.bs-on .app { min-height: 0; }
+html.bs-on .app > .main > .bs-view, html.bs-on #bbBsContent > .bs-view { padding: 10px 16px 0; }
+html.bs-on .bs-view-room .bs-roomkick { max-width: 1200px; margin: 4px auto 0; }
+html.bs-on .bs-foot { flex-wrap: wrap; }
+
+/* Brian (bb-assistant.js) opens from the Birdseye helper drawer, so his floating launcher steps aside */
+html.bs-on #bbai-btn { display: none !important; }
+/* the patient-messages inbox (bb-messages.js): its bubble moves into the Birdseye header (#bbBsMsg) so nothing floats
+   over the plan; until that button exists the bubble stays put, lifted above the dock */
+html.bs-on #bbmsg-btn { bottom: calc(108px + env(safe-area-inset-bottom, 0px)) !important; }
+html.bs-on.bb-msg-in-head #bbmsg-btn { display: none !important; }
+.bb-bs-msg { position: relative; color: var(--bs-red); }
+.bb-bs-bdg { display: none; position: absolute; top: -5px; right: -5px; min-width: 18px; height: 18px; padding: 0 5px; border-radius: 9px; background: var(--bs-gold); color: #2a1f0c; font: 800 10.5px/18px var(--bs-sans); text-align: center; }
+.bb-bs-bdg.on { display: block; }
+html.bs-on .bb-install { bottom: calc(104px + env(safe-area-inset-bottom, 0px)) !important; }
+html.bs-on .app ~ .toast, html.bs-on body > .toast { bottom: 110px; }
+
+/* a room page's own sticky bar would slide under the Birdseye header */
+html.bs-on #bbBsContent .top { position: static !important; }
+
+/* the "Talk to Brian" button inside the helper drawer, and who is signed in, in the footer */
+.bb-dbtn { display: block; width: calc(100% - 28px); margin: 4px 14px 8px; }
+/* phones: the header keeps the system name — messages live in the helper drawer, with a gold dot on Ask when unread */
+@media (max-width: 640px) {
+  .bb-bs-msg { display: none !important; }
+  html.bb-msg-unread .bs-ask { position: relative; }
+  html.bb-msg-unread .bs-ask::after { content: ""; position: absolute; top: -3px; right: -3px; width: 11px; height: 11px; border-radius: 50%; background: var(--bs-gold); border: 2px solid var(--bs-paper); }
+}
+.bb-bs-who { flex-basis: 100%; font: 600 11.5px/1.4 var(--bs-sans); color: var(--bs-mut); text-align: center; margin-top: 8px; }
+.bb-bs-who a { color: var(--bs-red); }
+.bb-bs-who .bb-chip b { color: var(--bs-ink); }
+
+/* some room pages style bare labels; the seat picker label stays on one line */
+html.bs-on .bs-seat, html.bs-on .bs-seat .bs-lbl { white-space: nowrap; }

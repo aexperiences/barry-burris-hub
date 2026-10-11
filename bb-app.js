@@ -162,3 +162,11 @@
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
   else start();
 })();
+/* BIRDSEYE:BEGIN — the Birdseye home for the staff side (BB Practice OS). Loads bb-birdseye.js, which lays the
+   Birdseye floor plan, dock, More sheet and helper over the page and hides (never removes) the legacy nav.
+   Patient pages are skipped. To undo: delete from BEGIN to END. */
+(function () {
+  if (/patient/i.test(location.pathname) || window.__bbEye || document.querySelector('script[src$="bb-birdseye.js"]')) return;
+  var s = document.createElement('script'); s.src = 'bb-birdseye.js'; (document.body || document.head).appendChild(s);
+})();
+/* BIRDSEYE:END */
