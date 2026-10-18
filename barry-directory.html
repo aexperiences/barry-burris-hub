@@ -128,8 +128,17 @@ tr:hover td{background:#fbf8f0}
 </div>
 <div class="cred">Directory by <b>Accelerated Experiences, LLC</b></div>
 
-<script src="barry-directory-data.js"></script>
 <script>
+/* Directory data now comes from the server, signed in only (api/directory). Oct 17 2026. */
+(function(){
+  function run(){ document.querySelectorAll('script[type="text/bb-after-data"]').forEach(function(o){ var n=document.createElement('script'); n.text=o.text; o.parentNode.replaceChild(n,o); }); }
+  fetch('/api/directory',{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).then(function(j){
+    if(!j||!j.ok) return; window.DIRECTORY_DATA=j.rows||[];
+    if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',run); else run();
+  }).catch(function(){});
+})();
+</script>
+<script type="text/bb-after-data">
 const STATUS_LABEL={new:'New',contacted:'Contacted',meeting:'Meeting set',partnered:'Partnered',notfit:'Not a fit'};
 let activeTiers=new Set();
 
