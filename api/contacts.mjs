@@ -14,6 +14,7 @@
 // behavior — nothing breaks, it just doesn't sync yet. Keys come from env only:
 //   KV_REST_API_URL + KV_REST_API_TOKEN   (Vercel KV)   — or —
 //   UPSTASH_REDIS_REST_URL + UPSTASH_REDIS_REST_TOKEN   (Upstash direct)
+import { gate } from './_gate.mjs';
 
 const NS = 'bb:contacts:';
 const ALL_KEY = NS + 'all';
@@ -43,7 +44,7 @@ const setJSON = (k, v) => kv(['SET', k, JSON.stringify(v)]);
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
 }
 function json(res, code, obj) {
   res.statusCode = code;
@@ -230,6 +231,7 @@ const ACT = { list, add, update, delete: remove, import: doImport, migrate, tag,
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (!kvCreds()) return json(res, 200, { ok: false, reason: 'no_kv' }); // env-gated: safe + dormant
 
   let body = {};

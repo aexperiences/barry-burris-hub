@@ -14,6 +14,7 @@
 // friendly "finishing setup" state. On upstream error -> 200 { ok:false, reason:'error' }.
 // No key is ever hardcoded — keys come from Vercel env only:
 //   DEEPSEEK_API_KEY  (preferred)  |  ANTHROPIC_API_KEY  (fallback)
+import { gate } from './_gate.mjs';
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
@@ -70,7 +71,7 @@ HONESTY GUARDRAIL (non-negotiable): You're DECISION SUPPORT, not the decision. B
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
 }
 function json(res, code, obj) {
   res.statusCode = code;
@@ -169,6 +170,7 @@ async function callAnthropic(key, messages) {
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST, OPTIONS'); return json(res, 405, { ok: false, reason: 'method', message: 'POST only' }); }
 
   const dsKey = (process.env.DEEPSEEK_API_KEY || '').trim();

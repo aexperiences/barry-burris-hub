@@ -9,6 +9,7 @@
 //
 // DEGRADES GRACEFULLY: if no KV env is set it returns 200 { ok:false, reason:'no_kv' } so the
 // UI can fall back to "download only" instead of erroring.
+import { gate } from './_gate.mjs';
 
 const NS = 'bb:docs:';
 const LIST_KEY = NS + 'list';
@@ -37,7 +38,7 @@ const delKey = (k) => kv(['DEL', k]);
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
 }
 function json(res, code, obj) {
   res.statusCode = code;
@@ -99,6 +100,7 @@ const ACT = { list, get, save, del, ping: async () => ({ ok: true, ts: Date.now(
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (!kvCreds()) return json(res, 200, { ok: false, reason: 'no_kv' }); // env-gated: safe + dormant
 
   let body = {};

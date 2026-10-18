@@ -7,6 +7,7 @@
 //
 // House pattern (Accelerated Experiences, LLC): env-gated, dependency-free. DeepSeek preferred ->
 // Anthropic (Haiku) fallback. Graceful no_key. No key hardcoded.
+import { gate } from './_gate.mjs';
 
 const DEEPSEEK = (process.env.DEEPSEEK_API_KEY || '').trim();
 const ANTHROPIC = (process.env.ANTHROPIC_API_KEY || '').trim();
@@ -35,9 +36,10 @@ function tryParse(txt) {
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (req.method !== 'POST') { res.statusCode = 405; res.end(JSON.stringify({ error: 'POST only' })); return; }
 
   let body = req.body;

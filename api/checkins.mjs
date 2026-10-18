@@ -14,6 +14,7 @@
 //
 // DEGRADES GRACEFULLY: no KV env -> 200 { ok:false, reason:'no_kv' } so the UI shows "coming
 // online". Keys from env only: KV_REST_API_URL + KV_REST_API_TOKEN (or UPSTASH_REDIS_REST_*).
+import { gate, actionOf } from './_gate.mjs';
 
 const NS = 'bb:ci:';
 const THREAD_MAX = 200;             // items kept per patient thread
@@ -45,7 +46,7 @@ const setJSON = (k, v, ex) => kv(ex ? ['SET', k, JSON.stringify(v), 'EX', String
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
 }
 function json(res, code, obj) { res.statusCode = code; res.setHeader('content-type', 'application/json; charset=utf-8'); res.end(JSON.stringify(obj)); }
 async function readBody(req) {
@@ -163,6 +164,7 @@ const ACT = { put, thread, video, list, inbox: list, seen, seenGet, ping: async 
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res, async () => { const a = await actionOf(req); return (['list','inbox'].includes(a.name) && a.args.role !== 'patient') || (['put','seen','seenGet'].includes(a.name) && a.args.role === 'provider'); }))) return; // staff actions only (api/_gate.mjs)
   if (!kvCreds()) return json(res, 200, { ok: false, reason: 'no_kv' });
   let body = {};
   if (req.method === 'POST') { try { body = await readBody(req); } catch { body = {}; } }

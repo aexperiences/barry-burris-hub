@@ -14,6 +14,7 @@
 //
 // No key is ever hardcoded — keys come from Vercel environment variables only:
 //   DEEPSEEK_API_KEY   (preferred)   |   ANTHROPIC_API_KEY   (fallback)
+import { gate } from './_gate.mjs';
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/chat/completions';
 const ANTHROPIC_URL = 'https://api.anthropic.com/v1/messages';
@@ -35,7 +36,7 @@ These are AI-GENERATED SUGGESTIONS to support the provider's decision-making —
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'content-type');
+  res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session');
 }
 function json(res, code, obj) {
   res.statusCode = code;
@@ -152,6 +153,7 @@ function enforceTail(plan) {
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (req.method !== 'POST') { res.setHeader('Allow', 'POST, OPTIONS'); return json(res, 405, { ok: false, reason: 'method', message: 'POST only' }); }
 
   // Env-gated: DeepSeek first, then Anthropic; neither -> clean no_key so the client falls back.

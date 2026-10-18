@@ -10,6 +10,7 @@
 //
 // House pattern (Accelerated Experiences, LLC): env-gated, dependency-free (raw fetch to the same
 // Upstash KV as Connect). Not tax advice — confirm with a CPA. No key hardcoded.
+import { gate } from './_gate.mjs';
 
 const NS = 'bb:books:';
 const LEDGER = NS + 'ledger';
@@ -64,7 +65,7 @@ async function kv(cmd) {
 const getJSON = async (k, d) => { try { const v = await kv(['GET', k]); return v == null ? d : JSON.parse(v); } catch { return d; } };
 const setJSON = (k, v) => kv(['SET', k, JSON.stringify(v)]);
 
-function cors(res) { res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'content-type'); }
+function cors(res) { res.setHeader('Access-Control-Allow-Origin', '*'); res.setHeader('Access-Control-Allow-Methods', 'POST, GET, OPTIONS'); res.setHeader('Access-Control-Allow-Headers', 'content-type, x-bb-session'); }
 function json(res, code, obj) { res.statusCode = code; res.setHeader('content-type', 'application/json; charset=utf-8'); res.end(JSON.stringify(obj)); }
 async function readBody(req) {
   if (req.body != null) { if (typeof req.body === 'object') return req.body; if (typeof req.body === 'string') { try { return JSON.parse(req.body); } catch { return {}; } } }
@@ -121,6 +122,7 @@ async function dispensaryRollup() {
 export default async function handler(req, res) {
   cors(res);
   if (req.method === 'OPTIONS') { res.statusCode = 204; res.end(); return; }
+  if (!(await gate(req, res))) return; // staff only (api/_gate.mjs)
   if (!kvCreds()) return json(res, 200, { ok: false, configured: false, reason: 'no_kv' });
 
   // ---- POST: append an event, void one, or set config ----
