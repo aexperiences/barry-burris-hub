@@ -162,7 +162,7 @@
   }
 
   function autoGrow() { inputEl.style.height = 'auto'; inputEl.style.height = Math.min(inputEl.scrollHeight, 120) + 'px'; }
-  function openPanel() { panel.classList.add('on'); scrim.classList.add('on'); setTimeout(function () { inputEl.focus(); scrollDown(); }, 60); }
+  function openPanel() { if (window.AEVoice && window.AEVoice.v >= 2) window.AEVoice.unlock(); panel.classList.add('on'); scrim.classList.add('on'); setTimeout(function () { inputEl.focus(); scrollDown(); }, 60); }
   function closePanel() { panel.classList.remove('on'); scrim.classList.remove('on'); if (recog && listening) { try { recog.stop(); } catch (e) {} } }
   function scrollDown() { if (bodyEl) bodyEl.scrollTop = bodyEl.scrollHeight; }
 
@@ -181,7 +181,7 @@
     if (voiceOn) primeAudio();
   }
   // iOS unlock: wake the AudioContext + prime a reusable <audio> during a real tap.
-  function primeAudio() {
+  function primeAudio() { if (window.AEVoice && window.AEVoice.v >= 2) window.AEVoice.unlock();
     try { if (!ctx && AC) ctx = new AC(); if (ctx && ctx.state === 'suspended') ctx.resume(); } catch (e) {}
     try {
       if (!audioEl) { audioEl = new Audio(); audioEl.playsInline = true; audioEl.setAttribute('playsinline', ''); }
@@ -190,9 +190,13 @@
       if (p && p.then) p.then(function () { try { audioEl.pause(); audioEl.currentTime = 0; } catch (e) {} audioEl.muted = false; }).catch(function () { audioEl.muted = false; });
     } catch (e) {}
   }
+  /* Oct 22 2026 (Anthony: "use turbo on ... Barry's system"): Brian speaks through the AE house voice, Turbo, via
+     the house player. ElevenLabs is retired house-wide (SSOT 0.10). */
+  (function(){ if(window.AEVoice&&window.AEVoice.v>=2) return; var sc=document.createElement('script'); sc.src='https://www.aexperiences.com/ae-voice.js'; sc.async=true; (document.head||document.documentElement).appendChild(sc); })();
   async function speak(text) {
     if (!voiceOn) return;
     var t = plain(text); if (!t) return;
+    if (window.AEVoice && window.AEVoice.v >= 2) { window.AEVoice.speak(t.slice(0, 1400), { voice: 'brian' }); return; }
     var buf;
     try {
       var r = await fetch(VOICE_API, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ text: t.slice(0, 1400) }) });
